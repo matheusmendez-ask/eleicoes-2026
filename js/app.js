@@ -869,7 +869,10 @@
     if (!v) return;
     img.addEventListener('error', () => { img.remove(); if (!hero.classList.contains('video-on')) hero.classList.add('no-media'); });
     const fail = () => { v.remove(); hero.classList.remove('video-on'); if (!document.contains(img)) hero.classList.add('no-media'); };
-    v.addEventListener('error', fail, true);
+    // O <video> só falha de vez quando a última <source> falha
+    const sources = $$('source', v);
+    (sources[sources.length - 1] || v).addEventListener('error', fail);
+    v.addEventListener('error', fail);
     if (reduceMotion) { v.remove(); return; }
     v.addEventListener('playing', () => hero.classList.add('video-on'), { once: true });
     // Só toca quando visível; poupa bateria e banda

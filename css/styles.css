@@ -233,9 +233,9 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 @keyframes wheel { 0%, 100% { transform: translate(-50%, 0); opacity: 1; } 60% { transform: translate(-50%, 12px); opacity: .2; } }
 
 .steps-hero { margin: 0; border: 0; padding: 22px 24px; background: rgba(8, 14, 12, .55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: var(--r-lg); border: 1px solid rgba(247, 246, 242, .12); gap: 0; }
-@media (min-width: 760px) { .steps-hero { grid-template-columns: 1fr; gap: 0; } }
-.steps-hero li { border-bottom: 1px solid rgba(247, 246, 242, .12); padding: 12px 0; }
-.steps-hero li:last-child { border-bottom: 0; }
+@media (min-width: 760px) { .hero .steps-hero { grid-template-columns: 1fr; gap: 0; } }
+.hero .steps-hero li { border-bottom: 1px solid rgba(247, 246, 242, .12); padding: 12px 0; }
+.hero .steps-hero li:last-child { border-bottom: 0; }
 .steps-hero li::before { color: var(--gold); font-size: 1.3rem; margin-bottom: 2px; }
 .steps-hero b { color: #F7F6F2; }
 .steps-hero span { color: rgba(247, 246, 242, .78); }

@@ -33,7 +33,9 @@ Cada uma das **48 propostas** passa por três filtros e recebe um quarto rótulo
 - **Radar da CF/88**: os artigos mais "testados" pelos planos, com o texto e as propostas afetadas.
 - **A conta, do começo ao fim**: funil que mostra como R$ 6,5 trilhões de orçamento viram R$ 206 bilhões livres; gráfico da dívida bruta desde 2014; linha do tempo das regras que amarraram o orçamento; e um balanço de quantas propostas de cada candidato aumentam gastos, economizam ou não mexem nas contas.
 - **Dossiê por candidato** com leitura rápida e índice das propostas, efeito de cada proposta nas contas públicas, cifras do plano comparadas ao espaço livre, de onde viria o dinheiro segundo o plano e o que o plano não responde.
+- **Abertura em “scrollytelling”**: você toma posse e vê o orçamento encolher de R$ 6,5 trilhões a R$ 206 bilhões conforme rola, até a grade do Congresso com os 308 deputados e 49 senadores necessários para uma emenda.
 - **Registro de correções**: tudo o que estava errado na primeira versão e como foi corrigido.
+- A imagem e o vídeo de fundo da abertura (o Congresso Nacional ao entardecer) foram gerados por IA com o Higgsfield e comprimidos para 90 KB e 277 KB; o vídeo não toca para quem prefere menos movimento.
 
 <img src="docs/mobile-escuro.jpg" alt="Versão para celular no tema escuro" width="260" align="right">
 
@@ -59,6 +61,7 @@ css/styles.css          design system (tokens, tema escuro, componentes)
 js/data.js              base de dados: candidatos, propostas, artigos, orçamento, fontes
 js/app.js               renderização, rotas, filtros, modais e compartilhamento
 fonts/                  Fraunces, Inter e JetBrains Mono (SIL OFL)
+assets/                 imagem e vídeo da abertura (gerados por IA)
 planos/                 PDFs originais dos planos de governo
 share/                  páginas e imagens de prévia geradas (não editar à mão)
 scripts/validate.cjs    validação da base (roda no CI)
