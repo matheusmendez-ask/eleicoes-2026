@@ -16,21 +16,21 @@
   --surface-2: #FAF9F5;
   --ink: #14161A;
   --ink-2: #3B4049;
-  --muted: #6A707A;
+  --muted: #595F69;
   --line: #E1DDD2;
   --line-strong: #CBC5B6;
 
-  --brand: #0B7A4B;
+  --brand: #096B41;
   --brand-ink: #FFFFFF;
   --brand-soft: #DDF1E6;
   --gold: #E8B20E;
   --blue: #1D4ED8;
 
   /* Escala de viabilidade jurídica */
-  --v-exec: #15803D;
-  --v-lei: #2563EB;
-  --v-lc: #7C3AED;
-  --v-pec: #C2410C;
+  --v-exec: #166534;
+  --v-lei: #1D4ED8;
+  --v-lc: #6D28D9;
+  --v-pec: #B03A0A;
   --v-vedado: #B91C1C;
   --v-exec-bg: #DCFCE7;
   --v-lei-bg: #DBEAFE;
@@ -265,7 +265,7 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
   padding: 26px; box-shadow: var(--shadow-3); position: relative;
 }
-.hero-card h3 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 4px; }
+.hero-card h2 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 4px; }
 .hero-card > p { color: var(--muted); font-size: .9rem; margin-bottom: 18px; }
 .filter-steps { display: grid; gap: 10px; counter-reset: s; }
 .filter-step {
@@ -303,7 +303,7 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 }
 .rung::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 5px; background: var(--vc); border-radius: inherit; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 .rung-step { font-family: var(--font-mono); font-size: .72rem; font-weight: 700; color: var(--vc); }
-.rung h4 { font-size: 1.05rem; margin: 6px 0 4px; }
+.rung h3 { font-size: 1.05rem; margin: 6px 0 4px; }
 .rung .who { font-size: .82rem; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
 .rung p { font-size: .86rem; color: var(--ink-2); }
 .rung .count { margin-top: 12px; font-family: var(--font-display); font-weight: 800; font-size: 1.8rem; color: var(--vc); line-height: 1; }
@@ -348,7 +348,7 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 .cand-party { font-size: .84rem; color: var(--muted); font-weight: 600; }
 .cand-thesis { margin-top: 14px; font-size: .95rem; color: var(--ink-2); }
 .cand-body { padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
-.cand-body h5 { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.cand-body h4 { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
 .mini-list { list-style: none; display: grid; gap: 8px; }
 .mini-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-size: .9rem; }
 .mini-list li > span:first-child { flex: 1; min-width: 0; }
@@ -589,7 +589,7 @@ details.more[open] summary { margin-bottom: 14px; }
 .method { display: grid; gap: 16px; }
 @media (min-width: 860px) { .method { grid-template-columns: repeat(3, 1fr); } }
 .method-item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 20px; }
-.method-item h4 { margin-bottom: 6px; }
+.method-item h3 { margin-bottom: 6px; font-size: 1.05rem; }
 .method-item p, .method-item li { font-size: .9rem; color: var(--ink-2); }
 .method-item ul { padding-left: 18px; display: grid; gap: 4px; }
 .sources { font-size: .85rem; color: var(--ink-2); columns: 1; }
@@ -602,7 +602,7 @@ details.more[open] summary { margin-bottom: 14px; }
 .site-footer a { color: var(--bg); }
 .foot-grid { display: grid; gap: 28px; }
 @media (min-width: 860px) { .foot-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
-.site-footer h4 { color: var(--bg); font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 10px; }
+.site-footer h2 { color: var(--bg); font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 10px; }
 .site-footer ul { list-style: none; display: grid; gap: 6px; font-size: .9rem; }
 .site-footer p { font-size: .9rem; }
 .foot-bottom { margin-top: 36px; padding-top: 20px; border-top: 1px solid color-mix(in srgb, var(--bg) 18%, transparent); font-size: .8rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }

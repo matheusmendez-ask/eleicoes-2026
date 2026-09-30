@@ -161,7 +161,7 @@
     $('#ladder').innerHTML = D.legalScale.map((s) => `
       <div class="rung v-${s.id}">
         <div class="rung-step">${esc(s.step)}</div>
-        <h4>${esc(s.label)}</h4>
+        <h3>${esc(s.label)}</h3>
         <div class="who">${esc(s.who)}</div>
         <p>${rich(s.desc)}</p>
         <div class="count">${counts[s.id]}<small>propostas analisadas</small></div>
@@ -198,11 +198,11 @@
         </div>
         <div class="cand-body">
           <div>
-            <h5>Perfil jurídico das ${c.proposals.length} propostas</h5>
+            <h4>Perfil jurídico das ${c.proposals.length} propostas</h4>
             <div style="margin-top: 8px;">${verdictBar(c.proposals)}</div>
           </div>
           <div>
-            <h5>Propostas que mais exigem</h5>
+            <h4>Propostas que mais exigem</h4>
             <ul class="mini-list" style="margin-top: 8px;">
               ${highlights.map((p) => `<li><span>${esc(p.title)}</span>${chip(p.verdict)}</li>`).join('')}
             </ul>
@@ -380,7 +380,7 @@
     const fmt = (v) => (v >= 1000 ? `R$ ${(v / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 2 })} tri` : `R$ ${v} bi`);
 
     $('#budget-stack').innerHTML = b.items.map((i) => `
-      <button role="listitem" data-bitem="${i.id}" style="--bc:${i.color}; width:${pct(i.value)}%" aria-label="${esc(i.label)}: ${fmt(i.value)} (${pct(i.value).toFixed(1)}%)">
+      <button data-bitem="${i.id}" style="--bc:${i.color}; width:${pct(i.value)}%" aria-label="${esc(i.label)}: ${fmt(i.value)} (${pct(i.value).toFixed(1)}%)">
         ${pct(i.value) > 9 ? `<span>${pct(i.value).toFixed(0)}%</span>` : ''}
       </button>`).join('');
 
@@ -755,21 +755,31 @@
      Init
      ========================================================== */
   document.addEventListener('DOMContentLoaded', () => {
+    // Primeiro o que aparece na tela inicial; o resto quando o navegador estiver livre
     initTheme();
     renderHero();
     renderLadder();
     renderCandidates();
-    renderFilters();
-    renderMatrix();
-    initCompare();
-    renderRadar();
-    renderBudget();
-    renderContext();
-    renderFixes();
-    renderGlossary();
-    renderFooter();
-    initTooltips();
-    initModal();
-    initChrome();
+
+    const rest = () => {
+      renderFilters();
+      renderMatrix();
+      initCompare();
+      renderRadar();
+      renderBudget();
+      renderContext();
+      renderFixes();
+      renderGlossary();
+      renderFooter();
+      initTooltips();
+      initChrome();
+      initModal();
+      // Link direto para uma seção (#orcamento etc.): rola depois que ela existe
+      const target = /^#[a-z-]+$/.test(location.hash) && document.getElementById(location.hash.slice(1));
+      if (target) target.scrollIntoView();
+    };
+    if (/^#(p|dossie|comparar)[/-]/.test(location.hash) || /^#[a-z-]+$/.test(location.hash)) rest();
+    else if ('requestIdleCallback' in window) requestIdleCallback(rest, { timeout: 400 });
+    else setTimeout(rest, 0);
   });
 })();

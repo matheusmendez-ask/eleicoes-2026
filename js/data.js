@@ -680,7 +680,7 @@ const ELECTION_DATA = {
       party: "Missão",
       coalition: "Não informada no documento",
       vice: "Aroldo Medina",
-      color: "#B7791F",
+      color: "#975A16",
       initials: "RS",
       document: {
         title: "O Futuro é Glorioso — Resumo executivo do Livro Amarelo",
