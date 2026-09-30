@@ -62,6 +62,8 @@ for (const c of D.candidates) {
     else p.arts.forEach((a) => articles.has(a) || fail(`${pw}: artigo "${a}" não existe em articles`));
     if (p.quote && p.quote.split(/\s+/).length > 30) warn(`${pw}: citação com mais de 30 palavras`);
     if (p.contested !== undefined && typeof p.contested !== 'boolean') fail(`${pw}: "contested" deve ser booleano`);
+    if (!p.fiscal || !['gasto', 'economia', 'neutro', 'incerto'].includes(p.fiscal.effect)) fail(`${pw}: fiscal.effect deve ser gasto, economia, neutro ou incerto`);
+    if (!p.fiscal || !nonEmpty(p.fiscal.note)) fail(`${pw}: fiscal.note vazio`);
   }
 
   const e = c.economic || {};
@@ -72,6 +74,7 @@ for (const c of D.candidates) {
     if (!Number.isInteger(f.page) || f.page > doc.maxPage) fail(`${where}: economic.figures[${i}] com página inválida`);
   });
   if (!(e.figures || []).length && !nonEmpty(e.figuresNote)) fail(`${where}: sem cifras, informe economic.figuresNote`);
+  ['funding', 'gaps'].forEach((k) => (Array.isArray(e[k]) && e[k].length && e[k].every(nonEmpty)) || fail(`${where}: economic.${k} deve ser uma lista de textos`));
 }
 
 /* ---------- Artigos ---------- */
@@ -93,6 +96,12 @@ const sum = D.budget.items.reduce((s, i) => s + i.value, 0);
 if (Math.abs(sum - D.budget.total) / D.budget.total > 0.01) fail(`budget: itens somam ${sum}, total declarado ${D.budget.total}`);
 if (!D.budget.items.some((i) => i.id === 'livre')) fail('budget: item "livre" é obrigatório');
 D.budget.promises.forEach((p) => candIds.has(p.candidate) || fail(`budget.promises: candidato "${p.candidate}" desconhecido`));
+(D.budget.funnel || []).forEach((f, i) => (nonEmpty(f.label) && f.value > 0) || fail(`budget.funnel[${i}] inválido`));
+if (!D.budget.funnel?.length || D.budget.funnel[D.budget.funnel.length - 1].value !== D.budget.items.find((i) => i.id === 'livre').value) fail('budget.funnel deve terminar no valor livre do Executivo');
+(D.budget.debtSeries || []).forEach((d, i) => (nonEmpty(d.year) && d.value > 0 && d.value < 200) || fail(`budget.debtSeries[${i}] inválido`));
+if ((D.budget.debtSeries || []).length < 5) fail('budget.debtSeries precisa de pelo menos 5 pontos');
+(D.budget.debtFacts || []).forEach((f, i) => (nonEmpty(f.label) && nonEmpty(f.value) && isHttps(f.url)) || fail(`budget.debtFacts[${i}] inválido`));
+(D.budget.timeline || []).forEach((t, i) => (nonEmpty(t.year) && nonEmpty(t.text)) || fail(`budget.timeline[${i}] inválido`));
 
 /* ---------- Glossário ---------- */
 const aliasSeen = new Map();

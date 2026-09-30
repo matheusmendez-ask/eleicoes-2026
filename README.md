@@ -13,7 +13,7 @@ Site de jornalismo de dados que analisa, proposta por proposta, os planos de gov
 
 ## Como funciona
 
-Cada uma das **48 propostas** passa por três filtros:
+Cada uma das **48 propostas** passa por três filtros e recebe um quarto rótulo, o efeito nas contas públicas (aumenta gastos, economiza ou arrecada, neutro, incerto):
 
 1. **Está no plano?** Página e citação literal do PDF oficial, com link que abre na página certa.
 2. **O que precisa mudar na lei?** Classificação numa escada de 5 degraus: *só o governo → lei → lei complementar → emenda constitucional → inconstitucional*. Leis, decisões do STF e artigos da CF citados na análise levam à fonte oficial.
@@ -31,7 +31,8 @@ Cada uma das **48 propostas** passa por três filtros:
 - **Link por proposta** (`#p/renan_santos/estado-de-defesa`), com botões de copiar, WhatsApp, X e compartilhamento nativo. Cada proposta tem uma página estática com **imagem Open Graph gerada automaticamente**, para aparecer com prévia nas redes.
 - **Glossário contextual**: termos como *cláusula pétrea*, *PEC* e *GLO* ganham explicação flutuante onde aparecem no texto.
 - **Radar da CF/88**: os artigos mais "testados" pelos planos, com o texto e as propostas afetadas.
-- **Orçamento interativo** e, no dossiê de cada candidato, gráfico das cifras do plano comparadas ao espaço livre.
+- **A conta, do começo ao fim**: funil que mostra como R$ 6,5 trilhões de orçamento viram R$ 206 bilhões livres; gráfico da dívida bruta desde 2014; linha do tempo das regras que amarraram o orçamento; e um balanço de quantas propostas de cada candidato aumentam gastos, economizam ou não mexem nas contas.
+- **Dossiê por candidato** com leitura rápida e índice das propostas, efeito de cada proposta nas contas públicas, cifras do plano comparadas ao espaço livre, de onde viria o dinheiro segundo o plano e o que o plano não responde.
 - **Registro de correções**: tudo o que estava errado na primeira versão e como foi corrigido.
 
 <img src="docs/mobile-escuro.jpg" alt="Versão para celular no tema escuro" width="260" align="right">

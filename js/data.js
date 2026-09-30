@@ -101,6 +101,7 @@ const ELECTION_DATA = {
       proposals: [
         {
           id: "fim-escala-6x1",
+          fiscal: { effect: "incerto", note: "O custo recai sobre as empresas; no setor público exige mais contratações ou horas extras." },
           theme: "economia",
           title: "Fim da escala 6x1 e jornada de 40 horas sem corte de salário",
           plain: "Reduzir a jornada semanal máxima de 44 para 40 horas e acabar com a escala de seis dias de trabalho para um de folga.",
@@ -113,6 +114,7 @@ const ELECTION_DATA = {
         },
         {
           id: "salario-minimo",
+          fiscal: { effect: "gasto", note: "Cada R$ 1 de aumento real do mínimo custa cerca de R$ 400 milhões por ano em benefícios do INSS e BPC." },
           theme: "economia",
           title: "Continuar a valorização do salário mínimo",
           plain: "Manter reajustes do mínimo acima da inflação.",
@@ -124,6 +126,7 @@ const ELECTION_DATA = {
         },
         {
           id: "arcabouco-fiscal",
+          fiscal: { effect: "neutro", note: "Mantém a regra atual; não cria nem corta despesa." },
           theme: "fiscal",
           title: "Manter o novo arcabouço fiscal",
           plain: "Seguir limitando o crescimento dos gastos à regra criada em 2023 (LC 200/2023).",
@@ -135,6 +138,7 @@ const ELECTION_DATA = {
         },
         {
           id: "pec-seguranca",
+          fiscal: { effect: "gasto", note: "O programa Brasil Contra o Crime Organizado é citado em R$ 10 bi; um novo ministério tem custo de estrutura." },
           theme: "seguranca",
           title: "PEC da Segurança Pública e Ministério da Segurança",
           plain: "Dar à União papel de coordenação nacional da segurança e criar um ministério próprio para o tema.",
@@ -145,6 +149,7 @@ const ELECTION_DATA = {
         },
         {
           id: "regulacao-plataformas",
+          fiscal: { effect: "neutro", note: "Regulação sem gasto público relevante; pode gerar receita com multas." },
           theme: "instituicoes",
           title: "Regulação das redes sociais e plataformas digitais",
           plain: "Criar regras de responsabilidade e transparência para as big techs e os algoritmos.",
@@ -156,6 +161,7 @@ const ELECTION_DATA = {
         },
         {
           id: "petrobras-distribuicao",
+          fiscal: { effect: "incerto", note: "Subvenções a combustíveis saem do Tesouro; o risco da estatal recai sobre a União como controladora." },
           theme: "economia",
           title: "Petrobras de volta à distribuição e ação contra a volatilidade de preços",
           plain: "A estatal voltaria a vender combustível na ponta, e o governo seguiria usando subvenções para amortecer choques de preço.",
@@ -168,6 +174,7 @@ const ELECTION_DATA = {
         },
         {
           id: "fila-saude-risco",
+          fiscal: { effect: "gasto", note: "Exige mais consultas e cirurgias especializadas; o custeio do SUS já é piso constitucional." },
           theme: "social",
           title: "Fila única digital na saúde por risco clínico",
           plain: "Organizar consultas e exames especializados pela gravidade do caso, e não pela ordem de chegada (programa Agora Tem Especialistas).",
@@ -178,6 +185,7 @@ const ELECTION_DATA = {
         },
         {
           id: "desmatamento-zero",
+          fiscal: { effect: "gasto", note: "Fiscalização e recuperação dependem do orçamento de Ibama e ICMBio e de doações ao Fundo Amazônia." },
           theme: "ambiente",
           title: "Desmatamento líquido zero até 2030",
           plain: "Compensar toda a perda de vegetação com recuperação até 2030.",
@@ -189,6 +197,8 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        funding: ["Crescimento da arrecadação com a economia", "Tributação de altas rendas (super-ricos, offshores, fundos exclusivos), tratada como já feita", "Bancos públicos e fundos de participação para investimento"],
+        gaps: ["Custo do fim da escala 6x1 no setor público", "Fonte das subvenções a combustíveis", "Como conter a Previdência com o mínimo subindo acima da inflação"],
         figures: [
           { label: "Programa Brasil Contra o Crime Organizado", value: null, display: "R$ 10 bi no total, sem prazo", kind: "gasto", page: 27 },
           { label: "Emendas parlamentares (diagnóstico do plano)", value: 50, display: "R$ 50 bi/ano, 1/5 do discricionário", kind: "diagnóstico", page: 15 }
@@ -232,6 +242,7 @@ const ELECTION_DATA = {
       proposals: [
         {
           id: "presidios-el-salvador",
+          fiscal: { effect: "gasto", note: "Cinco presídios novos e custeio permanente: cada preso custa ao Estado mais de R$ 2 mil por mês." },
           theme: "seguranca",
           title: "5 presídios de segurança máxima no modelo de El Salvador",
           plain: "Criar um complexo federal (“TREVA”) sem celular, sem visita íntima e com visitas monitoradas.",
@@ -243,6 +254,7 @@ const ELECTION_DATA = {
         },
         {
           id: "fim-progressao-hediondos",
+          fiscal: { effect: "gasto", note: "Mais tempo de prisão significa mais vagas e custeio num sistema que já tem déficit de vagas." },
           theme: "seguranca",
           title: "Fim da progressão de regime para crimes hediondos",
           plain: "Condenados por crimes hediondos cumpririam toda a pena em regime fechado.",
@@ -254,6 +266,7 @@ const ELECTION_DATA = {
         },
         {
           id: "maioridade-penal",
+          fiscal: { effect: "gasto", note: "Amplia a população carcerária adulta." },
           theme: "seguranca",
           title: "Maioridade penal aos 16 anos (e punição a partir dos 14 para crimes graves)",
           plain: "Adolescentes passariam a responder como adultos por crimes.",
@@ -266,6 +279,7 @@ const ELECTION_DATA = {
         },
         {
           id: "castracao-quimica",
+          fiscal: { effect: "neutro", note: "Custo baixo de medicamentos; o obstáculo é jurídico, não fiscal." },
           theme: "seguranca",
           title: "Castração química obrigatória para estupradores condenados",
           plain: "Aplicar tratamento hormonal compulsório a condenados por estupro e abuso infantil.",
@@ -278,6 +292,7 @@ const ELECTION_DATA = {
         },
         {
           id: "abate-fuzil",
+          fiscal: { effect: "neutro", note: "Sem custo direto; risco de indenizações por letalidade policial." },
           theme: "seguranca",
           title: "“Bandido armado com fuzil na mão vai ser abatido”",
           plain: "Autorizar as forças de segurança a atirar em criminosos armados com fuzil.",
@@ -290,6 +305,7 @@ const ELECTION_DATA = {
         },
         {
           id: "militares-portos-aeroportos",
+          fiscal: { effect: "gasto", note: "Emprego permanente de tropas exige orçamento de Defesa; hoje a fiscalização é da PF e da Receita." },
           theme: "seguranca",
           title: "Marinha e Aeronáutica ocupando portos e aeroportos de forma permanente",
           plain: "Tropas especiais militares fariam o controle permanente de portos e aeroportos.",
@@ -302,6 +318,7 @@ const ELECTION_DATA = {
         },
         {
           id: "voucher-creche",
+          fiscal: { effect: "gasto", note: "Cada vaga em creche credenciada custa centenas de reais por mês; a conta depende do déficit de vagas." },
           theme: "social",
           title: "Voucher-creche quando faltar vaga na rede pública",
           plain: "Se não houver vaga pública, a família recebe um voucher para usar em creche privada credenciada até surgir a vaga.",
@@ -314,6 +331,7 @@ const ELECTION_DATA = {
         },
         {
           id: "infraestrutura-900-bi",
+          fiscal: { effect: "gasto", note: "R$ 225 bi por ano, mais que o espaço livre do orçamento; o plano aposta em PPPs e concessões para não sair do Tesouro." },
           theme: "economia",
           title: "R$ 900 bilhões em infraestrutura em 4 anos",
           plain: "Rodovias, ferrovias (Ferrogrão), hidrovias, portos e aeroportos com PPPs, concessões, BNDES e securitização de ativos da União.",
@@ -325,6 +343,7 @@ const ELECTION_DATA = {
         },
         {
           id: "licenca-ambiental-tacita",
+          fiscal: { effect: "neutro", note: "Sem gasto; o efeito é sobre risco ambiental e judicial." },
           theme: "ambiente",
           title: "Licença ambiental concedida automaticamente se o órgão não decidir no prazo",
           plain: "Se o governo demorar demais para analisar, a licença sai sozinha.",
@@ -336,6 +355,7 @@ const ELECTION_DATA = {
         },
         {
           id: "fracking",
+          fiscal: { effect: "economia", note: "Gera royalties e bônus de assinatura, sem gasto direto." },
           theme: "ambiente",
           title: "Liberar o fracking (gás não convencional)",
           plain: "Permitir a extração de gás de xisto por fraturamento hidráulico, “cumprindo a lei”.",
@@ -348,6 +368,7 @@ const ELECTION_DATA = {
         },
         {
           id: "reforma-judiciario",
+          fiscal: { effect: "neutro", note: "Sem efeito fiscal direto." },
           theme: "instituicoes",
           title: "Reforma do Judiciário: fim do foro criminal no STF e limite a decisões monocráticas",
           plain: "O STF deixaria de julgar autoridades em processos criminais, e as decisões individuais de ministros seriam limitadas.",
@@ -359,6 +380,7 @@ const ELECTION_DATA = {
         },
         {
           id: "fim-reeleicao",
+          fiscal: { effect: "neutro", note: "Sem efeito fiscal direto." },
           theme: "instituicoes",
           title: "Fim da reeleição para presidente",
           plain: "Mandatos presidenciais sem direito a um segundo período consecutivo.",
@@ -369,6 +391,8 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        funding: ["PPPs e concessões", "Securitização de ativos da União", "BNDES", "Corte de gastos (“Tesouraço”) e de pelo menos 10 ministérios"],
+        gaps: ["Divisão entre público e privado nos R$ 900 bi", "Custo de meio milhão de novas vagas prisionais", "Perda de receita com a redução da CDE e do IVA"],
         figures: [
           { label: "Infraestrutura (público + privado)", value: 225, display: "R$ 900 bi em 4 anos", kind: "gasto", page: 51 },
           { label: "Meta de crescimento do PIB", value: null, display: "4% ao ano", kind: "meta", page: 49 },
@@ -413,6 +437,7 @@ const ELECTION_DATA = {
       proposals: [
         {
           id: "faccoes-terrorismo",
+          fiscal: { effect: "gasto", note: "Penas de 35 a 45 anos elevam a população prisional por décadas; o fundo antiterrorismo seria bancado com bens confiscados." },
           theme: "seguranca",
           title: "Facções como “terrorismo doméstico”, com penas mínimas de 35 a 45 anos",
           plain: "Nova lei enquadraria facções que têm comando, território, armas e poder econômico como organizações terroristas.",
@@ -424,6 +449,7 @@ const ELECTION_DATA = {
         },
         {
           id: "regime-redad",
+          fiscal: { effect: "gasto", note: "Celas individuais e monitoramento exigem novos presídios federais." },
           theme: "seguranca",
           title: "Regime prisional especial (REDAD): progressão só após 90% da pena e monitoramento de conversas com advogados",
           plain: "Líderes de facção ficariam isolados, com conversas com advogados monitoradas e quase sem direito a progressão.",
@@ -436,6 +462,7 @@ const ELECTION_DATA = {
         },
         {
           id: "forcas-armadas-sem-glo",
+          fiscal: { effect: "gasto", note: "Emprego regular das Forças Armadas na segurança consome orçamento de Defesa." },
           theme: "seguranca",
           title: "Forças Armadas contra o crime organizado sem precisar decretar GLO",
           plain: "Militares atuariam de forma regular no combate às facções, sem o decreto de Garantia da Lei e da Ordem.",
@@ -448,6 +475,7 @@ const ELECTION_DATA = {
         },
         {
           id: "perda-bens-crime",
+          fiscal: { effect: "economia", note: "Bens confiscados viram receita do fundo, que o plano destina à segurança." },
           theme: "seguranca",
           title: "Perda de bens do crime independentemente da ação penal",
           plain: "Bens e criptoativos de facções poderiam ser tomados em processo próprio, com inversão do ônus da prova e venda antecipada.",
@@ -460,6 +488,7 @@ const ELECTION_DATA = {
         },
         {
           id: "despesas-abaixo-pib",
+          fiscal: { effect: "economia", note: "Se cumprida, abre espaço fiscal gradual; depende de conter Previdência e folha." },
           theme: "fiscal",
           title: "Despesas obrigatórias crescendo abaixo do PIB, sem cortes lineares nem aumento de impostos",
           plain: "Frear gastos como Previdência e folha para que cresçam menos que a economia.",
@@ -472,6 +501,7 @@ const ELECTION_DATA = {
         },
         {
           id: "emendas-criterios",
+          fiscal: { effect: "neutro", note: "Não reduz o total das emendas; muda a forma de aplicá-las." },
           theme: "fiscal",
           title: "Novos critérios para as emendas parlamentares, pactuados com o Congresso",
           plain: "Reduzir a pulverização das emendas e exigir planejamento, transparência e resultado.",
@@ -483,6 +513,7 @@ const ELECTION_DATA = {
         },
         {
           id: "fim-reeleicao",
+          fiscal: { effect: "neutro", note: "Sem efeito fiscal direto." },
           theme: "instituicoes",
           title: "Fim da reeleição, valendo já para o mandato iniciado em 2027",
           plain: "O próprio Caiado abriria mão de concorrer a um segundo mandato.",
@@ -493,6 +524,7 @@ const ELECTION_DATA = {
         },
         {
           id: "voto-distrital-misto",
+          fiscal: { effect: "neutro", note: "Sem efeito fiscal direto." },
           theme: "instituicoes",
           title: "Voto distrital misto para deputados",
           plain: "Parte dos deputados seria eleita por distritos e parte por lista partidária.",
@@ -504,6 +536,7 @@ const ELECTION_DATA = {
         },
         {
           id: "regulacao-sus",
+          fiscal: { effect: "neutro", note: "Reorganiza a fila com o mesmo orçamento; pode reduzir desperdício." },
           theme: "social",
           title: "Regulação inteligente do SUS: da fila cronológica à prioridade clínica",
           plain: "Consultas e cirurgias seriam agendadas pela gravidade e pelo prazo clínico, não pela ordem de chegada.",
@@ -514,6 +547,8 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        funding: ["Despesas obrigatórias crescendo abaixo do PIB", "Combate a fraudes em benefícios", "Bens confiscados do crime organizado (fundo não contingenciável)", "Sem aumento de impostos e sem cortes lineares"],
+        gaps: ["Custo do sistema prisional com penas de 35 a 45 anos", "Como frear a Previdência sem mexer no salário mínimo", "Valor em reais do ajuste pretendido"],
         figures: [],
         figuresNote: "Não encontramos no plano estimativas em reais do custo total das propostas nem da economia pretendida. A regra fiscal é descrita como proporção do PIB.",
         headline: "O ajuste mais detalhado, mas amarrado a gastos que a Constituição protege",
@@ -555,6 +590,7 @@ const ELECTION_DATA = {
       proposals: [
         {
           id: "semipresidencialismo",
+          fiscal: { effect: "neutro", note: "Sem efeito fiscal direto." },
           theme: "instituicoes",
           title: "Semipresidencialismo, com Primeiro-Ministro escolhido pelo Parlamento",
           plain: "O presidente dividiria o governo com um primeiro-ministro que depende do apoio da maioria parlamentar.",
@@ -566,6 +602,7 @@ const ELECTION_DATA = {
         },
         {
           id: "reforma-stf",
+          fiscal: { effect: "neutro", note: "Sem efeito fiscal direto." },
           theme: "instituicoes",
           title: "STF com 9 ministros, mandato de 8 anos e escolha pelas carreiras jurídicas",
           plain: "O presidente deixaria de indicar ministros; magistratura, MP e OAB escolheriam. Mínimo de 3 mulheres.",
@@ -577,6 +614,7 @@ const ELECTION_DATA = {
         },
         {
           id: "gestao-emocao-curriculo",
+          fiscal: { effect: "gasto", note: "A parte cara é o tempo integral nacional: cada matrícula integral custa bem mais que a parcial." },
           theme: "social",
           title: "Gestão da Emoção, Educação Financeira e Empreendedorismo no currículo",
           plain: "Três novos pilares nas escolas, dentro do tempo integral.",
@@ -587,6 +625,7 @@ const ELECTION_DATA = {
         },
         {
           id: "neuroinclusivo",
+          fiscal: { effect: "gasto", note: "Formação de professores e profissionais de apoio; parte da conta cabe a estados e municípios." },
           theme: "social",
           title: "Brasil Neuroinclusivo",
           plain: "Política nacional para estudantes com autismo, TDAH, dislexia e altas habilidades, com formação de professores.",
@@ -597,6 +636,7 @@ const ELECTION_DATA = {
         },
         {
           id: "banco-empreendedor",
+          fiscal: { effect: "gasto", note: "Juros de 5% a 6% com a Selic a 13,75% exigem subsídio do Tesouro (equalização) em cada empréstimo." },
           theme: "economia",
           title: "10 milhões de novos empreendedores e “Banco do Empreendedor”",
           plain: "Crédito de até R$ 20 mil a 5% ou 6% ao ano, via 10 mil clubes, coordenados por uma Secretaria ou Ministério do Empreendedorismo.",
@@ -608,6 +648,7 @@ const ELECTION_DATA = {
         },
         {
           id: "tele-saude",
+          fiscal: { effect: "gasto", note: "Plataforma e equipes médicas em escala nacional; parte pode substituir consultas presenciais." },
           theme: "social",
           title: "Tele Saúde Brasil",
           plain: "Maior plataforma pública de telemedicina do mundo, com atendimento digital em até 30 minutos nos casos compatíveis.",
@@ -619,6 +660,7 @@ const ELECTION_DATA = {
         },
         {
           id: "brasil-oasis",
+          fiscal: { effect: "gasto", note: "Infraestrutura hídrica e irrigação em 1.477 municípios; o plano cita parceiros internacionais como fonte." },
           theme: "economia",
           title: "Brasil Oásis no Semiárido",
           plain: "Irrigação de precisão e agroindústria em 1.477 municípios (31 milhões de pessoas), com meta de multiplicar por dez a exportação de frutas.",
@@ -629,6 +671,7 @@ const ELECTION_DATA = {
         },
         {
           id: "policia-foco",
+          fiscal: { effect: "neutro", note: "Remaneja servidores existentes, sem aumento de efetivo." },
           theme: "seguranca",
           title: "Polícia FOCO: converter 5% dos servidores municipais em força de segurança",
           plain: "Servidores já existentes nas prefeituras seriam remanejados para uma força municipal de prevenção.",
@@ -640,6 +683,7 @@ const ELECTION_DATA = {
         },
         {
           id: "deficit-zero",
+          fiscal: { effect: "economia", note: "Meta de equilíbrio; o plano não detalha de onde viriam os cortes." },
           theme: "fiscal",
           title: "Déficit próximo de zero “sem aventuras fiscais”",
           plain: "Compromisso genérico com equilíbrio das contas.",
@@ -651,6 +695,8 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        funding: ["Parte dos lucros das estatais para o Banco do Empreendedor", "PPPs (BEE nas Estradas)", "Fundos internacionais e do Golfo (Brasil Oásis)", "Fundo internacional contra a fome (US$ 177–342 bi/ano, externo)"],
+        gaps: ["Custo total dos 18 projetos", "Subsídio anual do crédito a 5–6% ao ano", "Como conciliar tudo isso com “déficit próximo de zero”"],
         figures: [
           { label: "Crédito por empreendedor", value: null, display: "até R$ 20 mil, a 5–6% ao ano", kind: "gasto", page: 98 },
           { label: "Fundo Internacional de Erradicação da Fome", value: null, display: "US$ 177–342 bi/ano, com financiamento internacional", kind: "fundo", page: 157 }
@@ -695,6 +741,7 @@ const ELECTION_DATA = {
       proposals: [
         {
           id: "direito-penal-inimigo",
+          fiscal: { effect: "gasto", note: "Superpresídios e federalização de casos elevam custos de segurança e prisões." },
           theme: "seguranca",
           title: "Direito Penal do Inimigo (Jakobs)",
           plain: "Membros de facções seriam tratados como “inimigos”: perda de direitos políticos e civis, restrição de locomoção e penas desproporcionais.",
@@ -706,6 +753,7 @@ const ELECTION_DATA = {
         },
         {
           id: "estado-de-defesa",
+          fiscal: { effect: "gasto", note: "Operações militares e GLO em série consomem orçamento de Defesa." },
           theme: "seguranca",
           title: "“Sucessivos decretos de Estado de Defesa” em áreas dominadas por facções",
           plain: "Usar o Estado de Defesa, que permite restringir direitos, de forma repetida para combater o crime.",
@@ -717,6 +765,7 @@ const ELECTION_DATA = {
         },
         {
           id: "desindexacao-beneficios",
+          fiscal: { effect: "economia", note: "Principal fonte do ajuste: a economia cresce a cada ano em que o mínimo sobe acima da inflação." },
           theme: "fiscal",
           title: "Desindexar aposentadorias e benefícios assistenciais do salário mínimo",
           plain: "Benefícios seriam corrigidos só pela inflação, mesmo que o salário mínimo tenha aumento real.",
@@ -729,6 +778,7 @@ const ELECTION_DATA = {
         },
         {
           id: "desvinculacao-pisos",
+          fiscal: { effect: "economia", note: "Libera centenas de bilhões de destinação obrigatória; não corta por si só, mas dá liberdade para cortar." },
           theme: "fiscal",
           title: "Desvincular os pisos de saúde e educação",
           plain: "O governo deixaria de ser obrigado a gastar percentuais mínimos da receita em saúde e educação.",
@@ -740,6 +790,7 @@ const ELECTION_DATA = {
         },
         {
           id: "consolidacao-municipal",
+          fiscal: { effect: "economia", note: "Reduz custo de câmaras e prefeituras; o efeito se dilui ao longo de anos." },
           theme: "instituicoes",
           title: "Grande Consolidação Municipal: de 5.570 para cerca de 1.650 municípios",
           plain: "Fundir municípios pequenos e sem receita própria, por meio da PEC 188/2019 e de um novo marco legal.",
@@ -752,6 +803,7 @@ const ELECTION_DATA = {
         },
         {
           id: "clausula-antimafia",
+          fiscal: { effect: "neutro", note: "Sem efeito fiscal direto." },
           theme: "instituicoes",
           title: "Cláusula Antimáfia: STJ dissolve prefeituras capturadas pelo crime",
           plain: "O mandato seria extinto e uma comissão federal administraria o município por até 24 meses.",
@@ -764,6 +816,7 @@ const ELECTION_DATA = {
         },
         {
           id: "frentes-cidadas",
+          fiscal: { effect: "incerto", note: "Troca transferência de renda por salário de frentes de trabalho; o custo depende do número de vagas e pode superar o do Bolsa Família." },
           theme: "social",
           title: "Trocar o Bolsa Família por “Frentes Cidadãs” de trabalho",
           plain: "A transferência de renda seria substituída por frentes de trabalho remuneradas.",
@@ -775,6 +828,7 @@ const ELECTION_DATA = {
         },
         {
           id: "cotas-autonomia-universitaria",
+          fiscal: { effect: "neutro", note: "Sem efeito fiscal direto." },
           theme: "social",
           title: "Abolir cotas e substituir a autonomia universitária por “alinhamento estratégico”",
           plain: "Fim da reserva de vagas e universidades federais subordinadas a metas do governo.",
@@ -786,6 +840,7 @@ const ELECTION_DATA = {
         },
         {
           id: "zonas-economicas-especiais",
+          fiscal: { effect: "gasto", note: "Isenções são renúncia de receita; o retorno depende de as indústrias de fato se instalarem." },
           theme: "economia",
           title: "Zonas Econômicas Especiais no Nordeste (modelos Shenzhen e Shannon)",
           plain: "Áreas com suspensão de tributos de importação e regime próprio de IBS/CBS para atrair indústria exportadora.",
@@ -797,6 +852,7 @@ const ELECTION_DATA = {
         },
         {
           id: "crime-favelizacao",
+          fiscal: { effect: "gasto", note: "O próprio plano estima R$ 1,2 a 1,5 trilhão em 10 anos para a desfavelização." },
           theme: "social",
           title: "“Crime de favelização” e demolição administrativa em 48 horas",
           plain: "Punir loteadores ilegais e demolir construções não habitadas em áreas públicas ou de risco sem ordem judicial.",
@@ -809,6 +865,8 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        funding: ["Desindexação de benefícios do salário mínimo", "Desvinculação dos pisos de saúde e educação", "Reforma administrativa e fim dos supersalários", "Consolidação municipal"],
+        gaps: ["Conta consolidada: corte de R$ 250 bi/ano ao lado de R$ 1,2–1,5 tri em desfavelização e +2% do PIB em infraestrutura", "Impacto recessivo do corte sobre as pequenas cidades", "Custo das Frentes Cidadãs"],
         figures: [
           { label: "Ajuste fiscal necessário (citado)", value: 250, display: "R$ 250 bi/ano", kind: "corte", page: 10 },
           { label: "Economia projetada com a PEC", value: 220, display: "R$ 1,1 tri até 2031", kind: "corte", page: 10 },
@@ -902,6 +960,37 @@ const ELECTION_DATA = {
       { id: "outras", label: "Outras obrigatórias (abono, seguro-desemprego, Fundeb, pisos, precatórios…)", value: 480, group: "obrig", color: "#A1887F" },
       { id: "emendas", label: "Emendas parlamentares", value: 50, group: "livre", color: "#2563EB" },
       { id: "livre", label: "Livre para o Executivo (investimentos e custeio)", value: 206, group: "livre", color: "#0B7A4B" }
+    ],
+    funnel: [
+      { label: "Orçamento total da União", value: 6530, note: "Tudo o que a lei autoriza gastar em 2026" },
+      { label: "Juros e rolagem da dívida", value: 3137, out: true, note: "Quase metade só refinancia e remunera a dívida" },
+      { label: "Transferências a estados e municípios", value: 640, out: true, note: "Fundos de participação e repasses constitucionais" },
+      { label: "Despesa primária da União", value: 2556, note: "O que o governo federal de fato gasta em serviços e benefícios" },
+      { label: "Obrigatório por lei ou pela Constituição", value: 2300, out: true, note: "Previdência, salários, BPC, Bolsa Família, pisos, precatórios" },
+      { label: "Emendas parlamentares", value: 50, out: true, note: "Decididas pelo Congresso" },
+      { label: "Livre para o Executivo", value: 206, note: "Investimentos e custeio que o presidente escolhe" }
+    ],
+    debtSeries: [
+      { year: "2014", value: 56.3 }, { year: "2015", value: 65.5 }, { year: "2016", value: 69.8 }, { year: "2017", value: 73.7 },
+      { year: "2018", value: 75.3 }, { year: "2019", value: 74.4 }, { year: "2020", value: 86.9 }, { year: "2021", value: 78.3 },
+      { year: "2022", value: 71.7 }, { year: "2023", value: 73.8 }, { year: "2024", value: 76.3 }, { year: "2025", value: 78.7 },
+      { year: "jul/2026", value: 82.5 }
+    ],
+    debtNote: "Dívida Bruta do Governo Geral em % do PIB, dezembro de cada ano; o último ponto é julho de 2026. Fonte: Banco Central.",
+    debtFacts: [
+      { label: "Juros incorporados à dívida em 2025", value: "8,9 pontos do PIB", note: "cerca de R$ 1,1 trilhão, mais de cinco vezes o espaço livre do orçamento", url: "https://www.cnnbrasil.com.br/economia/money/macroeconomia/bc-divida-bruta-do-governo-geral-sobe-e-fecha-2025-em-787-do-pib/" },
+      { label: "Resultado primário de 2025", value: "déficit de R$ 55 bi", note: "receitas menos despesas, antes dos juros", url: "https://agenciabrasil.ebc.com.br/economia/noticia/2026-01/contas-publicas-tem-deficit-de-r-55021-bilhoes-em-2025" },
+      { label: "Meta para 2026", value: "superávit de R$ 34,2 bi", note: "0,25% do PIB, com bandas de tolerância", url: "https://www12.senado.leg.br/noticias/materias/2026/01/15/orcamento-2026-e-sancionado-com-previsao-de-superavit-de-rs-34-2-bi" }
+    ],
+    timeline: [
+      { year: "1988", text: "A Constituição cria os pisos de saúde e educação e garante que nenhum benefício do INSS fique abaixo do salário mínimo." },
+      { year: "2000", text: "Lei de Responsabilidade Fiscal: toda despesa nova precisa de fonte permanente." },
+      { year: "2015", text: "Emendas individuais dos parlamentares passam a ser de execução obrigatória (EC 86)." },
+      { year: "2016", text: "Teto de Gastos congela a despesa real por 20 anos (EC 95); dura até 2023." },
+      { year: "2019", text: "Emendas de bancada também viram impositivas (EC 100)." },
+      { year: "2021", text: "Renda básica aos vulneráveis entra na Constituição (EC 114)." },
+      { year: "2023", text: "Arcabouço fiscal substitui o teto: despesa cresce entre 0,6% e 2,5% acima da inflação (LC 200/2023)." },
+      { year: "2024", text: "Ganho real do salário mínimo fica limitado à mesma faixa do arcabouço (Lei 15.077/2024)." }
     ],
     promises: [
       { candidate: "flavio_bolsonaro", label: "Infraestrutura de R$ 900 bi em 4 anos", perYear: 225, note: "Público e privado, sem divisão informada" },

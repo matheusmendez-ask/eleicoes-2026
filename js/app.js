@@ -71,6 +71,14 @@
   const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   const ext = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener">${label}</a>`;
   const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
+  const FISCAL = {
+    gasto: { label: 'Aumenta gastos', cls: 'f-gasto' },
+    economia: { label: 'Economiza ou arrecada', cls: 'f-economia' },
+    neutro: { label: 'Sem efeito direto', cls: 'f-neutro' },
+    incerto: { label: 'Efeito incerto', cls: 'f-incerto' }
+  };
+  const fiscalChip = (p) => `<span class="chip ${FISCAL[p.fiscal.effect].cls}">${FISCAL[p.fiscal.effect].label}</span>`;
+  const countFiscal = (list) => Object.keys(FISCAL).reduce((acc, k) => ((acc[k] = list.filter((p) => p.fiscal.effect === k).length), acc), {});
 
   /* ==========================================================
      Texto rico: leis/decisões viram links, artigos da CF apontam
@@ -440,6 +448,77 @@
     }).join('');
   }
 
+  function renderFunnel() {
+    const f = D.budget.funnel;
+    const max = f[0].value;
+    const fmt = (v) => (v >= 1000 ? `R$ ${(v / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 2 })} tri` : `R$ ${v} bi`);
+    $('#funnel').innerHTML = f.map((step, i) => `
+      <div class="fn-row${step.out ? ' fn-out' : ''}${i === f.length - 1 ? ' fn-last' : ''}">
+        <div class="fn-label"><b>${step.out ? '− ' : ''}${esc(step.label)}</b><span>${esc(step.note)}</span></div>
+        <div class="fn-bar"><i style="width:${Math.max(0.6, (step.value / max) * 100)}%"></i></div>
+        <div class="fn-val">${fmt(step.value)}</div>
+      </div>`).join('');
+  }
+
+  function renderDebt() {
+    const d = D.budget.debtSeries;
+    const W = 720, H = 260, L = 44, R = 16, T = 16, B = 34;
+    const ys = d.map((x) => x.value);
+    const min = Math.floor((Math.min(...ys) - 5) / 10) * 10;
+    const maxV = Math.ceil((Math.max(...ys) + 3) / 10) * 10;
+    const x = (i) => L + (i / (d.length - 1)) * (W - L - R);
+    const y = (v) => T + (1 - (v - min) / (maxV - min)) * (H - T - B);
+    const path = d.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.value).toFixed(1)}`).join(' ');
+    const ticks = [];
+    for (let v = min; v <= maxV; v += 10) ticks.push(v);
+    const last = d[d.length - 1];
+    $('#debt-chart').innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" class="line-chart" role="img" aria-label="Dívida bruta do governo geral, de ${d[0].year} a ${last.year}, em % do PIB">
+        ${ticks.map((v) => `<g><line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" class="grid"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" class="tick">${v}%</text></g>`).join('')}
+        ${d.map((p, i) => (i % 2 === 0 || i === d.length - 1) ? `<text x="${x(i)}" y="${H - 10}" text-anchor="middle" class="tick">${esc(p.year.replace('jul/', ''))}</text>` : '').join('')}
+        <path d="${path}" class="line"/>
+        ${d.map((p, i) => `<g class="pt" data-i="${i}"><circle cx="${x(i)}" cy="${y(p.value)}" r="9" class="hit"/><circle cx="${x(i)}" cy="${y(p.value)}" r="${i === d.length - 1 ? 5 : 3.5}" class="dot"/></g>`).join('')}
+        <text x="${x(d.length - 1) - 10}" y="${y(last.value) - 12}" text-anchor="end" class="lbl">${last.value.toLocaleString('pt-BR')}% (${esc(last.year)})</text>
+        <text x="${x(0) + 8}" y="${y(d[0].value) + 18}" class="lbl">${d[0].value.toLocaleString('pt-BR')}%</text>
+      </svg>
+      <div class="chart-tip" id="debt-tip" hidden></div>`;
+    const tip = $('#debt-tip');
+    const svg = $('#debt-chart svg');
+    $$('#debt-chart .pt').forEach((g) => {
+      const show = () => {
+        const p = d[+g.dataset.i];
+        tip.textContent = `${p.year}: ${p.value.toLocaleString('pt-BR')}% do PIB`;
+        tip.hidden = false;
+        const r = g.querySelector('.dot').getBoundingClientRect();
+        const box = svg.getBoundingClientRect();
+        tip.style.left = `${Math.min(Math.max(r.left - box.left + r.width / 2, 60), box.width - 60)}px`;
+        tip.style.top = `${r.top - box.top - 10}px`;
+      };
+      g.addEventListener('mouseenter', show);
+      g.addEventListener('mouseleave', () => { tip.hidden = true; });
+      g.addEventListener('focus', show);
+    });
+    $('#debt-note').textContent = D.budget.debtNote;
+    $('#debt-table').innerHTML = `<table><thead><tr><th>Ano</th><th>% do PIB</th></tr></thead><tbody>${d.map((p) => `<tr><td>${esc(p.year)}</td><td>${p.value.toLocaleString('pt-BR')}</td></tr>`).join('')}</tbody></table>`;
+    $('#debt-facts').innerHTML = D.budget.debtFacts.map((f) => `<div class="fact"><span class="stat-label">${esc(f.label)}</span><div class="stat-value">${esc(f.value)}</div><div class="stat-note">${esc(f.note)}</div><a class="stat-src" href="${esc(f.url)}" target="_blank" rel="noopener">fonte</a></div>`).join('');
+  }
+
+  function renderTimeline() {
+    $('#timeline').innerHTML = D.budget.timeline.map((t) => `<li><b>${esc(t.year)}</b><span>${rich(t.text, { terms: false })}</span></li>`).join('');
+  }
+
+  function renderBalance() {
+    $('#balance').innerHTML = `
+      <table class="bal-table">
+        <thead><tr><th>Candidato</th><th><span class="th-long">Aumentam gastos</span><span class="th-short">Gastam</span></th><th><span class="th-long">Economizam ou arrecadam</span><span class="th-short">Economizam</span></th><th><span class="th-long">Neutras ou incertas</span><span class="th-short">Neutras</span></th><th></th></tr></thead>
+        <tbody>${D.candidates.map((c) => {
+          const f = countFiscal(c.proposals);
+          return `<tr><td><a class="bal-who" href="#dossie/${c.id}/economia">${avatar(c, 'avatar-xs')}<span>${esc(c.shortName)}</span></a></td><td class="f-gasto"><b>${f.gasto}</b></td><td class="f-economia"><b>${f.economia}</b></td><td><b>${f.neutro + f.incerto}</b></td><td class="bal-more"><a class="link" href="#dossie/${c.id}/economia">Ver economia</a></td></tr>`;
+        }).join('')}</tbody>
+      </table>
+      <p class="stat-note">Contagem das propostas analisadas neste site, não do plano inteiro. O tamanho de cada efeito varia: uma proposta pode custar R$ 10 bi e outra, R$ 200 bi.</p>`;
+  }
+
   /* ---------- Cifras (aba Economia do dossiê) ---------- */
   const kindLabel = { gasto: 'gasto', corte: 'corte', meta: 'meta', fundo: 'fundo externo', 'diagnóstico': 'diagnóstico' };
 
@@ -556,7 +635,7 @@
   function proposalCard(p, { withWho = false, link = true } = {}) {
     const c = p.cand;
     return `
-      <article class="panel">
+      <article class="panel" id="prop-${p.id}">
         <div class="panel-top">
           ${link ? `<a class="panel-title" href="#p/${p.key}">${withWho ? `${esc(c.shortName)}: ` : ''}${esc(p.title)}</a>` : '<b class="panel-title">Em uma frase</b>'}
           <span class="prop-side">${chip(p.verdict)}${contestedTag(p)}</span>
@@ -565,6 +644,8 @@
         ${p.quote ? `<blockquote class="quote">“${esc(p.quote)}”<cite>${esc(c.document.title)}, p. ${esc(p.page)}</cite></blockquote>` : ''}
         <h4 class="label">O que diz a Constituição</h4>
         <p>${rich(p.legal)}</p>
+        <h4 class="label">Efeito nas contas públicas</h4>
+        <p class="fiscal-line">${fiscalChip(p)}<span>${rich(p.fiscal.note)}</span></p>
         <div class="card-links">
           <a class="link" href="${pdfUrl(c, p.page)}" target="_blank" rel="noopener">Ver no plano, p. ${esc(p.page)} ${icon('external', 14)}</a>
           ${p.arts.map((a) => `<button class="link" data-article="${a}">${esc(D.articles[a].title)}</button>`).join('')}
@@ -589,15 +670,49 @@
   }
 
   function dossierBody(c, tab) {
+    const mine = allProposals.filter((p) => p.cand.id === c.id);
     if (tab === 'propostas') {
-      return D.themes.filter((t) => c.proposals.some((p) => p.theme === t.id)).map((t) =>
-        `<h3>${esc(t.label)}</h3>` + allProposals.filter((p) => p.cand.id === c.id && p.theme === t.id).map((p) => proposalCard(p)).join('')
-      ).join('');
+      const v = countBy(mine);
+      const f = countFiscal(mine);
+      const sentence = D.legalScale.filter((sc) => v[sc.id]).map((sc) => `<b>${v[sc.id]}</b> ${sc.id === 'exec' ? 'o governo faz sozinho' : sc.id === 'lei' ? (v[sc.id] === 1 ? 'precisa de lei' : 'precisam de lei') : sc.id === 'lc' ? (v[sc.id] === 1 ? 'precisa de lei complementar' : 'precisam de lei complementar') : sc.id === 'pec' ? (v[sc.id] === 1 ? 'exige emenda constitucional' : 'exigem emenda constitucional') : (v[sc.id] === 1 ? 'esbarra na Constituição' : 'esbarram na Constituição')}`).join(', ');
+      return `
+        <div class="quick">
+          <h3>Leitura rápida</h3>
+          <p>Das ${mine.length} propostas analisadas, ${sentence}. Nas contas públicas, <b>${f.gasto}</b> ${f.gasto === 1 ? 'aumenta' : 'aumentam'} gastos, <b>${f.economia}</b> ${f.economia === 1 ? 'economiza ou arrecada' : 'economizam ou arrecadam'} e <b>${f.neutro + f.incerto}</b> ${f.neutro + f.incerto === 1 ? 'tem' : 'têm'} efeito neutro ou incerto.</p>
+          ${verdictBar(mine)}
+          <ol class="index">
+            ${D.themes.filter((t) => mine.some((p) => p.theme === t.id)).map((t) => `
+              <li><span class="index-theme">${esc(t.label)}</span>
+                ${mine.filter((p) => p.theme === t.id).map((p) => `<a href="#prop-${p.id}" data-jump="prop-${p.id}"><span>${esc(p.title)}</span>${chip(p.verdict)}</a>`).join('')}
+              </li>`).join('')}
+          </ol>
+        </div>
+        ${D.themes.filter((t) => mine.some((p) => p.theme === t.id)).map((t) =>
+          `<h3>${esc(t.label)}</h3>` + mine.filter((p) => p.theme === t.id).map((p) => proposalCard(p)).join('')
+        ).join('')}`;
     }
     if (tab === 'economia') {
+      const f = countFiscal(mine);
+      const col = (k) => `
+        <div class="bal-col ${FISCAL[k].cls}">
+          <div class="bal-head"><b>${f[k]}</b> ${esc(FISCAL[k].label.toLowerCase())}</div>
+          ${mine.filter((p) => p.fiscal.effect === k).map((p) => `<a href="#p/${p.key}">${esc(p.title)}</a>`).join('') || '<span class="cmp-empty">nenhuma</span>'}
+        </div>`;
       return `
         <h3>${esc(c.economic.headline)}</h3>
+        <div class="start">
+          <div><span class="stat-label">Ponto de partida</span><div class="stat-value">82,5%</div><div class="stat-note">do PIB em dívida bruta (jul/2026), em alta</div></div>
+          <div><span class="stat-label">Juros da dívida</span><div class="stat-value">~R$ 1,1 tri</div><div class="stat-note">incorporados em 2025, 8,9 pontos do PIB</div></div>
+          <div><span class="stat-label">Espaço livre</span><div class="stat-value">R$ ${FREE_SPACE} bi</div><div class="stat-note">por ano para o presidente decidir</div></div>
+        </div>
+        <h3>Balanço das propostas nas contas públicas</h3>
+        <div class="balance">${col('gasto')}${col('economia')}${col('neutro')}${f.incerto ? col('incerto') : ''}</div>
         ${figuresChart(c)}
+        <div class="two-col">
+          <div><h3>De onde viria o dinheiro, segundo o plano</h3><ul class="bullets">${c.economic.funding.map((x) => `<li>${rich(x)}</li>`).join('')}</ul></div>
+          <div><h3>O que o plano não responde</h3><ul class="bullets gaps">${c.economic.gaps.map((x) => `<li>${rich(x)}</li>`).join('')}</ul></div>
+        </div>
+        <h3>Nossa leitura</h3>
         <ul class="bullets">${c.economic.points.map((x) => `<li>${rich(x)}</li>`).join('')}</ul>
         <p>${rich(c.economic.analysis)}</p>`;
     }
@@ -686,7 +801,7 @@
     let m;
     document.title = BASE_TITLE;
     if ((m = h.match(/^p\/([\w-]+\/[\w-]+)$/)) && byKey[m[1]]) return openProposal(m[1]);
-    if ((m = h.match(/^dossie[/-]([\w-]+)$/)) && candById[m[1]]) return openDossier(m[1]);
+    if ((m = h.match(/^dossie[/-]([\w-]+)(?:\/(geral|propostas|economia|contexto))?$/)) && candById[m[1]]) return openDossier(m[1], m[2] || 'geral');
     if ((m = h.match(/^comparar\/([\w-]+),([\w-]+)$/)) && candById[m[1]] && candById[m[2]]) {
       if (modal.classList.contains('open')) closeModal();
       state.cmp = [m[1], m[2]];
@@ -699,8 +814,14 @@
 
   function initModal() {
     document.addEventListener('click', (e) => {
-      const t = e.target.closest('[data-article],[data-tab],[data-close],[data-copy],[data-native-share]');
+      const t = e.target.closest('[data-article],[data-tab],[data-close],[data-copy],[data-native-share],[data-jump]');
       if (!t) return;
+      if (t.dataset.jump) {
+        e.preventDefault();
+        const el = document.getElementById(t.dataset.jump);
+        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1200); }
+        return;
+      }
       if (t.dataset.close !== undefined) {
         if (t.tagName !== 'A') closeModal();
         return;
@@ -785,6 +906,10 @@
       initCompare();
       renderRadar();
       renderBudget();
+      renderFunnel();
+      renderDebt();
+      renderTimeline();
+      renderBalance();
       renderContext();
       renderFixes();
       renderGlossary();
