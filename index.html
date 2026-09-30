@@ -67,29 +67,91 @@
   <main id="conteudo">
     <!-- ============ ABERTURA ============ -->
     <section class="hero" id="topo">
-      <div class="container">
-        <p class="kicker">Eleição presidencial · 1º turno em 4 de outubro de 2026</p>
-        <h1>O que eles prometem. <em>O que a Constituição deixa.</em></h1>
-        <p class="lede">
-          Lemos os planos de governo de cinco candidatos à Presidência e checamos cada proposta em três perguntas:
-          ela está mesmo no documento? Que lei precisaria mudar? Cabe no orçamento?
-        </p>
-        <div class="hero-cta">
-          <a href="#propostas" class="btn btn-primary">Explorar as propostas</a>
-          <a href="#como-ler" class="btn btn-ghost">Como ler este site</a>
+      <div class="hero-media" aria-hidden="true">
+        <img id="hero-poster" class="hero-poster" src="assets/hero.jpg" alt="" decoding="async" fetchpriority="high">
+        <video id="hero-video" class="hero-video" muted loop playsinline preload="metadata">
+          <source src="assets/hero.mp4" type="video/mp4">
+        </video>
+        <div class="hero-shade"></div>
+      </div>
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="kicker">Eleição presidencial · 1º turno em 4 de outubro de 2026</p>
+          <h1>O que eles prometem. <em>O que a Constituição deixa.</em></h1>
+          <p class="lede">
+            Lemos os planos de governo de cinco candidatos à Presidência e checamos cada proposta em três perguntas:
+            ela está mesmo no documento? Que lei precisaria mudar? Cabe no orçamento?
+          </p>
+          <div class="hero-cta">
+            <a href="#posse" class="btn btn-light">Começar pelo essencial</a>
+            <a href="#propostas" class="btn btn-outline">Ir direto às propostas</a>
+          </div>
+          <div class="hero-faces">
+            <div class="faces" id="hero-faces"></div>
+            <small id="hero-count"></small>
+          </div>
         </div>
-        <div class="hero-faces">
-          <div class="faces" id="hero-faces"></div>
-          <small id="hero-count"></small>
-        </div>
-
-        <ol class="steps" aria-label="Método em três filtros">
+        <ol class="steps steps-hero" aria-label="Método em três filtros">
           <li><b>Está no plano?</b><span>Citamos a página do PDF oficial, com link.</span></li>
           <li><b>O que precisa mudar na lei?</b><span>De um decreto do governo até a emenda constitucional.</span></li>
           <li><b>Cabe no orçamento?</b><span>Cerca de 90% do gasto federal já tem destino fixo.</span></li>
         </ol>
+      </div>
+      <a class="hero-scroll" href="#posse" aria-label="Rolar para a próxima seção"><span></span></a>
+    </section>
 
-        <div class="stats-strip" id="hero-stats"></div>
+    <div class="container"><div class="stats-strip stats-hero" id="hero-stats"></div></div>
+
+    <!-- ============ A POSSE (scrollytelling) ============ -->
+    <section class="posse" id="posse" aria-label="Imagine que você tomou posse">
+      <div class="container posse-grid">
+        <div class="posse-sticky">
+          <div class="posse-card" id="posse-card">
+            <div class="posse-label" id="posse-label">Orçamento autorizado para 2027</div>
+            <div class="posse-number"><span id="posse-num">6,53</span> <span class="posse-unit" id="posse-unit">trilhões</span></div>
+            <div class="posse-bar"><i id="posse-bar" style="width:100%"></i></div>
+            <div class="posse-sub" id="posse-sub">100% do que a lei autoriza gastar</div>
+            <div class="posse-dots" id="posse-dots" hidden>
+              <div class="dots-block"><div class="dots-title"><b id="dots-dep">308</b> de 513 deputados</div><div class="dots" id="dots-camara"></div></div>
+              <div class="dots-block"><div class="dots-title"><b id="dots-sen">49</b> de 81 senadores</div><div class="dots" id="dots-senado"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="posse-steps">
+          <div class="posse-step" data-step="0">
+            <span class="eyebrow">1º de janeiro de 2027</span>
+            <h2>Imagine que você acabou de tomar posse.</h2>
+            <p>Na mesa, o orçamento do seu primeiro ano: <b>R$ 6,5 trilhões</b>. Parece muito dinheiro para cumprir promessas. Vamos ver quanto dele é seu de verdade.</p>
+          </div>
+          <div class="posse-step" data-step="1">
+            <h2>Antes de qualquer promessa, quase metade vai para a dívida.</h2>
+            <p><b>R$ 3,1 trilhões</b> pagam juros e refinanciam o que o país já deve. Com a dívida em 82,5% do PIB e juro de 13,75% ao ano, essa é a maior fatia de todas.</p>
+          </div>
+          <div class="posse-step" data-step="2">
+            <h2>Depois, a parte dos estados e municípios.</h2>
+            <p><b>R$ 640 bilhões</b> seguem para governadores e prefeitos por regra constitucional. Não passam pela sua caneta.</p>
+          </div>
+          <div class="posse-step" data-step="3">
+            <h2>Do que sobra, quase tudo já tem dono.</h2>
+            <p>Aposentadorias, salários de servidores, BPC, Bolsa Família, pisos de saúde e educação, precatórios: <b>R$ 2,3 trilhões</b> obrigatórios por lei ou pela Constituição.</p>
+          </div>
+          <div class="posse-step" data-step="4">
+            <h2>Sobram R$ 206 bilhões.</h2>
+            <p>Depois de R$ 50 bilhões em emendas do Congresso, é isso que você pode decidir onde gastar: <b>3% do orçamento</b>. Cada promessa nova precisa caber aí, ou tirar dinheiro de outro lugar.</p>
+          </div>
+          <div class="posse-step" data-step="5">
+            <h2>Para mudar as regras, você precisa deles.</h2>
+            <p>Desindexar aposentadorias, mexer nos pisos, criar novas penas? Boa parte exige emenda constitucional: <b>308 deputados e 49 senadores</b>, em dois turnos. O presidente nem vota, nem sanciona.</p>
+          </div>
+          <div class="posse-step" data-step="6">
+            <h2>É por isso que este site existe.</h2>
+            <p>Cada promessa dos cinco candidatos passa por três filtros: está no plano? O que precisa mudar na lei? Cabe nesses R$ 206 bilhões? Vamos começar.</p>
+            <div class="hero-cta">
+              <a href="#como-ler" class="btn btn-primary">Entender a escada da Constituição</a>
+              <a href="#candidatos" class="btn btn-ghost">Ver os candidatos</a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -200,20 +262,22 @@
           </p>
         </header>
 
+        <div class="conta-top">
         <div class="budget-card">
           <h3>De R$ 6,5 trilhões a R$ 206 bilhões</h3>
           <p>Como o orçamento encolhe até chegar ao que o presidente pode decidir. Valores aproximados da LOA 2026, em reais.</p>
           <div class="funnel" id="funnel"></div>
         </div>
 
-        <div class="budget-wrap">
-          <div class="budget-card">
+        <div class="budget-card">
             <h3>Para onde vai a despesa primária da União em 2026</h3>
             <p id="budget-note"></p>
             <div class="stack" id="budget-stack" role="group" aria-label="Composição do orçamento"></div>
             <div class="budget-legend" id="budget-legend"></div>
-          </div>
+        </div>
+        </div>
 
+        <div class="budget-wrap budget-side-wide">
           <div class="budget-side">
             <div class="budget-card">
               <span class="stat-label">Espaço livre do Executivo</span>
@@ -242,13 +306,18 @@
           <div class="facts" id="debt-facts"></div>
         </div>
 
-        <h3 class="sub-title">Como o orçamento ficou tão amarrado</h3>
-        <p class="lede">Cada regra foi criada para proteger um direito ou conter um abuso. Somadas, deixam pouco espaço para qualquer presidente.</p>
-        <ol class="timeline" id="timeline"></ol>
-
-        <h3 class="sub-title">O que as propostas fazem com a conta</h3>
-        <p class="lede">Quantas propostas de cada candidato aumentam gastos, economizam ou não mexem nas contas.</p>
-        <div id="balance"></div>
+        <div class="conta-bottom">
+          <div>
+            <h3 class="sub-title">Como o orçamento ficou tão amarrado</h3>
+            <p class="lede">Cada regra foi criada para proteger um direito ou conter um abuso. Somadas, deixam pouco espaço para qualquer presidente.</p>
+            <ol class="timeline" id="timeline"></ol>
+          </div>
+          <div>
+            <h3 class="sub-title">O que as propostas fazem com a conta</h3>
+            <p class="lede">Quantas propostas de cada candidato aumentam gastos, economizam ou não mexem nas contas.</p>
+            <div id="balance"></div>
+          </div>
+        </div>
 
         <div class="note">
           <b>Por que é tão rígido</b>

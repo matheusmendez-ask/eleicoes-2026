@@ -858,6 +858,126 @@
   }
 
   /* ==========================================================
+     Abertura: vídeo de fundo e contadores
+     ========================================================== */
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function initHeroMedia() {
+    const hero = $('#topo');
+    const v = $('#hero-video');
+    const img = $('#hero-poster');
+    if (!v) return;
+    img.addEventListener('error', () => { img.remove(); if (!hero.classList.contains('video-on')) hero.classList.add('no-media'); });
+    const fail = () => { v.remove(); hero.classList.remove('video-on'); if (!document.contains(img)) hero.classList.add('no-media'); };
+    v.addEventListener('error', fail, true);
+    if (reduceMotion) { v.remove(); return; }
+    v.addEventListener('playing', () => hero.classList.add('video-on'), { once: true });
+    // Só toca quando visível; poupa bateria e banda
+    const io = new IntersectionObserver((en) => en.forEach((e) => { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }), { threshold: .1 });
+    io.observe(v);
+  }
+
+  function tween(el, from, to, format, ms = 900) {
+    if (reduceMotion) { el.textContent = format(to); return; }
+    const t0 = performance.now();
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / ms);
+      const e = 1 - Math.pow(1 - k, 3);
+      el.textContent = format(from + (to - from) * e);
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ---------- A posse ---------- */
+  function initPosse() {
+    const card = $('#posse-card');
+    if (!card) return;
+    const num = $('#posse-num'), unit = $('#posse-unit'), bar = $('#posse-bar'), label = $('#posse-label'), sub = $('#posse-sub'), dots = $('#posse-dots');
+    const TOTAL = 6530;
+    const steps = [
+      { v: 6530, label: 'Orçamento autorizado para 2027', sub: '100% do que a lei autoriza gastar' },
+      { v: 3393, label: 'Depois dos juros e da rolagem da dívida', sub: 'R$ 3,1 tri a menos, 48% do total' },
+      { v: 2556, label: 'Depois das transferências a estados e municípios', sub: 'Despesa primária da União' },
+      { v: 256, label: 'Depois das despesas obrigatórias', sub: 'R$ 2,3 tri já têm dono' },
+      { v: 206, label: 'Livre para o presidente decidir', sub: '3% do orçamento, depois das emendas', warn: true },
+      { dots: true, label: 'Quórum para mudar a Constituição', sub: '3/5 de cada Casa, em dois turnos' },
+      { v: 206, label: 'Cada promessa precisa caber aqui', sub: 'ou tirar dinheiro de outro lugar', warn: true }
+    ];
+    const camara = $('#dots-camara'), senado = $('#dots-senado');
+    camara.innerHTML = Array.from({ length: 513 }, () => '<i></i>').join('');
+    senado.innerHTML = Array.from({ length: 81 }, () => '<i></i>').join('');
+    let cur = 0;
+    let shown = TOTAL;
+    const fmt = (v) => (v >= 1000 ? (v / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : Math.round(v).toLocaleString('pt-BR'));
+    const apply = (i) => {
+      const st = steps[i];
+      label.textContent = st.label;
+      sub.textContent = st.sub;
+      card.classList.toggle('warn', !!st.warn);
+      if (st.dots) {
+        dots.hidden = false;
+        $('.posse-number', card).hidden = true;
+        $('.posse-bar', card).hidden = true;
+        const light = (el, n) => $$('i', el).forEach((d, k) => setTimeout(() => d.classList.add('on'), reduceMotion ? 0 : Math.min(k * 3, 900)) && k < n);
+        $$('i', camara).forEach((d) => d.classList.remove('on'));
+        $$('i', senado).forEach((d) => d.classList.remove('on'));
+        $$('i', camara).slice(0, 308).forEach((d, k) => setTimeout(() => d.classList.add('on'), reduceMotion ? 0 : k * 2));
+        $$('i', senado).slice(0, 49).forEach((d, k) => setTimeout(() => d.classList.add('on'), reduceMotion ? 0 : 300 + k * 8));
+        void light;
+        return;
+      }
+      dots.hidden = true;
+      $('.posse-number', card).hidden = false;
+      $('.posse-bar', card).hidden = false;
+      const to = st.v;
+      const unitTo = to >= 1000 ? 'trilhões' : 'bilhões';
+      // Evita animar entre unidades diferentes (tri → bi)
+      const from = (shown >= 1000) === (to >= 1000) ? shown : to;
+      unit.textContent = unitTo;
+      tween(num, from, to, fmt);
+      bar.style.width = `${Math.max(1.2, (to / TOTAL) * 100)}%`;
+      shown = to;
+    };
+    apply(0);
+    $$('.posse-step')[0].classList.add('active');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        const i = +en.target.dataset.step;
+        $$('.posse-step').forEach((el) => el.classList.toggle('active', el === en.target));
+        if (i !== cur) { cur = i; apply(i); }
+      });
+    }, { rootMargin: '-40% 0px -40% 0px' });
+    $$('.posse-step').forEach((el) => io.observe(el));
+  }
+
+  /* ---------- Contadores nos indicadores ---------- */
+  function initCounters() {
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        io.unobserve(en.target);
+        const el = en.target;
+        const raw = el.textContent.trim();
+        const m = raw.match(/^([^0-9]*)([0-9][0-9.,]*)(.*)$/);
+        if (!m) return;
+        const numStr = m[2];
+        const decimals = (numStr.split(',')[1] || '').length;
+        const value = parseFloat(numStr.replace(/\./g, '').replace(',', '.'));
+        if (!isFinite(value)) return;
+        const fmtN = (v) => v.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+        const span = document.createElement('span');
+        el.textContent = '';
+        el.append(m[1], span, m[3]);
+        tween(span, 0, value, fmtN, 1100);
+      });
+    }, { threshold: .6 });
+    $$('.stats-strip .stat-value, .ctx-card .stat-value, .big-number').forEach((el) => io.observe(el));
+  }
+
+  /* ==========================================================
      Navegação e progresso
      ========================================================== */
   function initChrome() {
@@ -897,6 +1017,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     renderHero();
+    initHeroMedia();
+    initPosse();
     renderLadder();
     renderCandidates();
 
@@ -915,6 +1037,7 @@
       renderGlossary();
       renderFooter();
       initTooltips();
+      initCounters();
       initChrome();
       initModal();
       const target = /^#[a-z-]+$/.test(location.hash) && document.getElementById(location.hash.slice(1));
