@@ -3,503 +3,342 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planos de Governo Brasil 2026 // Raio-X Constitucional e Econômico</title>
-  <meta name="description" content="Análise comparativa e profunda dos planos de governo dos 5 principais candidatos à presidência do Brasil em 2026: Lula, Flávio Bolsonaro, Ronaldo Caiado, Augusto Cury e Renan Santos. Resumo, limitações constitucionais (CF/88), limitações econômicas e contexto do país.">
-  <meta name="keywords" content="eleições 2026 brasil, planos de governo 2026, lula, flavio bolsonaro, ronaldo caiado, augusto cury, renan santos livro amarelo, constituicao 1988, arcabouco fiscal">
-  <meta name="author" content="BEN - Análise Política e Constitucional Independente">
-  
-  <!-- Favicon SVG inline -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23060913' stroke='%2338BDF8' stroke-width='4'/><polygon points='50,15 85,50 50,85 15,50' fill='%230284C7' opacity='0.3'/><circle cx='50' cy='50' r='20' fill='%23EAB308'/></svg>">
-  
-  <!-- CSS Stylesheet -->
+  <title>Raio-X dos Planos de Governo 2026</title>
+  <meta name="description" content="O que cada candidato promete e o que a Constituição e o orçamento permitem. Análise de 5 planos de governo das eleições presidenciais de 2026, proposta por proposta, com página do documento original e avaliação jurídica.">
+  <meta name="theme-color" content="#0B7A4B">
+  <meta property="og:title" content="Raio-X dos Planos de Governo 2026">
+  <meta property="og:description" content="Promessas × Constituição × orçamento: 48 propostas de 5 candidatos, checadas no documento original.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230B7A4B'/><path d='M44 44 64 64V44z' fill='%23E8B20E'/><text x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia' font-weight='700' font-size='34' fill='white'>R</text></svg>">
+  <script>
+    // Aplica o tema salvo antes da pintura para evitar "flash"
+    try { const t = localStorage.getItem('raiox-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
-  <!-- Live Macroeconomic Indicators Ticker -->
-  <aside class="ticker-bar" aria-label="Indicadores Macroeconômicos em Tempo Real">
-    <div class="container ticker-wrapper">
-      <div class="ticker-title">
-        <span class="ticker-pulse" aria-hidden="true"></span>
-        <span>Radar Brasil 2026</span>
-      </div>
-      <div class="ticker-items" id="ticker-items-list">
-        <div class="ticker-item">
-          <span>Dívida Bruta (DBGG/PIB):</span>
-          <strong>78,6%</strong>
-          <span class="ticker-badge-crit">Alerta</span>
-        </div>
-        <div class="ticker-item">
-          <span>Taxa Selic:</span>
-          <strong>10,75% a.a.</strong>
-          <span class="ticker-badge-warn">Juros Reais Elevados</span>
-        </div>
-        <div class="ticker-item">
-          <span>Rigidez Orçamentária:</span>
-          <strong>94,3% Comprometido</strong>
-          <span class="ticker-badge-crit">Engessado</span>
-        </div>
-        <div class="ticker-item">
-          <span>Emendas Parlamentares:</span>
-          <strong>R$ 53,2 bi/ano</strong>
-          <span class="ticker-badge-warn">Impositivo</span>
-        </div>
-        <div class="ticker-item">
-          <span>Homicídios Anuais:</span>
-          <strong>39.500 mortes</strong>
-          <span class="ticker-badge-crit">Crise Faccional</span>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Sticky Main Navbar -->
-  <header class="navbar" id="main-navbar">
-    <div class="container nav-container">
-      <a href="#hero" class="nav-brand" id="brand-logo-link">
-        <div class="nav-logo-icon" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>
-        <div class="nav-brand-text">
-          <div class="nav-brand-title">
-            <span>BRASIL</span>
-            <span class="nav-brand-year">2026</span>
-          </div>
-          <span class="nav-brand-sub">Raio-X dos Planos de Governo</span>
-        </div>
+  <header class="site-header">
+    <div class="container header-row">
+      <a href="#topo" class="brand" aria-label="Raio-X 2026, início">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span class="brand-text"><b>Raio-X 2026</b><span>Planos de governo sob a lupa</span></span>
       </a>
-
-      <!-- Navigation Links -->
-      <nav aria-label="Navegação Principal">
-        <ul class="nav-links">
-          <li><a href="#planos" class="nav-link" id="nav-link-planos">Os 5 Planos</a></li>
-          <li><a href="#comparador" class="nav-link" id="nav-link-comparador">Comparador</a></li>
-          <li><a href="#radar-cf88" class="nav-link" id="nav-link-radar">Radar CF/88</a></li>
-          <li><a href="#simulador" class="nav-link" id="nav-link-simulador">Simulador Fiscal</a></li>
-          <li><a href="#contexto" class="nav-link" id="nav-link-contexto">Contexto do País</a></li>
-          <li><a href="#glossario" class="nav-link" id="nav-link-glossario">Glossário</a></li>
-        </ul>
+      <nav class="nav" aria-label="Seções">
+        <a href="#como-ler">Como ler</a>
+        <a href="#candidatos">Candidatos</a>
+        <a href="#propostas">Propostas</a>
+        <a href="#constituicao">Constituição</a>
+        <a href="#orcamento">Orçamento</a>
+        <a href="#transparencia">Método</a>
       </nav>
-
-      <!-- Actions -->
-      <div class="nav-actions">
-        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema claro/escuro" aria-label="Alternar tema claro ou escuro">
-          <span id="theme-toggle-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
-          </span>
+      <div class="header-actions">
+        <button class="icon-btn" id="theme-btn" aria-label="Alternar tema claro/escuro">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         </button>
-
-        <a href="#comparador" class="btn-primary-header" id="btn-quick-compare">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
-          Comparar Candidatos
-        </a>
+        <button class="icon-btn menu-btn" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
       </div>
     </div>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Seções (menu)">
+      <a href="#como-ler">Como ler</a>
+      <a href="#candidatos">Candidatos</a>
+      <a href="#propostas">Propostas</a>
+      <a href="#constituicao">Constituição</a>
+      <a href="#orcamento">Orçamento</a>
+      <a href="#contexto">Contexto</a>
+      <a href="#transparencia">Método e correções</a>
+      <a href="#glossario">Glossário</a>
+    </nav>
+    <div class="progress" id="progress" aria-hidden="true"></div>
   </header>
 
-  <!-- Hero Section -->
-  <main>
-    <section class="hero-section" id="hero">
-      <div class="hero-bg-overlay" aria-hidden="true"></div>
-      <div class="hero-gradient-overlay" aria-hidden="true"></div>
-
-      <div class="container hero-content">
-        <div class="hero-badge-pill">
-          <span class="hero-badge-dot"></span>
-          <span>ELEIÇÃO PRESIDENCIAL BRASIL 2026 • DOSSIÊ ANALÍTICO INDEPENDENTE</span>
-        </div>
-
-        <h1 class="hero-title">
-          Planos de Governo sob a Lupa: <br>
-          <span class="text-gradient">Orçamento, Poder e a Constituição de 1988</span>
-        </h1>
-
-        <p class="hero-description">
-          Uma radiografia técnica, profunda e imparcial dos 5 principais projetos para o futuro do Brasil: 
-          <strong>Luiz Inácio Lula da Silva</strong>, <strong>Flávio Bolsonaro</strong>, <strong>Ronaldo Caiado</strong>, 
-          <strong>Augusto Cury</strong> e <strong>Renan Santos</strong>. Confronte o discurso oficial com as 
-          <strong>limitações constitucionais expressas</strong>, as <strong>amarras fiscais</strong> e a realidade do país.
-        </p>
-
-        <!-- Hero Macro Metrics Grid -->
-        <div class="hero-metrics-grid" id="hero-macro-metrics">
-          <div class="hero-stat-card">
-            <div class="hero-stat-header">
-              <span>Dívida Bruta (DBGG)</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <div class="hero-stat-val">78,6%</div>
-            <div class="hero-stat-sub">do PIB brasileiro em risco de escalada</div>
-          </div>
-
-          <div class="hero-stat-card">
-            <div class="hero-stat-header">
-              <span>Taxa Selic</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            </div>
-            <div class="hero-stat-val">10,75%</div>
-            <div class="hero-stat-sub">Juros reais de ~6,5% sufocam investimentos</div>
-          </div>
-
-          <div class="hero-stat-card">
-            <div class="hero-stat-header">
-              <span>Orçamento Engessado</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </div>
-            <div class="hero-stat-val">94,3%</div>
-            <div class="hero-stat-sub">Despesas obrigatórias fixadas em lei</div>
-          </div>
-
-          <div class="hero-stat-card">
-            <div class="hero-stat-header">
-              <span>Emendas do Congresso</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-            </div>
-            <div class="hero-stat-val">R$ 53,2 bi</div>
-            <div class="hero-stat-sub">Impositivas e controladas pelo Parlamento</div>
-          </div>
-        </div>
-
-        <!-- Real-Time Search & Category Filters -->
-        <div class="search-filter-container">
-          <div class="search-input-wrapper">
-            <span class="search-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </span>
-            <input 
-              type="text" 
-              class="search-input" 
-              id="search-candidates-input" 
-              placeholder="Pesquisar por tema, proposta ou artigo constitucional (ex: 'segurança', 'previdência', 'voucher', 'Art. 5º', 'teto')..."
-              aria-label="Pesquisar nos planos de governo"
-            >
-          </div>
-
-          <div class="filter-tags-group" id="filter-tags-group">
-            <span class="filter-label">Filtros Rápidos:</span>
-            <button class="filter-btn active" data-filter="all" id="filter-btn-all">Todos os Candidatos</button>
-            <button class="filter-btn" data-filter="seguranca" id="filter-btn-seguranca">Segurança & Crime</button>
-            <button class="filter-btn" data-filter="fiscal" id="filter-btn-fiscal">Ajuste Fiscal & Dívida</button>
-            <button class="filter-btn" data-filter="constituicao" id="filter-btn-constituicao">Atritos na CF/88</button>
-            <button class="filter-btn" data-filter="social" id="filter-btn-social">Saúde & Educação</button>
-            <button class="filter-btn" data-filter="infra" id="filter-btn-infra">Agro & Infraestrutura</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 1: CANDIDATE CARDS (THE 5 PLANS) -->
-    <section class="section-padding" id="planos">
+  <main id="conteudo">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="topo">
       <div class="container">
-        <header class="section-header">
-          <span class="section-tag">Análise Individualizada</span>
-          <h2 class="section-title">Os 5 Principais Planos de Governo</h2>
-          <p class="section-subtitle">
-            Cada síntese abaixo foi construída a partir da leitura direta dos documentos oficiais registrados para a disputa presidencial de 2026, 
-            confrontada com as cláusulas pétreas da Carta de 1988 e os limites fiscais do Estado brasileiro.
-          </p>
-        </header>
-
-        <!-- Dynamic Candidate Cards Grid -->
-        <div class="candidates-grid" id="candidates-cards-grid">
-          <!-- Populated by js/app.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 2: INTERACTIVE COMPARATOR -->
-    <section class="section-padding comparator-section" id="comparador">
-      <div class="container">
-        <header class="section-header">
-          <span class="section-tag">Matriz Analítica</span>
-          <h2 class="section-title">Comparador Direto de Propostas</h2>
-          <p class="section-subtitle">
-            Selecione quais candidatos deseja confrontar lado a lado e filtre pelo eixo temático de interesse.
-          </p>
-        </header>
-
-        <!-- Comparator Toolbar -->
-        <div class="comparator-toolbar">
-          <div class="candidate-toggle-row">
-            <span class="toggle-group-title">Selecione os Candidatos na Comparação:</span>
-            <div class="candidate-selector-chips" id="candidate-selector-chips">
-              <!-- Populated by js/app.js -->
+        <div class="hero-grid">
+          <div>
+            <span class="pill"><span class="dot"></span>Eleição presidencial · 1º turno em 4 de outubro de 2026</span>
+            <h1>O que eles prometem. <em>O que a Constituição deixa.</em></h1>
+            <p class="lede">
+              Lemos os planos de governo de cinco candidatos à Presidência e checamos cada proposta em três perguntas:
+              ela está mesmo no documento? Que lei precisaria mudar? Cabe no orçamento?
+            </p>
+            <div class="hero-cta">
+              <a href="#propostas" class="btn btn-primary">Explorar as propostas
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </a>
+              <a href="#como-ler" class="btn btn-ghost">Como ler este site</a>
+            </div>
+            <div class="hero-faces">
+              <div class="faces" id="hero-faces"></div>
+              <small id="hero-count"></small>
             </div>
           </div>
 
-          <div class="comparator-axes-nav" id="comparator-axes-nav">
-            <button class="axis-tab-btn active" data-axis="overview" id="axis-btn-overview">Visão Geral & Lema</button>
-            <button class="axis-tab-btn" data-axis="security" id="axis-btn-security">Segurança Pública</button>
-            <button class="axis-tab-btn" data-axis="fiscal" id="axis-btn-fiscal">Estratégia Fiscal</button>
-            <button class="axis-tab-btn" data-axis="social" id="axis-btn-social">Saúde, Educação & Social</button>
-            <button class="axis-tab-btn" data-axis="constitutional" id="axis-btn-constitutional">Limitações Constitucionais</button>
-            <button class="axis-tab-btn" data-axis="economic" id="axis-btn-economic">Limitações Econômicas</button>
-          </div>
-        </div>
-
-        <!-- Side-by-Side Comparison Grid -->
-        <div class="comparison-grid" id="comparison-grid">
-          <!-- Populated by js/app.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3: CONSTITUTIONAL RADAR (CF/88) -->
-    <section class="section-padding" id="radar-cf88">
-      <div class="container">
-        <header class="section-header">
-          <span class="section-tag">O Teste da Carta Magna</span>
-          <h2 class="section-title">Radar Constitucional da CF/88</h2>
-          <p class="section-subtitle">
-            A Constituição Federal de 1988 impõe amarras pétreas e garantias que bloqueiam medidas populistas ou de exceção. 
-            Clique em qualquer artigo abaixo para ver a citação legal, o histórico do STF e quais propostas entram em rota de colisão.
-          </p>
-        </header>
-
-        <!-- Constitutional Cards Grid -->
-        <div class="radar-grid" id="constitutional-radar-grid">
-          <!-- Populated by js/app.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 4: BUDGET & FISCAL SIMULATOR (OGU) -->
-    <section class="section-padding" id="simulador">
-      <div class="container">
-        <header class="section-header">
-          <span class="section-tag">A Realidade dos Números</span>
-          <h2 class="section-title">Simulador de Viabilidade Orçamentária (OGU)</h2>
-          <p class="section-subtitle">
-            O Orçamento Geral da União de mais de R$ 5,6 Trilhões possui 94,3% de suas despesas carimbadas por lei e pela Constituição. 
-            Veja abaixo o que resta para investimentos e simule os impactos das propostas dos candidatos.
-          </p>
-        </header>
-
-        <div class="budget-simulator-container">
-          <!-- Visual Bar Representation -->
-          <div class="budget-visual-bar-wrapper">
-            <div class="budget-bar-labels">
-              <span style="color: #FB7185;">Despesas Obrigatórias por Lei (94,3%) - R$ 5,28 Trilhões</span>
-              <span style="color: #38BDF8;">Despesas Discricionárias (5,7%) - R$ 320 Bilhões</span>
-            </div>
-            <div class="budget-bar-container" role="progressbar" aria-valuenow="94.3" aria-valuemin="0" aria-valuemax="100">
-              <div class="budget-bar-segment-mandatory" title="Despesas Obrigatórias (94,3%)">94,3% OBRIGATÓRIO (Previdência, Folha, Pisos, Precatórios)</div>
-              <div class="budget-bar-segment-discretionary" title="Despesas Discricionárias (5,7%)">5,7%</div>
-            </div>
-          </div>
-
-          <!-- Breakdown Columns -->
-          <div class="budget-breakdown-columns">
-            <div>
-              <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-primary);">Onde o Dinheiro Público está Comprometido:</h3>
-              <div class="budget-items-list" id="budget-mandatory-list">
-                <!-- Populated by js/app.js -->
+          <aside class="hero-card reveal" aria-label="Método em três filtros">
+            <h3>Três filtros para cada promessa</h3>
+            <p>Uma proposta só vira política pública se passar pelos três.</p>
+            <div class="filter-steps">
+              <div class="filter-step">
+                <span class="ico" style="background: var(--brand-soft)" aria-hidden="true">📄</span>
+                <div><b>1. Está no plano?</b><span>Citamos a página do PDF oficial, com link.</span></div>
               </div>
-
-              <h4 style="font-size: 0.95rem; font-weight: 800; margin: 1.5rem 0 0.75rem; color: #38BDF8;">Margem Real para Investimentos & Manutenção:</h4>
-              <div class="budget-items-list" id="budget-discretionary-list">
-                <!-- Populated by js/app.js -->
+              <div class="filter-step">
+                <span class="ico" style="background: var(--v-lei-bg)" aria-hidden="true">⚖️</span>
+                <div><b>2. O que precisa mudar na lei?</b><span>De um simples decreto até a emenda constitucional.</span></div>
+              </div>
+              <div class="filter-step">
+                <span class="ico" style="background: var(--v-pec-bg)" aria-hidden="true">💰</span>
+                <div><b>3. Cabe no orçamento?</b><span>Cerca de 90% do gasto federal já tem destino fixo.</span></div>
               </div>
             </div>
+          </aside>
+        </div>
 
-            <!-- Interactive Scenario Tester -->
-            <div class="simulator-interactive-box">
-              <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-primary);">Simulador: Teste as Propostas</h3>
-              <p style="font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 1rem;">Selecione um plano de governo para verificar o que acontece com as contas públicas e com a legalidade:</p>
+        <div class="stats-strip" id="hero-stats"></div>
+      </div>
+    </section>
 
-              <div class="scenario-pills-row">
-                <button class="scenario-pill-btn active" data-scenario="cenario_missao" id="scn-btn-missao">
-                  <strong>Renan Santos (Missão):</strong> Corte fiscal de R$ 250 bi e desindexação
-                </button>
-                <button class="scenario-pill-btn" data-scenario="cenario_flavio" id="scn-btn-flavio">
-                  <strong>Flávio Bolsonaro:</strong> R$ 900 bi em infraestrutura + Voucher-Creche
-                </button>
-                <button class="scenario-pill-btn" data-scenario="cenario_caiado" id="scn-btn-caiado">
-                  <strong>Ronaldo Caiado:</strong> Trava de despesas correntes e Terrorismo Doméstico
-                </button>
-                <button class="scenario-pill-btn" data-scenario="cenario_cury" id="scn-btn-cury">
-                  <strong>Augusto Cury:</strong> 10 mi microempresas, Brasil Oásis e Tele Saúde
-                </button>
-                <button class="scenario-pill-btn" data-scenario="cenario_lula" id="scn-btn-lula">
-                  <strong>Lula:</strong> Aumento real do salário mínimo, Novo PAC e Arcabouço
-                </button>
-              </div>
+    <!-- ============ COMO LER ============ -->
+    <section class="section section-alt" id="como-ler">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">1</span>Como ler</span>
+          <h2>A escada da Constituição</h2>
+          <p>
+            Todo presidente governa dentro de regras. Quanto mais alta a proposta na escada, mais votos ela exige.
+            No último degrau estão as medidas que nem uma emenda constitucional consegue aprovar.
+          </p>
+        </header>
 
-              <div class="scenario-result-box" id="scenario-result-box">
-                <!-- Populated by js/app.js -->
+        <div class="explain reveal">
+          <span class="explain-icon" aria-hidden="true">i</span>
+          <div>
+            <strong>Por que isso importa?</strong>
+            <p>
+              Um presidente eleito tem maioria só na própria caneta. Para aprovar uma PEC, precisa de 308 dos 513 deputados
+              e 49 dos 81 senadores, em dois turnos. Um plano cheio de propostas nos degraus 4 e 5 depende de um Congresso que o presidente não controla,
+              ou do aval do STF.
+            </p>
+          </div>
+        </div>
+
+        <div class="ladder reveal" id="ladder"></div>
+        <div class="ladder-arrow" aria-hidden="true"><span>Mais fácil</span><span></span><span>Mais difícil</span></div>
+      </div>
+    </section>
+
+    <!-- ============ CANDIDATOS ============ -->
+    <section class="section" id="candidatos">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">2</span>Os planos</span>
+          <h2>Cinco candidatos, cinco visões de país</h2>
+          <p>
+            Cada cartão resume a tese central do plano e mostra quantas propostas analisadas caem em cada degrau da escada.
+            Abra o dossiê para ver os detalhes.
+          </p>
+        </header>
+        <div class="cand-grid" id="cand-grid"></div>
+      </div>
+    </section>
+
+    <!-- ============ PROPOSTAS ============ -->
+    <section class="section section-alt" id="propostas">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">3</span>Proposta por proposta</span>
+          <h2>Compare o que cada um propõe, tema a tema</h2>
+          <p>Filtre por tema, candidato ou degrau jurídico. Clique numa proposta para ler a explicação e o trecho original.</p>
+        </header>
+
+        <div class="toolbar">
+          <label class="search" for="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span class="sr-only">Buscar propostas</span>
+            <input id="search" type="search" placeholder="Buscar: presídio, salário mínimo, STF, creche…" autocomplete="off">
+          </label>
+          <div class="seg" id="theme-filter" role="group" aria-label="Filtrar por tema"></div>
+          <div class="seg" id="cand-filter" role="group" aria-label="Filtrar por candidato"></div>
+          <div class="seg" id="verdict-filter" role="group" aria-label="Filtrar por degrau jurídico"></div>
+        </div>
+
+        <p class="stat-note" id="matrix-count" aria-live="polite" style="margin-bottom: 12px;"></p>
+        <div class="matrix" id="matrix"></div>
+      </div>
+    </section>
+
+    <!-- ============ CONSTITUIÇÃO ============ -->
+    <section class="section" id="constituicao">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">4</span>Radar da CF/88</span>
+          <h2>Os artigos da Constituição mais testados pelos planos</h2>
+          <p>Estes são os dispositivos citados nas análises, do mais acionado ao menos. Clique para ler o texto e ver quais propostas esbarram nele.</p>
+        </header>
+        <div class="radar-grid" id="radar"></div>
+        <div id="radar-more"></div>
+      </div>
+    </section>
+
+    <!-- ============ ORÇAMENTO ============ -->
+    <section class="section section-alt" id="orcamento">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">5</span>A conta</span>
+          <h2>Quanto dinheiro sobra para cumprir promessas?</h2>
+          <p>
+            O orçamento federal de 2026 soma R$ 6,5 trilhões, mas quase metade é juros e rolagem da dívida. Da despesa primária,
+            a maior parte já tem destino fixo por lei ou pela Constituição.
+          </p>
+        </header>
+
+        <div class="budget-wrap">
+          <div class="budget-card reveal">
+            <h3>Para onde vai a despesa primária da União (2026)</h3>
+            <p id="budget-note"></p>
+            <div class="stack" id="budget-stack" role="list" aria-label="Composição do orçamento"></div>
+            <div class="budget-legend" id="budget-legend"></div>
+            <div class="explain" style="margin:22px 0 0">
+              <span class="explain-icon" aria-hidden="true">?</span>
+              <div>
+                <strong>Por que é tão rígido?</strong>
+                <p>A Constituição garante que nenhum benefício do INSS seja menor que o salário mínimo, fixa gastos mínimos em saúde e educação e obriga o pagamento das emendas. Cada real novo precisa sair de algum lugar: cortar outro gasto, arrecadar mais ou mudar a Constituição.</p>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- SECTION 5: COUNTRY CONTEXT & TRILEMMA -->
-    <section class="section-padding" id="contexto">
-      <div class="container">
-        <header class="section-header">
-          <span class="section-tag">Radiografia Nacional</span>
-          <h2 class="section-title">Contexto do País & O Trilema Republicano</h2>
-          <p class="section-subtitle">
-            O mandatário eleito em 2026 enfrentará uma tempestade perfeita de desafios fiscais, climáticos, de segurança pública 
-            e hiperfragmentação parlamentar.
-          </p>
-        </header>
-
-        <!-- Trilemma Feature Card -->
-        <div class="trilemma-card">
-          <h3 style="font-size: 1.4rem; font-weight: 800; color: #FFFFFF; text-align: center; margin-bottom: 0.5rem;">O Trilema Republicano Brasileiro</h3>
-          <p style="text-align: center; color: var(--text-secondary); max-width: 780px; margin: 0 auto; font-size: 0.95rem;">
-            Qualquer proposta que prometa resolver um dos lados sem equacionar os outros dois colapsa na realidade política e judicial de Brasília:
-          </p>
-
-          <div class="trilemma-axes-grid">
-            <div class="trilemma-axis-box">
-              <div class="trilemma-axis-title">1. Sustentabilidade da Dívida</div>
-              <p class="trilemma-axis-desc">
-                Com a DBGG em 78,6% do PIB e juros reais de dois dígitos, qualquer sinal de descontrole fiscal provoca desvalorização cambial, fuga de capitais e inflação imediata.
+          <div class="budget-side">
+            <div class="budget-card reveal">
+              <span class="stat-label">Espaço livre do Executivo</span>
+              <div class="big-number">R$ 206 bi</div>
+              <p>
+                É o que o governo pode decidir onde gastar num ano, cerca de 8% da despesa primária. Todo o resto
+                (Previdência, salários, benefícios, pisos, emendas) está amarrado.
               </p>
             </div>
-
-            <div class="trilemma-axis-box">
-              <div class="trilemma-axis-title">2. Cláusulas Pétreas da CF/88</div>
-              <p class="trilemma-axis-desc">
-                A Constituição Cidadã protege direitos fundamentais individuais, federalismo, e vinculações de saúde e educação que impedem cortes cegos de gastos ou atalhos autoritários.
-              </p>
-            </div>
-
-            <div class="trilemma-axis-box">
-              <div class="trilemma-axis-title">3. O Poder das Emendas</div>
-              <p class="trilemma-axis-desc">
-                O Congresso Nacional comanda mais de R$ 53 bilhões anuais em emendas impositivas. Nenhum presidente governa sem negociar a base parlamentar do chamado "Centrão".
-              </p>
+            <div class="budget-card reveal">
+              <h3 style="font-size: 1.1rem;">Promessas × espaço livre</h3>
+              <p style="color: var(--muted); font-size: .85rem;">Valores por ano citados nos planos, comparados aos R$ 206 bi livres.</p>
+              <div class="promise-list" id="promises"></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 6: GLOSSARY -->
-    <section class="section-padding" id="glossario">
+    <!-- ============ CONTEXTO ============ -->
+    <section class="section" id="contexto">
       <div class="container">
-        <header class="section-header">
-          <span class="section-tag">Fundamentação Técnica</span>
-          <h2 class="section-title">Glossário Constitucional & Econômico</h2>
-          <p class="section-subtitle">
-            Conceitos jurídicos e financeiros essenciais para compreender com precisão as promessas e limitações dos planos de governo.
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">6</span>O país que o eleito recebe</span>
+          <h2>Contexto em números</h2>
+          <p>Indicadores mais recentes disponíveis, com fonte e data.</p>
+        </header>
+        <div class="ctx-grid" id="ctx-grid"></div>
+
+        <div class="tri reveal" id="trilemma"></div>
+      </div>
+    </section>
+
+    <!-- ============ TRANSPARÊNCIA ============ -->
+    <section class="section section-alt" id="transparencia">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">7</span>Método e correções</span>
+          <h2>Como fizemos, e o que corrigimos</h2>
+          <p>
+            Checamos cada afirmação da versão anterior do site contra o texto dos PDFs. Encontramos lemas e coligações inventados,
+            propostas distorcidas e dados desatualizados. Tudo o que mudou está listado aqui.
           </p>
         </header>
 
-        <div class="glossary-grid" id="glossary-grid">
-          <!-- Populated by js/app.js -->
+        <div class="method reveal">
+          <div class="method-item">
+            <h4>📄 Fonte primária</h4>
+            <p>Cada proposta tem página e, quando possível, a citação literal do plano. Os PDFs estão no repositório e abrem na página citada.</p>
+          </div>
+          <div class="method-item">
+            <h4>⚖️ Critério jurídico</h4>
+            <p>Classificamos o instrumento <b>mínimo</b> para implementar a proposta como escrita. “Controverso” indica que há divergência séria entre juristas ou no STF.</p>
+          </div>
+          <div class="method-item">
+            <h4>🚫 O que não fazemos</h4>
+            <ul>
+              <li>Não damos notas nem ranking de candidatos.</li>
+              <li>Não avaliamos se a proposta é boa ou ruim, só o que ela exige.</li>
+              <li>Não somos parecer jurídico.</li>
+            </ul>
+          </div>
         </div>
+
+        <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin: 40px 0 16px;">Registro de correções</h3>
+        <div class="fix-grid" id="fixes"></div>
+        <div id="fixes-more"></div>
+
+        <details class="more">
+          <summary>Fontes consultadas ↓</summary>
+          <ul class="sources" id="sources"></ul>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ GLOSSÁRIO ============ -->
+    <section class="section" id="glossario">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">8</span>Glossário</span>
+          <h2>Termos que aparecem no debate</h2>
+        </header>
+        <div class="gloss" id="gloss"></div>
       </div>
     </section>
   </main>
 
-  <!-- OFFICIAL DOSSIER MODAL DIALOG -->
-  <div class="modal-backdrop" id="dossier-modal" role="dialog" aria-modal="true" aria-labelledby="modal-candidate-name">
-    <div class="modal-container">
-      <!-- Modal Header -->
-      <div class="modal-header-hero" id="modal-header-hero">
-        <div class="modal-cand-details">
-          <div class="modal-avatar" id="modal-avatar-badge">LS</div>
-          <div class="modal-title-group">
-            <h2 id="modal-candidate-name">Nome do Candidato</h2>
-            <p id="modal-candidate-party">Partido e Coligação</p>
-          </div>
-        </div>
-
-        <button class="modal-close-btn" id="modal-close-btn" aria-label="Fechar janela modal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-
-      <!-- Modal Tabs Nav -->
-      <div class="modal-tabs-nav" id="modal-tabs-nav">
-        <button class="modal-tab-btn active" data-tab="summary" id="tab-btn-summary">Síntese Estratégica</button>
-        <button class="modal-tab-btn" data-tab="constitutional" id="tab-btn-constitutional">Limitações Constitucionais (CF/88)</button>
-        <button class="modal-tab-btn" data-tab="economic" id="tab-btn-economic">Limitações Econômicas & Dívida</button>
-        <button class="modal-tab-btn" data-tab="country" id="tab-btn-country">Resposta ao Contexto Nacional</button>
-      </div>
-
-      <!-- Modal Body Dynamic Content -->
-      <div class="modal-body-content" id="modal-dynamic-content">
-        <!-- Content injected by js/app.js -->
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="modal-footer">
-        <button class="btn-modal-secondary" id="modal-close-secondary">Fechar</button>
-        <button class="btn-modal-print" id="modal-print-btn">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          Imprimir Dossiê
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SITE FOOTER -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-top-grid">
-        <div class="footer-brand">
-          <h4>BRASIL 2026 // RAIO-X DOS PLANOS DE GOVERNO</h4>
-          <p style="margin-top: 0.5rem; line-height: 1.6;">
-            Plataforma independente de análise analítica, fundamentada na Constituição da República Federativa do Brasil de 1988, 
-            na Lei de Responsabilidade Fiscal e nas diretrizes macroeconômicas oficiais.
+      <div class="foot-grid">
+        <div>
+          <h4>Raio-X dos Planos de Governo 2026</h4>
+          <p>
+            Projeto independente de jornalismo de dados. Não tem vínculo com partidos ou candidaturas.
+            Encontrou um erro? Abra uma issue no repositório.
           </p>
-          <div style="margin-top: 1rem; font-size: 0.76rem; color: var(--text-muted);">
-            Documentos analisados: 
-            <em>FLAVIO-BOLSONARO-PARA-O-BRASIL-VENCER-O-ATRASO-1-1.pdf</em>, 
-            <em>Plano-de-Governo-Ronaldo-Caiado-Presidente.pdf</em>, 
-            <em>Plano_gov_Augusto_Cury_2026.pdf</em>, 
-            <em>Programa-de-Governo-LULA-13.pdf</em>, 
-            <em>proposta-missao-renan-santos.pdf</em>.
-          </div>
         </div>
-
         <div>
-          <div class="footer-col-title">Navegação Rápida</div>
-          <ul class="footer-links-list">
-            <li><a href="#hero">Início / Topo</a></li>
-            <li><a href="#planos">Os 5 Planos</a></li>
-            <li><a href="#comparador">Comparador Multicandidato</a></li>
-            <li><a href="#radar-cf88">Radar Constitucional</a></li>
+          <h4>Seções</h4>
+          <ul>
+            <li><a href="#candidatos">Candidatos</a></li>
+            <li><a href="#propostas">Propostas</a></li>
+            <li><a href="#constituicao">Radar CF/88</a></li>
+            <li><a href="#orcamento">Orçamento</a></li>
           </ul>
         </div>
-
         <div>
-          <div class="footer-col-title">Pilares Analíticos</div>
-          <ul class="footer-links-list">
-            <li><a href="#simulador">Simulador do Orçamento</a></li>
-            <li><a href="#contexto">O Trilema Republicano</a></li>
-            <li><a href="#glossario">Glossário Jurídico</a></li>
-            <li><a href="#radar-cf88">Artigo 5º da CF/88</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Metodologia & Dados</div>
-          <ul class="footer-links-list">
-            <li><span>Fonte: TSE & Partidos</span></li>
-            <li><span>Auditoria Constitucional</span></li>
-            <li><span>Relatórios do Tesouro</span></li>
-            <li><span>Atualização: Set/2026</span></li>
-          </ul>
+          <h4>Documentos originais</h4>
+          <ul id="foot-docs"></ul>
         </div>
       </div>
-
-      <div class="footer-bottom-bar">
-        <div>© 2026 Dossiê Eleitoral Independente. Desenvolvido para máxima transparência e cidadania democrática.</div>
-        <div>Constituição Federal de 1988 • Liberdade de Informação e Análise Crítica</div>
+      <div class="foot-bottom">
+        <span>Desenvolvido por Matheus Mendez · <span id="foot-updated"></span></span>
+        <span>HTML, CSS e JavaScript puros · sem rastreadores</span>
       </div>
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Modal único (dossiê, proposta, artigo) -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head" id="modal-head"></div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
 </body>
