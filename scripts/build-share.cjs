@@ -103,6 +103,61 @@ function homeImage() {
   </body></html>`;
 }
 
+function compareImage(a, b) {
+  const av = (c) => `<div class="av" style="--c:${c.color}">${esc(c.initials)}</div>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><style>${baseCss}
+    .duo { display: flex; align-items: center; gap: 28px; margin-top: 40px; }
+    .duo .av { width: 96px; height: 96px; border-radius: 28px; font-size: 40px; }
+    .vs { font-family: F; font-weight: 700; font-size: 34px; color: #6A707A; }
+    .names { font-size: 34px; font-weight: 700; }
+    .names span { color: #6A707A; font-weight: 500; font-size: 22px; display: block; }
+    h1 { font-size: 60px; margin-top: 34px; }
+  </style></head>
+  <body style="--c:#096B41">
+    <div class="band"></div>
+    <div class="wrap">
+      <div class="brand"><div class="mark">R</div>Raio-X 2026<small>Frente a frente</small></div>
+      <div class="duo">${av(a)}<div class="names">${esc(a.shortName)}<span>${esc(a.party)}</span></div><div class="vs">×</div>${av(b)}<div class="names">${esc(b.shortName)}<span>${esc(b.party)}</span></div></div>
+      <h1>O que cada um propõe, tema a tema</h1>
+      <div class="foot"><div class="need">${a.proposals.length + b.proposals.length} propostas checadas no documento original</div><div class="src">Proposta × lei × orçamento</div></div>
+    </div>
+  </body></html>`;
+}
+
+function comparePage(a, b) {
+  const file = `comparar--${a.id}--${b.id}`;
+  const title = `${a.shortName} × ${b.shortName}: propostas frente a frente`;
+  const desc = `Compare, tema a tema, o que ${a.shortName} e ${b.shortName} propõem e o que cada proposta exige: decreto, lei, emenda constitucional ou nada disso resolve.`;
+  const target = `../#comparar/${a.id},${b.id}`;
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${esc(title)} · Raio-X 2026</title>
+  <meta name="description" content="${esc(desc)}">
+  <link rel="canonical" href="${esc(`${SITE}#comparar/${a.id},${b.id}`)}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Raio-X dos Planos de Governo 2026">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="${esc(title)}">
+  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:url" content="${esc(`${SITE}share/${file}.html`)}">
+  <meta property="og:image" content="${esc(`${SITE}share/og/${file}.jpg`)}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${esc(title)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta http-equiv="refresh" content="0; url=${esc(target)}">
+  <script>location.replace(${JSON.stringify(target)});</script>
+</head>
+<body>
+  <p><a href="${esc(target)}">Abrir a comparação entre ${esc(a.shortName)} e ${esc(b.shortName)}</a></p>
+</body>
+</html>
+`;
+}
+
 function sharePage(c, p) {
   const key = `${c.id}/${p.id}`;
   const file = `${c.id}--${p.id}`;
@@ -162,6 +217,17 @@ function sharePage(c, p) {
       n++;
     }
   }
+  let pairs = 0;
+  for (let i = 0; i < D.candidates.length; i++) {
+    for (let j = i + 1; j < D.candidates.length; j++) {
+      const a = D.candidates[i];
+      const b = D.candidates[j];
+      const file = `comparar--${a.id}--${b.id}`;
+      await render(compareImage(a, b), path.join(OG, `${file}.jpg`));
+      fs.writeFileSync(path.join(OUT, `${file}.html`), comparePage(a, b));
+      pairs++;
+    }
+  }
   await browser.close();
-  console.log(`✓ ${n} páginas de compartilhamento + ${n + 1} imagens em share/`);
+  console.log(`✓ ${n} propostas + ${pairs} comparações: ${n + pairs} páginas de compartilhamento e ${n + pairs + 1} imagens em share/`);
 })();

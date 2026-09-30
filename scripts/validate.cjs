@@ -108,6 +108,7 @@ D.glossary.forEach((g) => {
 /* ---------- Páginas de compartilhamento ---------- */
 const shareDir = path.join(ROOT, 'share');
 const expected = new Set(D.candidates.flatMap((c) => c.proposals.map((p) => `${c.id}--${p.id}`)));
+D.candidates.forEach((a, i) => D.candidates.slice(i + 1).forEach((b) => expected.add(`comparar--${a.id}--${b.id}`)));
 if (!fs.existsSync(shareDir)) {
   fail('share/ não existe: rode "npm run build:share"');
 } else {
@@ -116,7 +117,7 @@ if (!fs.existsSync(shareDir)) {
     have.has(k) || fail(`share/${k}.html ausente: rode "npm run build:share"`);
     fs.existsSync(path.join(shareDir, 'og', `${k}.jpg`)) || fail(`share/og/${k}.jpg ausente: rode "npm run build:share"`);
   });
-  have.forEach((k) => expected.has(k) || fail(`share/${k}.html não corresponde a nenhuma proposta (arquivo órfão)`));
+  have.forEach((k) => expected.has(k) || fail(`share/${k}.html não corresponde a nenhuma proposta ou comparação (arquivo órfão)`));
   fs.existsSync(path.join(shareDir, 'og', 'home.jpg')) || fail('share/og/home.jpg ausente');
 }
 
@@ -133,4 +134,4 @@ if (errors.length) {
   console.error(`\n${errors.length} erro(s) encontrados.`);
   process.exit(1);
 }
-console.log(`✓ Dados válidos: ${D.candidates.length} candidatos, ${total} propostas, ${Object.keys(D.articles).length} artigos, ${D.refs.length} referências, ${expected.size} páginas de compartilhamento.`);
+console.log(`✓ Dados válidos: ${D.candidates.length} candidatos, ${total} propostas, ${Object.keys(D.articles).length} artigos, ${D.refs.length} referências, ${expected.size} páginas de compartilhamento (propostas e comparações).`);

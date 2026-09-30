@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Raio-X dos Planos de Governo 2026</title>
   <meta name="description" content="O que cada candidato promete e o que a Constituição e o orçamento permitem. Análise de 5 planos de governo das eleições presidenciais de 2026, proposta por proposta, com página do documento original e avaliação jurídica.">
-  <meta name="theme-color" content="#0B7A4B">
+  <meta name="theme-color" content="#096B41">
   <meta property="og:title" content="Raio-X dos Planos de Governo 2026">
   <meta property="og:description" content="Promessas × Constituição × orçamento: 48 propostas de 5 candidatos, checadas no documento original.">
   <meta property="og:type" content="website">
@@ -16,7 +16,7 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://matheusmendez-ask.github.io/eleicoes-2026/">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230B7A4B'/><path d='M44 44 64 64V44z' fill='%23E8B20E'/><text x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia' font-weight='700' font-size='34' fill='white'>R</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23096B41'/><text x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia' font-weight='700' font-size='34' fill='white'>R</text></svg>">
   <script>
     // Aplica o tema salvo antes da pintura para evitar "flash"
     try { const t = localStorage.getItem('raiox-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
@@ -44,11 +44,9 @@
         <a href="#transparencia">Método</a>
       </nav>
       <div class="header-actions">
-        <button class="icon-btn" id="theme-btn" aria-label="Alternar tema claro/escuro">
-          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        </button>
+        <button class="icon-btn" id="theme-btn" aria-label="Alternar tema claro/escuro"></button>
         <button class="icon-btn menu-btn" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
       </div>
     </div>
@@ -67,48 +65,29 @@
   </header>
 
   <main id="conteudo">
-    <!-- ============ HERO ============ -->
+    <!-- ============ ABERTURA ============ -->
     <section class="hero" id="topo">
       <div class="container">
-        <div class="hero-grid">
-          <div>
-            <span class="pill"><span class="dot"></span>Eleição presidencial · 1º turno em 4 de outubro de 2026</span>
-            <h1>O que eles prometem. <em>O que a Constituição deixa.</em></h1>
-            <p class="lede">
-              Lemos os planos de governo de cinco candidatos à Presidência e checamos cada proposta em três perguntas:
-              ela está mesmo no documento? Que lei precisaria mudar? Cabe no orçamento?
-            </p>
-            <div class="hero-cta">
-              <a href="#propostas" class="btn btn-primary">Explorar as propostas
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-              </a>
-              <a href="#como-ler" class="btn btn-ghost">Como ler este site</a>
-            </div>
-            <div class="hero-faces">
-              <div class="faces" id="hero-faces"></div>
-              <small id="hero-count"></small>
-            </div>
-          </div>
-
-          <aside class="hero-card reveal" aria-label="Método em três filtros">
-            <h2>Três filtros para cada promessa</h2>
-            <p>Uma proposta só vira política pública se passar pelos três.</p>
-            <div class="filter-steps">
-              <div class="filter-step">
-                <span class="ico" style="background: var(--brand-soft)" aria-hidden="true">📄</span>
-                <div><b>1. Está no plano?</b><span>Citamos a página do PDF oficial, com link.</span></div>
-              </div>
-              <div class="filter-step">
-                <span class="ico" style="background: var(--v-lei-bg)" aria-hidden="true">⚖️</span>
-                <div><b>2. O que precisa mudar na lei?</b><span>De um simples decreto até a emenda constitucional.</span></div>
-              </div>
-              <div class="filter-step">
-                <span class="ico" style="background: var(--v-pec-bg)" aria-hidden="true">💰</span>
-                <div><b>3. Cabe no orçamento?</b><span>Cerca de 90% do gasto federal já tem destino fixo.</span></div>
-              </div>
-            </div>
-          </aside>
+        <p class="kicker">Eleição presidencial · 1º turno em 4 de outubro de 2026</p>
+        <h1>O que eles prometem. <em>O que a Constituição deixa.</em></h1>
+        <p class="lede">
+          Lemos os planos de governo de cinco candidatos à Presidência e checamos cada proposta em três perguntas:
+          ela está mesmo no documento? Que lei precisaria mudar? Cabe no orçamento?
+        </p>
+        <div class="hero-cta">
+          <a href="#propostas" class="btn btn-primary">Explorar as propostas</a>
+          <a href="#como-ler" class="btn btn-ghost">Como ler este site</a>
         </div>
+        <div class="hero-faces">
+          <div class="faces" id="hero-faces"></div>
+          <small id="hero-count"></small>
+        </div>
+
+        <ol class="steps" aria-label="Método em três filtros">
+          <li><b>Está no plano?</b><span>Citamos a página do PDF oficial, com link.</span></li>
+          <li><b>O que precisa mudar na lei?</b><span>De um decreto do governo até a emenda constitucional.</span></li>
+          <li><b>Cabe no orçamento?</b><span>Cerca de 90% do gasto federal já tem destino fixo.</span></li>
+        </ol>
 
         <div class="stats-strip" id="hero-stats"></div>
       </div>
@@ -117,8 +96,8 @@
     <!-- ============ COMO LER ============ -->
     <section class="section section-alt" id="como-ler">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">1</span>Como ler</span>
+        <header class="section-head">
+          <span class="eyebrow">Como ler</span>
           <h2>A escada da Constituição</h2>
           <p>
             Todo presidente governa dentro de regras. Quanto mais alta a proposta na escada, mais votos ela exige.
@@ -126,59 +105,54 @@
           </p>
         </header>
 
-        <div class="explain reveal">
-          <span class="explain-icon" aria-hidden="true">i</span>
-          <div>
-            <strong>Por que isso importa?</strong>
-            <p>
-              Um presidente eleito tem maioria só na própria caneta. Para aprovar uma PEC, precisa de 308 dos 513 deputados
-              e 49 dos 81 senadores, em dois turnos. Um plano cheio de propostas nos degraus 4 e 5 depende de um Congresso que o presidente não controla,
-              ou do aval do STF.
-            </p>
-          </div>
-        </div>
-
-        <div class="ladder reveal" id="ladder"></div>
+        <div class="ladder" id="ladder"></div>
         <div class="ladder-arrow" aria-hidden="true"><span>Mais fácil</span><span></span><span>Mais difícil</span></div>
+
+        <div class="note">
+          <b>Por que isso importa</b>
+          <p>
+            Um presidente eleito tem maioria só na própria caneta. Para aprovar uma PEC, precisa de 308 dos 513 deputados
+            e 49 dos 81 senadores, em dois turnos. Um plano cheio de propostas nos degraus 4 e 5 depende de um Congresso que o presidente não controla,
+            ou do aval do STF.
+          </p>
+        </div>
       </div>
     </section>
 
     <!-- ============ CANDIDATOS ============ -->
     <section class="section" id="candidatos">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">2</span>Os planos</span>
+        <header class="section-head">
+          <span class="eyebrow">Os planos</span>
           <h2>Cinco candidatos, cinco visões de país</h2>
-          <p>
-            Cada cartão resume a tese central do plano e mostra quantas propostas analisadas caem em cada degrau da escada.
-            Abra o dossiê para ver os detalhes.
-          </p>
+          <p>A tese central de cada plano e quantas propostas analisadas caem em cada degrau da escada.</p>
         </header>
         <div class="cand-grid" id="cand-grid"></div>
+        <p class="footnote" id="cand-note"></p>
       </div>
     </section>
 
     <!-- ============ PROPOSTAS ============ -->
     <section class="section section-alt" id="propostas">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">3</span>Proposta por proposta</span>
-          <h2>Compare o que cada um propõe, tema a tema</h2>
-          <p>Filtre por tema, candidato ou degrau jurídico. Clique numa proposta para ler a explicação e o trecho original.</p>
+        <header class="section-head">
+          <span class="eyebrow">Proposta por proposta</span>
+          <h2>O que cada um propõe, tema a tema</h2>
+          <p>Filtre por tema, candidato ou exigência jurídica. Abra uma proposta para ler a explicação e o trecho original.</p>
         </header>
 
         <div class="toolbar">
           <label class="search" for="search">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
             <span class="sr-only">Buscar propostas</span>
             <input id="search" type="search" placeholder="Buscar: presídio, salário mínimo, STF, creche…" autocomplete="off">
           </label>
-          <div class="seg" id="theme-filter" role="group" aria-label="Filtrar por tema"></div>
-          <div class="seg" id="cand-filter" role="group" aria-label="Filtrar por candidato"></div>
-          <div class="seg" id="verdict-filter" role="group" aria-label="Filtrar por degrau jurídico"></div>
+          <div class="filter-group"><span class="filter-label">Tema</span><div class="seg" id="theme-filter" role="group" aria-label="Filtrar por tema"></div></div>
+          <div class="filter-group"><span class="filter-label">Candidato</span><div class="seg" id="cand-filter" role="group" aria-label="Filtrar por candidato"></div></div>
+          <div class="filter-group"><span class="filter-label">Exigência</span><div class="seg" id="verdict-filter" role="group" aria-label="Filtrar por degrau jurídico"></div></div>
         </div>
 
-        <p class="stat-note" id="matrix-count" aria-live="polite" style="margin-bottom: 12px;"></p>
+        <p class="matrix-count" id="matrix-count" aria-live="polite"></p>
         <div class="matrix" id="matrix"></div>
       </div>
     </section>
@@ -186,28 +160,28 @@
     <!-- ============ FRENTE A FRENTE ============ -->
     <section class="section" id="comparar">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">4</span>Frente a frente</span>
-          <h2>Compare dois candidatos, tema a tema</h2>
-          <p>Escolha dois nomes. O link desta comparação pode ser copiado e enviado para quem você quiser.</p>
+        <header class="section-head">
+          <span class="eyebrow">Frente a frente</span>
+          <h2>Compare dois candidatos</h2>
+          <p>Escolha dois nomes e veja, tema a tema, o que cada um propõe e o que a proposta exige.</p>
         </header>
         <div class="cmp-toolbar">
           <label class="cmp-select"><span class="sr-only">Primeiro candidato</span><select id="cmp-a"></select></label>
-          <button class="icon-btn" id="cmp-swap" aria-label="Inverter candidatos" title="Inverter">⇄</button>
+          <button class="icon-btn" id="cmp-swap" aria-label="Inverter candidatos" title="Inverter"></button>
           <label class="cmp-select"><span class="sr-only">Segundo candidato</span><select id="cmp-b"></select></label>
-          <button class="share-btn" id="cmp-share">🔗 Copiar link da comparação</button>
+          <div id="cmp-share"></div>
         </div>
         <div id="cmp"></div>
       </div>
     </section>
 
     <!-- ============ CONSTITUIÇÃO ============ -->
-    <section class="section" id="constituicao">
+    <section class="section section-alt" id="constituicao">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">5</span>Radar da CF/88</span>
-          <h2>Os artigos da Constituição mais testados pelos planos</h2>
-          <p>Estes são os dispositivos citados nas análises, do mais acionado ao menos. Clique para ler o texto e ver quais propostas esbarram nele.</p>
+        <header class="section-head">
+          <span class="eyebrow">Constituição</span>
+          <h2>Os artigos mais testados pelos planos</h2>
+          <p>Os dispositivos da Constituição de 1988 citados nas análises, do mais acionado ao menos. Abra um artigo para ler o texto e ver as propostas que esbarram nele.</p>
         </header>
         <div class="radar-grid" id="radar"></div>
         <div id="radar-more"></div>
@@ -215,10 +189,10 @@
     </section>
 
     <!-- ============ ORÇAMENTO ============ -->
-    <section class="section section-alt" id="orcamento">
+    <section class="section" id="orcamento">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">6</span>A conta</span>
+        <header class="section-head">
+          <span class="eyebrow">A conta</span>
           <h2>Quanto dinheiro sobra para cumprir promessas?</h2>
           <p>
             O orçamento federal de 2026 soma R$ 6,5 trilhões, mas quase metade é juros e rolagem da dívida. Da despesa primária,
@@ -227,22 +201,19 @@
         </header>
 
         <div class="budget-wrap">
-          <div class="budget-card reveal">
-            <h3>Para onde vai a despesa primária da União (2026)</h3>
+          <div class="budget-card">
+            <h3>Para onde vai a despesa primária da União em 2026</h3>
             <p id="budget-note"></p>
             <div class="stack" id="budget-stack" role="group" aria-label="Composição do orçamento"></div>
             <div class="budget-legend" id="budget-legend"></div>
-            <div class="explain" style="margin:22px 0 0">
-              <span class="explain-icon" aria-hidden="true">?</span>
-              <div>
-                <strong>Por que é tão rígido?</strong>
-                <p>A Constituição garante que nenhum benefício do INSS seja menor que o salário mínimo, fixa gastos mínimos em saúde e educação e obriga o pagamento das emendas. Cada real novo precisa sair de algum lugar: cortar outro gasto, arrecadar mais ou mudar a Constituição.</p>
-              </div>
+            <div class="note">
+              <b>Por que é tão rígido</b>
+              <p>A Constituição garante que nenhum benefício do INSS seja menor que o salário mínimo, fixa gastos mínimos em saúde e educação e obriga o pagamento das emendas. Cada real novo precisa sair de algum lugar: cortar outro gasto, arrecadar mais ou mudar a Constituição.</p>
             </div>
           </div>
 
           <div class="budget-side">
-            <div class="budget-card reveal">
+            <div class="budget-card">
               <span class="stat-label">Espaço livre do Executivo</span>
               <div class="big-number">R$ 206 bi</div>
               <p>
@@ -250,9 +221,9 @@
                 (Previdência, salários, benefícios, pisos, emendas) está amarrado.
               </p>
             </div>
-            <div class="budget-card reveal">
-              <h3 style="font-size: 1.1rem;">Promessas × espaço livre</h3>
-              <p style="color: var(--muted); font-size: .85rem;">Valores por ano citados nos planos, comparados aos R$ 206 bi livres.</p>
+            <div class="budget-card">
+              <h3>Promessas × espaço livre</h3>
+              <p class="stat-note">Valores por ano citados nos planos, comparados aos R$ 206 bi livres.</p>
               <div class="promise-list" id="promises"></div>
             </div>
           </div>
@@ -261,24 +232,26 @@
     </section>
 
     <!-- ============ CONTEXTO ============ -->
-    <section class="section" id="contexto">
+    <section class="section section-alt" id="contexto">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">7</span>O país que o eleito recebe</span>
+        <header class="section-head">
+          <span class="eyebrow">O país que o eleito recebe</span>
           <h2>Contexto em números</h2>
           <p>Indicadores mais recentes disponíveis, com fonte e data.</p>
         </header>
         <div class="ctx-grid" id="ctx-grid"></div>
 
-        <div class="tri reveal" id="trilemma"></div>
+        <h3 class="sub-title">O trilema de qualquer presidente</h3>
+        <p class="lede">Toda promessa precisa passar por estas três travas ao mesmo tempo.</p>
+        <div class="tri" id="trilemma"></div>
       </div>
     </section>
 
-    <!-- ============ TRANSPARÊNCIA ============ -->
-    <section class="section section-alt" id="transparencia">
+    <!-- ============ MÉTODO ============ -->
+    <section class="section" id="transparencia">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">8</span>Método e correções</span>
+        <header class="section-head">
+          <span class="eyebrow">Método e correções</span>
           <h2>Como fizemos, e o que corrigimos</h2>
           <p>
             Checamos cada afirmação da versão anterior do site contra o texto dos PDFs. Encontramos lemas e coligações inventados,
@@ -286,17 +259,17 @@
           </p>
         </header>
 
-        <div class="method reveal">
+        <div class="method">
           <div class="method-item">
-            <h3>📄 Fonte primária</h3>
+            <h3>Fonte primária</h3>
             <p>Cada proposta tem página e, quando possível, a citação literal do plano. Os PDFs estão no repositório e abrem na página citada.</p>
           </div>
           <div class="method-item">
-            <h3>⚖️ Critério jurídico</h3>
+            <h3>Critério jurídico</h3>
             <p>Classificamos o instrumento <b>mínimo</b> para implementar a proposta como escrita. “Controverso” indica que há divergência séria entre juristas ou no STF.</p>
           </div>
           <div class="method-item">
-            <h3>🚫 O que não fazemos</h3>
+            <h3>O que não fazemos</h3>
             <ul>
               <li>Não damos notas nem ranking de candidatos.</li>
               <li>Não avaliamos se a proposta é boa ou ruim, só o que ela exige.</li>
@@ -305,22 +278,22 @@
           </div>
         </div>
 
-        <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin: 40px 0 16px;">Registro de correções</h3>
+        <h3 class="sub-title">Registro de correções</h3>
         <div class="fix-grid" id="fixes"></div>
         <div id="fixes-more"></div>
 
         <details class="more">
-          <summary>Fontes consultadas ↓</summary>
+          <summary>Fontes consultadas</summary>
           <ul class="sources" id="sources"></ul>
         </details>
       </div>
     </section>
 
     <!-- ============ GLOSSÁRIO ============ -->
-    <section class="section" id="glossario">
+    <section class="section section-alt" id="glossario">
       <div class="container">
-        <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">9</span>Glossário</span>
+        <header class="section-head">
+          <span class="eyebrow">Glossário</span>
           <h2>Termos que aparecem no debate</h2>
         </header>
         <div class="gloss" id="gloss"></div>
@@ -343,7 +316,8 @@
           <ul>
             <li><a href="#candidatos">Candidatos</a></li>
             <li><a href="#propostas">Propostas</a></li>
-            <li><a href="#constituicao">Radar CF/88</a></li>
+            <li><a href="#comparar">Frente a frente</a></li>
+            <li><a href="#constituicao">Constituição</a></li>
             <li><a href="#orcamento">Orçamento</a></li>
           </ul>
         </div>
