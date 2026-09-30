@@ -14,6 +14,8 @@
     // Aplica o tema salvo antes da pintura para evitar "flash"
     try { const t = localStorage.getItem('raiox-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
   </script>
+  <link rel="preload" href="fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
