@@ -479,7 +479,7 @@ a.ref:hover { color: var(--brand); }
 .funnel, .promise-list { display: grid; gap: 0; }
 .fn-row { display: grid; grid-template-columns: 1fr; gap: 6px 18px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
 .fn-row:first-child { border-top: 0; padding-top: 0; }
-@media (min-width: 760px) { .fn-row { grid-template-columns: minmax(240px, 1.1fr) 2fr 150px; } }
+@media (min-width: 760px) { .fn-row { grid-template-columns: minmax(240px, 1.1fr) 2fr 170px; } }
 .fn-label b { display: flex; align-items: flex-start; gap: 8px; font-size: .95rem; line-height: 1.3; }
 .fn-label span { display: block; font-size: .8rem; color: var(--muted); }
 .fn-minus { flex: 0 0 auto; display: inline-grid; place-items: center; width: 16px; height: 16px; margin-top: 2px; border-radius: 4px; background: var(--bg-alt); color: var(--muted); font-size: .8rem; }
@@ -488,11 +488,11 @@ a.ref:hover { color: var(--brand); }
 .fn-out .fn-bar i { background: var(--line-strong); }
 .fn-out .fn-label b { color: var(--ink-2); font-weight: 500; }
 .fn-val { font-weight: 700; font-size: 1rem; white-space: nowrap; }
-.fn-val small { display: block; font-weight: 500; font-size: .76rem; color: var(--muted); }
+.fn-val small { display: block; font-weight: 500; font-size: .76rem; color: var(--muted); white-space: normal; }
 @media (min-width: 760px) { .fn-val { text-align: right; } }
 .fn-last .fn-label b, .fn-last .fn-val { color: var(--brand); }
 .fn-last .fn-bar i { background: var(--brand); }
-.fn-promise .avatar-xs { width: 22px; height: 22px; font-size: .55rem; }
+.fn-promise .fn-who { font-style: normal; font-weight: 600; color: var(--c); }
 
 /* Barra empilhada da despesa primária */
 .stack { display: flex; height: 64px; border-radius: 6px; overflow: hidden; gap: 2px; background: var(--line); }

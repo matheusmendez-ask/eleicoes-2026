@@ -442,7 +442,7 @@
       const c = candById[p.candidate];
       return `
       <div class="fn-row fn-promise" style="--c:${c.color}">
-        <div class="fn-label"><b>${avatar(c, 'avatar-xs')}${esc(p.label)}</b><span>${esc(c.shortName)} · ${esc(p.note)}</span></div>
+        <div class="fn-label"><b>${esc(p.label)}</b><span><em class="fn-who">${esc(c.shortName)}</em> · ${esc(p.note)}</span></div>
         <div class="fn-bar"><i style="width:${(p.perYear / max) * 100}%"></i></div>
         <div class="fn-val">R$ ${p.perYear} bi<small>por ano${p.perYear > FREE_SPACE ? ` · ${(p.perYear / FREE_SPACE).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}× o espaço livre` : ''}</small></div>
       </div>`;
