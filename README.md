@@ -101,4 +101,4 @@ O deploy é automático a cada push na `main`, desde que a validação passe. Na
 
 ---
 
-Desenvolvido por **Matheus Mendez** · [Licença MIT](LICENSE)
+Desenvolvido por **Matheus M. Mendez / DeepBlue IA** · [Licença MIT](LICENSE)
