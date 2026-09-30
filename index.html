@@ -200,16 +200,18 @@
           </p>
         </header>
 
+        <div class="budget-card">
+          <h3>De R$ 6,5 trilhões a R$ 206 bilhões</h3>
+          <p>Como o orçamento encolhe até chegar ao que o presidente pode decidir. Valores aproximados da LOA 2026, em reais.</p>
+          <div class="funnel" id="funnel"></div>
+        </div>
+
         <div class="budget-wrap">
           <div class="budget-card">
             <h3>Para onde vai a despesa primária da União em 2026</h3>
             <p id="budget-note"></p>
             <div class="stack" id="budget-stack" role="group" aria-label="Composição do orçamento"></div>
             <div class="budget-legend" id="budget-legend"></div>
-            <div class="note">
-              <b>Por que é tão rígido</b>
-              <p>A Constituição garante que nenhum benefício do INSS seja menor que o salário mínimo, fixa gastos mínimos em saúde e educação e obriga o pagamento das emendas. Cada real novo precisa sair de algum lugar: cortar outro gasto, arrecadar mais ou mudar a Constituição.</p>
-            </div>
           </div>
 
           <div class="budget-side">
@@ -227,6 +229,30 @@
               <div class="promise-list" id="promises"></div>
             </div>
           </div>
+        </div>
+
+        <h3 class="sub-title">A dívida que o eleito herda</h3>
+        <p class="lede">A dívida subiu 26 pontos do PIB em 12 anos. Quanto maior, mais juros; quanto mais juros, menos sobra para o resto.</p>
+        <div class="budget-wrap debt-wrap">
+          <div class="budget-card">
+            <div id="debt-chart" class="chart"></div>
+            <p class="stat-note" id="debt-note"></p>
+            <details class="more"><summary>Ver como tabela</summary><div id="debt-table" class="table-wrap"></div></details>
+          </div>
+          <div class="facts" id="debt-facts"></div>
+        </div>
+
+        <h3 class="sub-title">Como o orçamento ficou tão amarrado</h3>
+        <p class="lede">Cada regra foi criada para proteger um direito ou conter um abuso. Somadas, deixam pouco espaço para qualquer presidente.</p>
+        <ol class="timeline" id="timeline"></ol>
+
+        <h3 class="sub-title">O que as propostas fazem com a conta</h3>
+        <p class="lede">Quantas propostas de cada candidato aumentam gastos, economizam ou não mexem nas contas.</p>
+        <div id="balance"></div>
+
+        <div class="note">
+          <b>Por que é tão rígido</b>
+          <p>A Constituição garante que nenhum benefício do INSS seja menor que o salário mínimo, fixa gastos mínimos em saúde e educação e obriga o pagamento das emendas. Cada real novo precisa sair de algum lugar: cortar outro gasto, arrecadar mais ou mudar a Constituição.</p>
         </div>
       </div>
     </section>
