@@ -12,6 +12,7 @@
 const ELECTION_DATA = {
   meta: {
     updated: "30 de setembro de 2026",
+    siteUrl: "https://matheusmendez-ask.github.io/eleicoes-2026/",
     registeredCandidates: 13,
     analyzed: 5
   },
@@ -98,6 +99,7 @@ const ELECTION_DATA = {
       summary: "O programa é, em grande parte, um balanço do atual mandato seguido de compromissos de continuidade. Várias medidas que costumam ser apresentadas como promessas — isenção de IR até R$ 5 mil, reforma tributária do consumo, COP30 — aparecem no documento como fatos já realizados. As novidades mais concretas são o fim da escala 6x1 com jornada de 40 horas, a PEC da Segurança Pública e a regulação das plataformas digitais.",
       proposals: [
         {
+          id: "fim-escala-6x1",
           theme: "economia",
           title: "Fim da escala 6x1 e jornada de 40 horas sem corte de salário",
           plain: "Reduzir a jornada semanal máxima de 44 para 40 horas e acabar com a escala de seis dias de trabalho para um de folga.",
@@ -109,6 +111,7 @@ const ELECTION_DATA = {
           arts: ["art7"]
         },
         {
+          id: "salario-minimo",
           theme: "economia",
           title: "Continuar a valorização do salário mínimo",
           plain: "Manter reajustes do mínimo acima da inflação.",
@@ -119,6 +122,7 @@ const ELECTION_DATA = {
           arts: ["art201"]
         },
         {
+          id: "arcabouco-fiscal",
           theme: "fiscal",
           title: "Manter o novo arcabouço fiscal",
           plain: "Seguir limitando o crescimento dos gastos à regra criada em 2023 (LC 200/2023).",
@@ -129,6 +133,7 @@ const ELECTION_DATA = {
           arts: []
         },
         {
+          id: "pec-seguranca",
           theme: "seguranca",
           title: "PEC da Segurança Pública e Ministério da Segurança",
           plain: "Dar à União papel de coordenação nacional da segurança e criar um ministério próprio para o tema.",
@@ -138,6 +143,7 @@ const ELECTION_DATA = {
           arts: ["art144", "art60"]
         },
         {
+          id: "regulacao-plataformas",
           theme: "instituicoes",
           title: "Regulação das redes sociais e plataformas digitais",
           plain: "Criar regras de responsabilidade e transparência para as big techs e os algoritmos.",
@@ -148,6 +154,7 @@ const ELECTION_DATA = {
           arts: ["art5"]
         },
         {
+          id: "petrobras-distribuicao",
           theme: "economia",
           title: "Petrobras de volta à distribuição e ação contra a volatilidade de preços",
           plain: "A estatal voltaria a vender combustível na ponta, e o governo seguiria usando subvenções para amortecer choques de preço.",
@@ -155,10 +162,11 @@ const ELECTION_DATA = {
           quote: "A Petrobras deverá retornar ao segmento de distribuição de combustíveis",
           verdict: "exec",
           contested: true,
-          legal: "É decisão de gestão do acionista controlador, mas a Petrobras é empresa de capital aberto: a Lei das Estatais (13.303/2016) e o Art. 173 exigem interesse público definido em lei e respeito aos acionistas minoritários. Subvenções dependem de previsão orçamentária.",
+          legal: "É decisão de gestão do acionista controlador, mas a Petrobras é empresa de capital aberto: a Lei das Estatais (Lei 13.303/2016) e o Art. 173 exigem interesse público definido em lei e respeito aos acionistas minoritários. Subvenções dependem de previsão orçamentária.",
           arts: ["art173"]
         },
         {
+          id: "fila-saude-risco",
           theme: "social",
           title: "Fila única digital na saúde por risco clínico",
           plain: "Organizar consultas e exames especializados pela gravidade do caso, e não pela ordem de chegada (programa Agora Tem Especialistas).",
@@ -168,6 +176,7 @@ const ELECTION_DATA = {
           arts: []
         },
         {
+          id: "desmatamento-zero",
           theme: "ambiente",
           title: "Desmatamento líquido zero até 2030",
           plain: "Compensar toda a perda de vegetação com recuperação até 2030.",
@@ -179,6 +188,10 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        figures: [
+          { label: "Programa Brasil Contra o Crime Organizado", value: null, display: "R$ 10 bi no total, sem prazo", kind: "gasto", page: 27 },
+          { label: "Emendas parlamentares (diagnóstico do plano)", value: 50, display: "R$ 50 bi/ano, 1/5 do discricionário", kind: "diagnóstico", page: 15 }
+        ],
         headline: "Promessas de continuidade num orçamento que já está no limite",
         points: [
           "Gastos obrigatórios (Previdência, BPC, pisos) crescem acima do teto de 2,5% real do arcabouço.",
@@ -216,6 +229,7 @@ const ELECTION_DATA = {
       summary: "O plano se define como “liberal, conservador e reformista”. Na segurança, propõe cinco presídios de segurança máxima no modelo de El Salvador, fim da progressão de regime para crimes hediondos, redução da maioridade penal e castração química de estupradores. Na economia, promete R$ 900 bilhões em infraestrutura em quatro anos (via PPPs, concessões, BNDES e securitização de ativos), redução gradual de encargos da conta de luz e liberação do fracking. No campo institucional, propõe fim da reeleição e uma reforma do Judiciário que limita decisões individuais de ministros do STF.",
       proposals: [
         {
+          id: "presidios-el-salvador",
           theme: "seguranca",
           title: "5 presídios de segurança máxima no modelo de El Salvador",
           plain: "Criar um complexo federal (“TREVA”) sem celular, sem visita íntima e com visitas monitoradas.",
@@ -226,6 +240,7 @@ const ELECTION_DATA = {
           arts: ["art5"]
         },
         {
+          id: "fim-progressao-hediondos",
           theme: "seguranca",
           title: "Fim da progressão de regime para crimes hediondos",
           plain: "Condenados por crimes hediondos cumpririam toda a pena em regime fechado.",
@@ -236,6 +251,7 @@ const ELECTION_DATA = {
           arts: ["art5", "art60"]
         },
         {
+          id: "maioridade-penal",
           theme: "seguranca",
           title: "Maioridade penal aos 16 anos (e punição a partir dos 14 para crimes graves)",
           plain: "Adolescentes passariam a responder como adultos por crimes.",
@@ -247,6 +263,7 @@ const ELECTION_DATA = {
           arts: ["art228", "art60"]
         },
         {
+          id: "castracao-quimica",
           theme: "seguranca",
           title: "Castração química obrigatória para estupradores condenados",
           plain: "Aplicar tratamento hormonal compulsório a condenados por estupro e abuso infantil.",
@@ -258,6 +275,7 @@ const ELECTION_DATA = {
           arts: ["art5"]
         },
         {
+          id: "abate-fuzil",
           theme: "seguranca",
           title: "“Bandido armado com fuzil na mão vai ser abatido”",
           plain: "Autorizar as forças de segurança a atirar em criminosos armados com fuzil.",
@@ -269,6 +287,7 @@ const ELECTION_DATA = {
           arts: ["art5"]
         },
         {
+          id: "militares-portos-aeroportos",
           theme: "seguranca",
           title: "Marinha e Aeronáutica ocupando portos e aeroportos de forma permanente",
           plain: "Tropas especiais militares fariam o controle permanente de portos e aeroportos.",
@@ -280,6 +299,7 @@ const ELECTION_DATA = {
           arts: ["art142"]
         },
         {
+          id: "voucher-creche",
           theme: "social",
           title: "Voucher-creche quando faltar vaga na rede pública",
           plain: "Se não houver vaga pública, a família recebe um voucher para usar em creche privada credenciada até surgir a vaga.",
@@ -291,6 +311,7 @@ const ELECTION_DATA = {
           arts: ["art213"]
         },
         {
+          id: "infraestrutura-900-bi",
           theme: "economia",
           title: "R$ 900 bilhões em infraestrutura em 4 anos",
           plain: "Rodovias, ferrovias (Ferrogrão), hidrovias, portos e aeroportos com PPPs, concessões, BNDES e securitização de ativos da União.",
@@ -301,6 +322,7 @@ const ELECTION_DATA = {
           arts: ["art225"]
         },
         {
+          id: "licenca-ambiental-tacita",
           theme: "ambiente",
           title: "Licença ambiental concedida automaticamente se o órgão não decidir no prazo",
           plain: "Se o governo demorar demais para analisar, a licença sai sozinha.",
@@ -311,6 +333,7 @@ const ELECTION_DATA = {
           arts: ["art225"]
         },
         {
+          id: "fracking",
           theme: "ambiente",
           title: "Liberar o fracking (gás não convencional)",
           plain: "Permitir a extração de gás de xisto por fraturamento hidráulico, “cumprindo a lei”.",
@@ -322,6 +345,7 @@ const ELECTION_DATA = {
           arts: ["art225"]
         },
         {
+          id: "reforma-judiciario",
           theme: "instituicoes",
           title: "Reforma do Judiciário: fim do foro criminal no STF e limite a decisões monocráticas",
           plain: "O STF deixaria de julgar autoridades em processos criminais, e as decisões individuais de ministros seriam limitadas.",
@@ -332,6 +356,7 @@ const ELECTION_DATA = {
           arts: ["art102", "art2"]
         },
         {
+          id: "fim-reeleicao",
           theme: "instituicoes",
           title: "Fim da reeleição para presidente",
           plain: "Mandatos presidenciais sem direito a um segundo período consecutivo.",
@@ -342,6 +367,11 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        figures: [
+          { label: "Infraestrutura (público + privado)", value: 225, display: "R$ 900 bi em 4 anos", kind: "gasto", page: 51 },
+          { label: "Meta de crescimento do PIB", value: null, display: "4% ao ano", kind: "meta", page: 49 },
+          { label: "Novas vagas prisionais", value: null, display: "500 mil em 4 anos, sem custo estimado", kind: "gasto", page: 14 }
+        ],
         headline: "Grandes cifras de investimento sem dizer quem paga",
         points: [
           "R$ 900 bi em 4 anos ≈ 1,7% do PIB por ano (PIB de 2025: R$ 12,7 tri).",
@@ -379,6 +409,7 @@ const ELECTION_DATA = {
       summary: "Documento técnico de 100 páginas e 26 temas. O eixo central é a segurança: a Presidência assume responsabilidade direta pelo tema, facções como PCC e CV são enquadradas como “terrorismo doméstico” quando cumprirem critérios cumulativos, há penas mínimas de 35 a 45 anos e um regime prisional especial (REDAD). No fiscal, propõe que as despesas obrigatórias cresçam abaixo do PIB nominal, sem cortes lineares nem aumento de impostos, e renegociar com o Congresso os critérios das emendas. Também propõe fim da reeleição a partir de 2027 e voto distrital misto.",
       proposals: [
         {
+          id: "faccoes-terrorismo",
           theme: "seguranca",
           title: "Facções como “terrorismo doméstico”, com penas mínimas de 35 a 45 anos",
           plain: "Nova lei enquadraria facções que têm comando, território, armas e poder econômico como organizações terroristas.",
@@ -389,6 +420,7 @@ const ELECTION_DATA = {
           arts: ["art5"]
         },
         {
+          id: "regime-redad",
           theme: "seguranca",
           title: "Regime prisional especial (REDAD): progressão só após 90% da pena e monitoramento de conversas com advogados",
           plain: "Líderes de facção ficariam isolados, com conversas com advogados monitoradas e quase sem direito a progressão.",
@@ -400,6 +432,7 @@ const ELECTION_DATA = {
           arts: ["art5"]
         },
         {
+          id: "forcas-armadas-sem-glo",
           theme: "seguranca",
           title: "Forças Armadas contra o crime organizado sem precisar decretar GLO",
           plain: "Militares atuariam de forma regular no combate às facções, sem o decreto de Garantia da Lei e da Ordem.",
@@ -411,6 +444,7 @@ const ELECTION_DATA = {
           arts: ["art142"]
         },
         {
+          id: "perda-bens-crime",
           theme: "seguranca",
           title: "Perda de bens do crime independentemente da ação penal",
           plain: "Bens e criptoativos de facções poderiam ser tomados em processo próprio, com inversão do ônus da prova e venda antecipada.",
@@ -422,6 +456,7 @@ const ELECTION_DATA = {
           arts: ["art5"]
         },
         {
+          id: "despesas-abaixo-pib",
           theme: "fiscal",
           title: "Despesas obrigatórias crescendo abaixo do PIB, sem cortes lineares nem aumento de impostos",
           plain: "Frear gastos como Previdência e folha para que cresçam menos que a economia.",
@@ -433,6 +468,7 @@ const ELECTION_DATA = {
           arts: ["art201", "art198"]
         },
         {
+          id: "emendas-criterios",
           theme: "fiscal",
           title: "Novos critérios para as emendas parlamentares, pactuados com o Congresso",
           plain: "Reduzir a pulverização das emendas e exigir planejamento, transparência e resultado.",
@@ -443,6 +479,7 @@ const ELECTION_DATA = {
           arts: ["art166"]
         },
         {
+          id: "fim-reeleicao",
           theme: "instituicoes",
           title: "Fim da reeleição, valendo já para o mandato iniciado em 2027",
           plain: "O próprio Caiado abriria mão de concorrer a um segundo mandato.",
@@ -452,6 +489,7 @@ const ELECTION_DATA = {
           arts: ["art14"]
         },
         {
+          id: "voto-distrital-misto",
           theme: "instituicoes",
           title: "Voto distrital misto para deputados",
           plain: "Parte dos deputados seria eleita por distritos e parte por lista partidária.",
@@ -462,6 +500,7 @@ const ELECTION_DATA = {
           arts: ["art45"]
         },
         {
+          id: "regulacao-sus",
           theme: "social",
           title: "Regulação inteligente do SUS: da fila cronológica à prioridade clínica",
           plain: "Consultas e cirurgias seriam agendadas pela gravidade e pelo prazo clínico, não pela ordem de chegada.",
@@ -472,6 +511,8 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        figures: [],
+        figuresNote: "Não encontramos no plano estimativas em reais do custo total das propostas nem da economia pretendida. A regra fiscal é descrita como proporção do PIB.",
         headline: "O ajuste mais detalhado, mas amarrado a gastos que a Constituição protege",
         points: [
           "Meta: despesas obrigatórias crescendo abaixo do PIB nominal.",
@@ -509,6 +550,7 @@ const ELECTION_DATA = {
       summary: "O plano mais extenso da eleição, com 200 páginas, 18 projetos e 20 teses. A tese central é que a sociedade está adoecida pela polarização. As propostas incluem escola em tempo integral com Gestão da Emoção, Educação Financeira e Empreendedorismo no currículo; a política Brasil Neuroinclusivo; um novo órgão para gerar 10 milhões de empreendedores; o Brasil Oásis no Semiárido; e a maior plataforma pública de telemedicina do mundo. No campo institucional, propõe adotar o semipresidencialismo e reformar o STF, com 9 ministros e mandato de 8 anos.",
       proposals: [
         {
+          id: "semipresidencialismo",
           theme: "instituicoes",
           title: "Semipresidencialismo, com Primeiro-Ministro escolhido pelo Parlamento",
           plain: "O presidente dividiria o governo com um primeiro-ministro que depende do apoio da maioria parlamentar.",
@@ -519,6 +561,7 @@ const ELECTION_DATA = {
           arts: ["art60"]
         },
         {
+          id: "reforma-stf",
           theme: "instituicoes",
           title: "STF com 9 ministros, mandato de 8 anos e escolha pelas carreiras jurídicas",
           plain: "O presidente deixaria de indicar ministros; magistratura, MP e OAB escolheriam. Mínimo de 3 mulheres.",
@@ -529,6 +572,7 @@ const ELECTION_DATA = {
           arts: ["art102", "art2"]
         },
         {
+          id: "gestao-emocao-curriculo",
           theme: "social",
           title: "Gestão da Emoção, Educação Financeira e Empreendedorismo no currículo",
           plain: "Três novos pilares nas escolas, dentro do tempo integral.",
@@ -538,6 +582,7 @@ const ELECTION_DATA = {
           arts: []
         },
         {
+          id: "neuroinclusivo",
           theme: "social",
           title: "Brasil Neuroinclusivo",
           plain: "Política nacional para estudantes com autismo, TDAH, dislexia e altas habilidades, com formação de professores.",
@@ -547,6 +592,7 @@ const ELECTION_DATA = {
           arts: []
         },
         {
+          id: "banco-empreendedor",
           theme: "economia",
           title: "10 milhões de novos empreendedores e “Banco do Empreendedor”",
           plain: "Crédito de até R$ 20 mil a 5% ou 6% ao ano, via 10 mil clubes, coordenados por uma Secretaria ou Ministério do Empreendedorismo.",
@@ -557,6 +603,7 @@ const ELECTION_DATA = {
           arts: []
         },
         {
+          id: "tele-saude",
           theme: "social",
           title: "Tele Saúde Brasil",
           plain: "Maior plataforma pública de telemedicina do mundo, com atendimento digital em até 30 minutos nos casos compatíveis.",
@@ -567,6 +614,7 @@ const ELECTION_DATA = {
           arts: []
         },
         {
+          id: "brasil-oasis",
           theme: "economia",
           title: "Brasil Oásis no Semiárido",
           plain: "Irrigação de precisão e agroindústria em 1.477 municípios (31 milhões de pessoas), com meta de multiplicar por dez a exportação de frutas.",
@@ -576,6 +624,7 @@ const ELECTION_DATA = {
           arts: []
         },
         {
+          id: "policia-foco",
           theme: "seguranca",
           title: "Polícia FOCO: converter 5% dos servidores municipais em força de segurança",
           plain: "Servidores já existentes nas prefeituras seriam remanejados para uma força municipal de prevenção.",
@@ -586,6 +635,7 @@ const ELECTION_DATA = {
           arts: ["art37", "art144"]
         },
         {
+          id: "deficit-zero",
           theme: "fiscal",
           title: "Déficit próximo de zero “sem aventuras fiscais”",
           plain: "Compromisso genérico com equilíbrio das contas.",
@@ -597,6 +647,11 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        figures: [
+          { label: "Crédito por empreendedor", value: null, display: "até R$ 20 mil, a 5–6% ao ano", kind: "gasto", page: 98 },
+          { label: "Fundo Internacional de Erradicação da Fome", value: null, display: "US$ 177–342 bi/ano, com financiamento internacional", kind: "fundo", page: 157 }
+        ],
+        figuresNote: "O plano não apresenta o custo total dos 18 projetos.",
         headline: "Muitos projetos novos e poucas fontes de financiamento",
         points: [
           "18 projetos nacionais, vários com novos órgãos e fundos.",
@@ -634,6 +689,7 @@ const ELECTION_DATA = {
       summary: "O resumo do Livro Amarelo, com 51 páginas de uma obra de mais de 500, é o plano mais radical e o mais explícito sobre mudanças constitucionais. No fiscal, propõe uma PEC antes da posse para desindexar benefícios do salário mínimo e desvincular os pisos de saúde e educação, citando um ajuste necessário de R$ 250 bi por ano (estimativa atribuída a Mansueto Almeida). Na segurança, propõe o Direito Penal do Inimigo, aplicado “por sucessivos decretos de Estado de Defesa em áreas sob comando das facções”. O plano também propõe reduzir drasticamente o número de municípios, substituir o Bolsa Família por frentes de trabalho, abolir cotas e acabar com a autonomia universitária. O próprio texto afirma que alguns objetivos “dependem de nova ordem constitucional”.",
       proposals: [
         {
+          id: "direito-penal-inimigo",
           theme: "seguranca",
           title: "Direito Penal do Inimigo (Jakobs)",
           plain: "Membros de facções seriam tratados como “inimigos”: perda de direitos políticos e civis, restrição de locomoção e penas desproporcionais.",
@@ -644,6 +700,7 @@ const ELECTION_DATA = {
           arts: ["art5", "art60", "art15"]
         },
         {
+          id: "estado-de-defesa",
           theme: "seguranca",
           title: "“Sucessivos decretos de Estado de Defesa” em áreas dominadas por facções",
           plain: "Usar o Estado de Defesa, que permite restringir direitos, de forma repetida para combater o crime.",
@@ -654,6 +711,7 @@ const ELECTION_DATA = {
           arts: ["art136"]
         },
         {
+          id: "desindexacao-beneficios",
           theme: "fiscal",
           title: "Desindexar aposentadorias e benefícios assistenciais do salário mínimo",
           plain: "Benefícios seriam corrigidos só pela inflação, mesmo que o salário mínimo tenha aumento real.",
@@ -665,6 +723,7 @@ const ELECTION_DATA = {
           arts: ["art201", "art60"]
         },
         {
+          id: "desvinculacao-pisos",
           theme: "fiscal",
           title: "Desvincular os pisos de saúde e educação",
           plain: "O governo deixaria de ser obrigado a gastar percentuais mínimos da receita em saúde e educação.",
@@ -675,6 +734,7 @@ const ELECTION_DATA = {
           arts: ["art198"]
         },
         {
+          id: "consolidacao-municipal",
           theme: "instituicoes",
           title: "Grande Consolidação Municipal: de 5.570 para cerca de 1.650 municípios",
           plain: "Fundir municípios pequenos e sem receita própria, por meio da PEC 188/2019 e de um novo marco legal.",
@@ -686,6 +746,7 @@ const ELECTION_DATA = {
           arts: ["art18", "art60"]
         },
         {
+          id: "clausula-antimafia",
           theme: "instituicoes",
           title: "Cláusula Antimáfia: STJ dissolve prefeituras capturadas pelo crime",
           plain: "O mandato seria extinto e uma comissão federal administraria o município por até 24 meses.",
@@ -697,36 +758,40 @@ const ELECTION_DATA = {
           arts: ["art18", "art60"]
         },
         {
+          id: "frentes-cidadas",
           theme: "social",
           title: "Trocar o Bolsa Família por “Frentes Cidadãs” de trabalho",
           plain: "A transferência de renda seria substituída por frentes de trabalho remuneradas.",
           page: 21,
           verdict: "lei",
           contested: true,
-          legal: "O Bolsa Família é criado por lei (Lei 14.601/2023). Desde a EC 114/2021, porém, a Constituição garante renda básica a quem está em vulnerabilidade (Art. 6º, parágrafo único). Exigir trabalho como condição é juridicamente discutível para quem não pode trabalhar.",
+          legal: "O Bolsa Família é criado pela Lei 14.601/2023. Desde a EC 114/2021, porém, a Constituição garante renda básica a quem está em vulnerabilidade (Art. 6º, parágrafo único). Exigir trabalho como condição é juridicamente discutível para quem não pode trabalhar.",
           arts: ["art6"]
         },
         {
+          id: "cotas-autonomia-universitaria",
           theme: "social",
           title: "Abolir cotas e substituir a autonomia universitária por “alinhamento estratégico”",
           plain: "Fim da reserva de vagas e universidades federais subordinadas a metas do governo.",
           page: 32,
           quote: "substituindo a autonomia universitária por uma perspectiva de alinhamento estratégico",
           verdict: "pec",
-          legal: "As cotas estão em lei (12.711/2012); o STF as considerou constitucionais, mas não obrigatórias, então revogá-las é possível por lei. Já a autonomia universitária está no Art. 207, e acabar com ela exige PEC.",
+          legal: "As cotas estão na Lei 12.711/2012; o STF as considerou constitucionais, mas não obrigatórias, então revogá-las é possível por lei. Já a autonomia universitária está no Art. 207, e acabar com ela exige PEC.",
           arts: ["art207"]
         },
         {
+          id: "zonas-economicas-especiais",
           theme: "economia",
           title: "Zonas Econômicas Especiais no Nordeste (modelos Shenzhen e Shannon)",
           plain: "Áreas com suspensão de tributos de importação e regime próprio de IBS/CBS para atrair indústria exportadora.",
           page: 35,
           verdict: "lc",
           contested: true,
-          legal: "Incentivos regionais são permitidos (Art. 151, I), e as ZPEs já existem por lei (11.508/2007). Criar um regime específico de IBS/CBS exige lei complementar e, se não estiver entre as exceções da reforma tributária (EC 132/2023), PEC.",
+          legal: "Incentivos regionais são permitidos (Art. 151, I), e as ZPEs já existem pela Lei 11.508/2007. Criar um regime específico de IBS/CBS exige lei complementar e, se não estiver entre as exceções da reforma tributária (EC 132/2023), PEC.",
           arts: []
         },
         {
+          id: "crime-favelizacao",
           theme: "social",
           title: "“Crime de favelização” e demolição administrativa em 48 horas",
           plain: "Punir loteadores ilegais e demolir construções não habitadas em áreas públicas ou de risco sem ordem judicial.",
@@ -739,6 +804,12 @@ const ELECTION_DATA = {
         }
       ],
       economic: {
+        figures: [
+          { label: "Ajuste fiscal necessário (citado)", value: 250, display: "R$ 250 bi/ano", kind: "corte", page: 10 },
+          { label: "Economia projetada com a PEC", value: 220, display: "R$ 1,1 tri até 2031", kind: "corte", page: 10 },
+          { label: "Infraestrutura de 2% para 4% do PIB", value: 254, display: "+2 pontos do PIB, público + privado", kind: "gasto", page: 23 },
+          { label: "Desfavelização", value: 135, display: "R$ 1,2–1,5 tri em 10 anos", kind: "gasto", page: 49 }
+        ],
         headline: "O maior ajuste fiscal proposto, com risco de choque de curto prazo",
         points: [
           "Ajuste citado: R$ 250 bi por ano, cerca de 2% do PIB (estimativa atribuída a Mansueto Almeida).",
@@ -754,6 +825,35 @@ const ELECTION_DATA = {
       }
     }
   ],
+
+  /* ------------------------------------------------------------------
+     Referências citadas no texto: viram links automaticamente
+     ------------------------------------------------------------------ */
+  refs: [
+    { match: "HC 82.959", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=HC&numeroProcesso=82959" },
+    { match: "ADI 6808", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADI&numeroProcesso=6808" },
+    { match: "ADI 6457", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADI&numeroProcesso=6457" },
+    { match: "ADI 6553", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADI&numeroProcesso=6553" },
+    { match: "ADPF 854", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADPF&numeroProcesso=854" },
+    { match: "ADPF 186", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADPF&numeroProcesso=186" },
+    { match: "Súmula Vinculante 26", url: "https://jurisprudencia.stf.jus.br/pages/search?base=sumulas&queryString=%22S%C3%BAmula%20Vinculante%2026%22" },
+    { match: "Súmula Vinculante 43", url: "https://jurisprudencia.stf.jus.br/pages/search?base=sumulas&queryString=%22S%C3%BAmula%20Vinculante%2043%22" },
+    { match: "Lei 13.260/2016", url: "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2016/lei/l13260.htm" },
+    { match: "Lei 13.303/2016", url: "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2016/lei/l13303.htm" },
+    { match: "Lei 14.601/2023", url: "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14601.htm" },
+    { match: "Lei 12.711/2012", url: "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12711.htm" },
+    { match: "Lei 11.508/2007", url: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2007/lei/l11508.htm" },
+    { match: "Lei 14.510/2022", url: "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14510.htm" },
+    { match: "Lei 12.764/2012", url: "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12764.htm" },
+    { match: "Lei 15.077/2024", url: "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2024/lei/l15077.htm" },
+    { match: "LC 200/2023", url: "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp200.htm" },
+    { match: "LC 97/1999", url: "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp97.htm" },
+    { match: "EC 95/2016", url: "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc95.htm" },
+    { match: "EC 114/2021", url: "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc114.htm" },
+    { match: "EC 132/2023", url: "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc132.htm" }
+  ],
+  // Artigos da Constituição ("Art. 5º", "Art. 144") viram link para o texto oficial
+  constitutionUrl: "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm",
 
   /* ------------------------------------------------------------------
      Radar CF/88 — os artigos citados nas análises
@@ -810,14 +910,14 @@ const ELECTION_DATA = {
      Indicadores (com fonte e data)
      ------------------------------------------------------------------ */
   indicators: [
-    { id: "selic", label: "Taxa Selic", value: "13,75%", note: "ao ano, após 5º corte seguido", source: "Copom/BCB · 16/09/2026" },
-    { id: "ipca", label: "Inflação (IPCA 12 meses)", value: "4,22%", note: "juro real perto de 9% ao ano", source: "IBGE · ago/2026" },
-    { id: "dbgg", label: "Dívida bruta", value: "82,5%", note: "do PIB, em alta", source: "BCB · jul/2026" },
-    { id: "rigidez", label: "Orçamento obrigatório", value: "~90%", note: "da despesa primária já tem destino fixo", source: "LOA 2026" },
-    { id: "emendas", label: "Emendas parlamentares", value: "R$ 61 bi", note: "previstas; R$ 37,8 bi de execução obrigatória", source: "LOA 2026" },
-    { id: "mvi", label: "Mortes violentas", value: "40.775", note: "em 2025 (−8,2%); 19,1 por 100 mil", source: "Anuário FBSP 2026" },
-    { id: "letal", label: "Mortes por intervenção policial", value: "6.602", note: "em 2025, maior número desde 2016", source: "Anuário FBSP 2026" },
-    { id: "pib", label: "PIB 2025", value: "R$ 12,7 tri", note: "crescimento de 2,3%", source: "IBGE · mar/2026" }
+    { id: "selic", label: "Taxa Selic", value: "13,75%", note: "ao ano, após 5º corte seguido", source: "Copom/BCB · 16/09/2026", url: "https://www.bcb.gov.br/controleinflacao/historicotaxasjuros" },
+    { id: "ipca", label: "Inflação (IPCA 12 meses)", value: "4,22%", note: "juro real perto de 9% ao ano", source: "IBGE · ago/2026", url: "https://agenciadenoticias.ibge.gov.br/agencia-sala-de-imprensa/2013-agencia-de-noticias/releases/48015-ipca-fica-em-0-32-em-agosto" },
+    { id: "dbgg", label: "Dívida bruta", value: "82,5%", note: "do PIB, em alta", source: "BCB · jul/2026", url: "https://www.bcb.gov.br/estatisticas/estatisticasfiscais" },
+    { id: "rigidez", label: "Orçamento obrigatório", value: "~90%", note: "da despesa primária já tem destino fixo", source: "LOA 2026", url: "https://www.camara.leg.br/noticias/1246912-consultoria-de-orcamento-publica-raio-x-da-lei-orcamentaria-2026-apos-vetos-presidenciais/" },
+    { id: "emendas", label: "Emendas parlamentares", value: "R$ 61 bi", note: "previstas; R$ 37,8 bi de execução obrigatória", source: "LOA 2026", url: "https://www.camara.leg.br/noticias/1235253-congresso-nacional-aprova-orcamento-de-2026-com-r-65-trilhoes-em-despesas" },
+    { id: "mvi", label: "Mortes violentas", value: "40.775", note: "em 2025 (−8,2%); 19,1 por 100 mil", source: "Anuário FBSP 2026", url: "https://agenciabrasil.ebc.com.br/direitos-humanos/noticia/2026-07/mortes-violentas-caem-82-no-pais-em-2025-feminicidios-aumentam-4" },
+    { id: "letal", label: "Mortes por intervenção policial", value: "6.602", note: "em 2025, maior número desde 2016", source: "Anuário FBSP 2026", url: "https://agenciabrasil.ebc.com.br/direitos-humanos/noticia/2026-07/mortes-violentas-caem-82-no-pais-em-2025-feminicidios-aumentam-4" },
+    { id: "pib", label: "PIB 2025", value: "R$ 12,7 tri", note: "crescimento de 2,3%", source: "IBGE · mar/2026", url: "https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/45969-pib-cresce-2-3-em-2025" }
   ],
 
   trilemma: [
@@ -848,28 +948,34 @@ const ELECTION_DATA = {
   ],
 
   glossary: [
-    { term: "Cláusula pétrea", definition: "Parte da Constituição que nem emenda pode abolir (Art. 60, §4º): forma federativa, voto direto e secreto, separação dos Poderes e direitos e garantias individuais." },
-    { term: "PEC (Proposta de Emenda à Constituição)", definition: "Altera o texto da Constituição. Precisa de 3/5 dos votos em dois turnos na Câmara (308 deputados) e no Senado (49 senadores). O presidente não pode vetar nem sancionar." },
-    { term: "Lei complementar", definition: "Lei exigida pela Constituição para certos temas. Precisa de maioria absoluta: 257 deputados e 41 senadores." },
-    { term: "Arcabouço fiscal (LC 200/2023)", definition: "Regra que substituiu o Teto de Gastos. As despesas podem crescer entre 0,6% e 2,5% acima da inflação por ano: até 70% do crescimento da receita, ou 50% se a meta de resultado for descumprida." },
-    { term: "Desindexação", definition: "Desligar a correção automática de um valor, como aposentadorias, de um índice como o salário mínimo. No Brasil, o benefício mínimo do INSS e o BPC são atrelados ao mínimo pela Constituição." },
-    { term: "Estado de Defesa (Art. 136)", definition: "Medida excepcional para restabelecer a ordem em locais determinados. Dura no máximo 30 dias, prorrogáveis uma vez, e precisa de aprovação do Congresso. Permite restringir apenas direitos específicos, como reunião e sigilo de comunicações." },
-    { term: "GLO (Garantia da Lei e da Ordem)", definition: "Decreto que autoriza as Forças Armadas a atuar temporariamente em segurança pública quando as polícias não dão conta (LC 97/1999)." },
-    { term: "Direito Penal do Inimigo", definition: "Teoria do jurista alemão Günther Jakobs segundo a qual certos criminosos perderiam o status de cidadão e seriam neutralizados sem as garantias comuns. É incompatível com as garantias do Art. 5º." },
-    { term: "Individualização da pena", definition: "Garantia de que a pena e sua execução considerem o caso concreto (Art. 5º, XLVI). Por isso o STF derrubou o regime integralmente fechado para crimes hediondos." },
-    { term: "Emendas impositivas", definition: "Parcela do orçamento indicada por deputados e senadores que o governo é obrigado a executar (Art. 166)." },
-    { term: "Regra de Ouro (Art. 167, III)", definition: "Proíbe o governo de se endividar para pagar despesas correntes, como salários e benefícios, sem autorização especial do Congresso por maioria absoluta. Desde 2019 essa autorização é pedida todos os anos." },
-    { term: "Zona Econômica Especial", definition: "Área com regras tributárias e aduaneiras próprias para atrair indústrias exportadoras. No Brasil existem as ZPEs (Lei 11.508/2007) e a Zona Franca de Manaus." }
+    { term: "Cláusula pétrea", aliases: ["cláusula pétrea", "cláusulas pétreas"], definition: "Parte da Constituição que nem emenda pode abolir (Art. 60, §4º): forma federativa, voto direto e secreto, separação dos Poderes e direitos e garantias individuais." },
+    { term: "PEC (Proposta de Emenda à Constituição)", aliases: ["PEC", "emenda constitucional"], definition: "Altera o texto da Constituição. Precisa de 3/5 dos votos em dois turnos na Câmara (308 deputados) e no Senado (49 senadores). O presidente não pode vetar nem sancionar." },
+    { term: "Lei complementar", aliases: ["lei complementar"], definition: "Lei exigida pela Constituição para certos temas. Precisa de maioria absoluta: 257 deputados e 41 senadores." },
+    { term: "Arcabouço fiscal (LC 200/2023)", aliases: ["arcabouço fiscal", "arcabouço"], definition: "Regra que substituiu o Teto de Gastos. As despesas podem crescer entre 0,6% e 2,5% acima da inflação por ano: até 70% do crescimento da receita, ou 50% se a meta de resultado for descumprida." },
+    { term: "Desindexação", aliases: ["desindexação", "desindexar"], definition: "Desligar a correção automática de um valor, como aposentadorias, de um índice como o salário mínimo. No Brasil, o benefício mínimo do INSS e o BPC são atrelados ao mínimo pela Constituição." },
+    { term: "Estado de Defesa (Art. 136)", aliases: ["Estado de Defesa"], definition: "Medida excepcional para restabelecer a ordem em locais determinados. Dura no máximo 30 dias, prorrogáveis uma vez, e precisa de aprovação do Congresso. Permite restringir apenas direitos específicos, como reunião e sigilo de comunicações." },
+    { term: "GLO (Garantia da Lei e da Ordem)", aliases: ["GLO"], definition: "Decreto que autoriza as Forças Armadas a atuar temporariamente em segurança pública quando as polícias não dão conta (LC 97/1999)." },
+    { term: "Direito Penal do Inimigo", aliases: ["Direito Penal do Inimigo"], definition: "Teoria do jurista alemão Günther Jakobs segundo a qual certos criminosos perderiam o status de cidadão e seriam neutralizados sem as garantias comuns. É incompatível com as garantias do Art. 5º." },
+    { term: "Individualização da pena", aliases: ["individualização da pena"], definition: "Garantia de que a pena e sua execução considerem o caso concreto (Art. 5º, XLVI). Por isso o STF derrubou o regime integralmente fechado para crimes hediondos." },
+    { term: "Emendas impositivas", aliases: ["emendas impositivas", "execução obrigatória"], definition: "Parcela do orçamento indicada por deputados e senadores que o governo é obrigado a executar (Art. 166)." },
+    { term: "Regra de Ouro (Art. 167, III)", aliases: ["Regra de Ouro"], definition: "Proíbe o governo de se endividar para pagar despesas correntes, como salários e benefícios, sem autorização especial do Congresso por maioria absoluta. Desde 2019 essa autorização é pedida todos os anos." },
+    { term: "BPC (Benefício de Prestação Continuada)", aliases: ["BPC"], definition: "Um salário mínimo mensal pago a idosos a partir de 65 anos e a pessoas com deficiência de baixa renda (Art. 203, V). Não exige contribuição ao INSS." },
+    { term: "Trânsito em julgado", aliases: ["trânsito em julgado", "transitada em julgado"], definition: "Momento em que não cabe mais recurso contra uma decisão judicial. Pela Constituição, só a partir daí alguém é considerado culpado (Art. 5º, LVII)." },
+    { term: "Despesa discricionária", aliases: ["discricionário", "discricionárias"], definition: "Gasto que o governo pode decidir fazer ou não, como investimentos e custeio da máquina. É a pequena parte do orçamento que não está amarrada por lei ou pela Constituição." },
+    { term: "Zona Econômica Especial", aliases: ["Zonas Econômicas Especiais", "Zona Econômica Especial", "ZPEs"], definition: "Área com regras tributárias e aduaneiras próprias para atrair indústrias exportadoras. No Brasil existem as ZPEs (Lei 11.508/2007) e a Zona Franca de Manaus." }
   ],
 
   sources: [
-    "Constituição da República Federativa do Brasil de 1988 (texto consolidado).",
-    "Planos de governo registrados pelos candidatos (pasta /planos deste repositório).",
-    "Banco Central do Brasil — Copom (16/09/2026) e Estatísticas Fiscais (jul/2026).",
-    "IBGE — IPCA (ago/2026) e Contas Nacionais (PIB 2025).",
-    "Lei Orçamentária Anual 2026 e relatórios da Consultoria de Orçamento do Congresso.",
-    "Fórum Brasileiro de Segurança Pública — Anuário 2026 (dados de 2025).",
-    "STF — HC 82.959, SV 26, SV 43, ADI 6808, ADI 6457, ADI 6553, ADPF 186, ADPF 854.",
-    "TSE — registros de candidatura 2026."
+    { text: "Constituição da República Federativa do Brasil de 1988 (texto consolidado)", url: "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm" },
+    { text: "Planos de governo registrados pelos candidatos (pasta /planos deste repositório)", url: "https://github.com/matheusmendez-ask/eleicoes-2026/tree/main/planos" },
+    { text: "Banco Central — histórico da Selic (Copom de 16/09/2026)", url: "https://www.bcb.gov.br/controleinflacao/historicotaxasjuros" },
+    { text: "Banco Central — Estatísticas fiscais (jul/2026)", url: "https://www.bcb.gov.br/estatisticas/estatisticasfiscais" },
+    { text: "IBGE — IPCA de agosto de 2026", url: "https://agenciadenoticias.ibge.gov.br/agencia-sala-de-imprensa/2013-agencia-de-noticias/releases/48015-ipca-fica-em-0-32-em-agosto" },
+    { text: "IBGE — PIB de 2025", url: "https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/45969-pib-cresce-2-3-em-2025" },
+    { text: "Câmara dos Deputados — Raio X da LOA 2026", url: "https://www.camara.leg.br/noticias/1246912-consultoria-de-orcamento-publica-raio-x-da-lei-orcamentaria-2026-apos-vetos-presidenciais/" },
+    { text: "Fórum Brasileiro de Segurança Pública — Anuário 2026 (dados de 2025)", url: "https://agenciabrasil.ebc.com.br/direitos-humanos/noticia/2026-07/mortes-violentas-caem-82-no-pais-em-2025-feminicidios-aumentam-4" },
+    { text: "Agência Brasil — Avante oficializa Augusto Cury", url: "https://agenciabrasil.ebc.com.br/politica/noticia/2026-08/avante-oficializa-augusto-cury-como-candidato-presidencia" },
+    { text: "TSE — registros de candidatura 2026", url: "https://divulgacandcontas.tse.jus.br/" },
+    { text: "STF — decisões citadas (HC 82.959, SV 26, SV 43, ADI 6808, ADI 6457, ADI 6553, ADPF 186, ADPF 854): links em cada análise", url: "https://portal.stf.jus.br/" }
   ]
 };

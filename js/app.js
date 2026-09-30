@@ -1,6 +1,11 @@
 /**
  * Raio-X dos Planos de Governo 2026 — interface
  * Renderiza tudo a partir de ELECTION_DATA (js/data.js). Sem dependências.
+ *
+ * Rotas (hash):
+ *   #p/<candidato>/<proposta>   abre a proposta (link compartilhável)
+ *   #dossie/<candidato>         abre o dossiê do candidato
+ *   #comparar/<a>,<b>           compara dois candidatos lado a lado
  */
 (() => {
   'use strict';
@@ -13,12 +18,21 @@
   const scaleById = Object.fromEntries(D.legalScale.map((s) => [s.id, s]));
   const themeById = Object.fromEntries(D.themes.map((t) => [t.id, t]));
   const candById = Object.fromEntries(D.candidates.map((c) => [c.id, c]));
-  const allProposals = D.candidates.flatMap((c) => c.proposals.map((p, i) => ({ ...p, cand: c, key: `${c.id}:${i}` })));
+  const allProposals = D.candidates.flatMap((c) => c.proposals.map((p) => ({ ...p, cand: c, key: `${c.id}/${p.id}` })));
   const byKey = Object.fromEntries(allProposals.map((p) => [p.key, p]));
+  const FREE_SPACE = D.budget.items.find((i) => i.id === 'livre').value;
 
-  const state = { theme: 'all', cands: new Set(D.candidates.map((c) => c.id)), verdict: 'all', q: '' };
+  const state = {
+    theme: 'all',
+    cands: new Set(D.candidates.map((c) => c.id)),
+    verdict: 'all',
+    q: '',
+    cmp: [D.candidates[0].id, D.candidates[1].id]
+  };
 
-  /* ---------- Helpers ---------- */
+  /* ==========================================================
+     Helpers
+     ========================================================== */
   const pdfPage = (c, page) => {
     if (!page) return null;
     if (c.document.pageMap === 'saddle84') return page <= 42 ? page : 85 - page;
@@ -30,11 +44,83 @@
     return p ? `${base}#page=${p}` : base;
   };
   const chip = (v) => `<span class="chip v-${v}" title="${esc(scaleById[v].label)}">${esc(scaleById[v].short)}</span>`;
-  const contestedTag = (p) => (p.contested ? '<span class="chip" style="--vc: var(--muted); --vbg: var(--bg-alt);" title="Há divergência relevante entre juristas ou no STF">controverso</span>' : '');
+  const contestedTag = (p) => (p.contested ? '<span class="chip chip-muted" title="Há divergência relevante entre juristas ou no STF">controverso</span>' : '');
   const avatar = (c, cls = '') => `<span class="avatar ${cls}" style="--c:${c.color}" aria-hidden="true">${esc(c.initials)}</span>`;
   const countBy = (list) => D.legalScale.reduce((acc, s) => ((acc[s.id] = list.filter((p) => p.verdict === s.id).length), acc), {});
+  const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const ext = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener">${label}</a>`;
 
-  /* ---------- Tema claro/escuro ---------- */
+  /* ==========================================================
+     Texto rico: leis/decisões viram links, artigos da CF apontam
+     para o texto oficial e termos do glossário ganham explicação.
+     ========================================================== */
+  const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const refByMatch = Object.fromEntries(D.refs.map((r) => [r.match.toLowerCase(), r.url]));
+  const termByAlias = {};
+  D.glossary.forEach((g, i) => (g.aliases || []).forEach((a) => (termByAlias[a.toLowerCase()] = i)));
+  const alternatives = [...Object.keys(refByMatch), ...Object.keys(termByAlias)]
+    .sort((a, b) => b.length - a.length)
+    .map(reEsc);
+  const RICH_RE = new RegExp(`(?<![\\p{L}\\d])(${alternatives.join('|')}|Arts?\\. \\d+(?:º|°)?)(?![\\p{L}\\d])`, 'giu');
+
+  function rich(text, { terms = true, skipTerm = -1 } = {}) {
+    const used = new Set();
+    let out = '';
+    let last = 0;
+    String(text ?? '').replace(RICH_RE, (m, _g, offset) => {
+      out += esc(text.slice(last, offset));
+      last = offset + m.length;
+      const k = m.toLowerCase();
+      if (refByMatch[k]) {
+        out += `<a class="ref" href="${esc(refByMatch[k])}" target="_blank" rel="noopener">${esc(m)}</a>`;
+      } else if (/^arts?\./i.test(m)) {
+        const n = m.match(/\d+/)[0];
+        out += `<a class="ref" href="${esc(D.constitutionUrl)}#art${n}" target="_blank" rel="noopener" title="Abrir a Constituição no Planalto">${esc(m)}</a>`;
+      } else if (terms && termByAlias[k] !== undefined && termByAlias[k] !== skipTerm && !used.has(termByAlias[k])) {
+        used.add(termByAlias[k]);
+        out += `<button type="button" class="term" data-term="${termByAlias[k]}" aria-describedby="tip">${esc(m)}</button>`;
+      } else {
+        out += esc(m);
+      }
+      return m;
+    });
+    return out + esc(String(text ?? '').slice(last));
+  }
+
+  /* ---------- Dica flutuante do glossário ---------- */
+  function initTooltips() {
+    const tip = $('#tip');
+    let current = null;
+    const show = (el) => {
+      const g = D.glossary[+el.dataset.term];
+      tip.innerHTML = `<b>${esc(g.term)}</b>${esc(g.definition)}`;
+      tip.hidden = false;
+      const r = el.getBoundingClientRect();
+      const w = Math.min(320, innerWidth - 24);
+      tip.style.width = `${w}px`;
+      const left = Math.max(12, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 12));
+      const below = r.bottom + 10 + tip.offsetHeight < innerHeight;
+      tip.style.left = `${left}px`;
+      tip.style.top = `${below ? r.bottom + 8 : r.top - tip.offsetHeight - 8}px`;
+      current = el;
+    };
+    const hide = () => { tip.hidden = true; current = null; };
+    document.addEventListener('mouseover', (e) => { const t = e.target.closest('.term'); if (t) show(t); });
+    document.addEventListener('mouseout', (e) => { if (e.target.closest('.term')) hide(); });
+    document.addEventListener('focusin', (e) => { const t = e.target.closest('.term'); if (t) show(t); else if (current) hide(); });
+    document.addEventListener('click', (e) => {
+      const t = e.target.closest('.term');
+      if (t) { e.stopPropagation(); current === t && !tip.hidden ? hide() : show(t); }
+      else if (current) hide();
+    }, true);
+    addEventListener('scroll', hide, { passive: true });
+    $('#modal-body').addEventListener('scroll', hide, { passive: true });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && current) { hide(); e.stopImmediatePropagation(); } });
+  }
+
+  /* ==========================================================
+     Tema claro/escuro
+     ========================================================== */
   function initTheme() {
     const btn = $('#theme-btn');
     const icon = $('#theme-icon');
@@ -57,18 +143,19 @@
     paint();
   }
 
-  /* ---------- Hero ---------- */
+  /* ==========================================================
+     Hero e escada
+     ========================================================== */
+  const statCard = (s, cls = 'stat') => `
+    <div class="${cls} reveal"><div class="stat-label">${esc(s.label)}</div><div class="stat-value">${esc(s.value)}</div>
+    <div class="stat-note">${esc(s.note)}</div><a class="stat-src" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.source)} ↗</a></div>`;
+
   function renderHero() {
     $('#hero-faces').innerHTML = D.candidates.map((c) => `<span class="face" style="--c:${c.color}" title="${esc(c.name)}">${esc(c.initials)}</span>`).join('');
     $('#hero-count').textContent = `${D.meta.analyzed} planos · ${allProposals.length} propostas checadas · ${D.meta.registeredCandidates} candidaturas registradas no TSE`;
-    const pick = ['selic', 'dbgg', 'rigidez', 'mvi'];
-    $('#hero-stats').innerHTML = pick.map((id) => {
-      const s = D.indicators.find((i) => i.id === id);
-      return `<div class="stat reveal"><div class="stat-label">${esc(s.label)}</div><div class="stat-value">${esc(s.value)}</div><div class="stat-note">${esc(s.note)}</div><span class="stat-src">${esc(s.source)}</span></div>`;
-    }).join('');
+    $('#hero-stats').innerHTML = ['selic', 'dbgg', 'rigidez', 'mvi'].map((id) => statCard(D.indicators.find((i) => i.id === id))).join('');
   }
 
-  /* ---------- Escada ---------- */
   function renderLadder() {
     const counts = countBy(allProposals);
     $('#ladder').innerHTML = D.legalScale.map((s) => `
@@ -76,12 +163,14 @@
         <div class="rung-step">${esc(s.step)}</div>
         <h4>${esc(s.label)}</h4>
         <div class="who">${esc(s.who)}</div>
-        <p>${esc(s.desc)}</p>
+        <p>${rich(s.desc)}</p>
         <div class="count">${counts[s.id]}<small>propostas analisadas</small></div>
       </div>`).join('');
   }
 
-  /* ---------- Cards de candidatos ---------- */
+  /* ==========================================================
+     Cartões de candidatos
+     ========================================================== */
   function verdictBar(list) {
     const counts = countBy(list);
     const total = list.length;
@@ -90,10 +179,11 @@
     return `<div class="vbar" role="img" aria-label="${D.legalScale.map((s) => `${s.label}: ${counts[s.id]}`).join(', ')}">${bar}</div><div class="vbar-legend">${legend}</div>`;
   }
 
+  const verdictOrder = { vedado: 0, pec: 1, lc: 2, lei: 3, exec: 4 };
+
   function renderCandidates() {
-    const order = { vedado: 0, pec: 1, lc: 2, lei: 3, exec: 4 };
     $('#cand-grid').innerHTML = D.candidates.map((c) => {
-      const highlights = [...c.proposals].sort((a, b) => order[a.verdict] - order[b.verdict]).slice(0, 3);
+      const highlights = [...c.proposals].sort((a, b) => verdictOrder[a.verdict] - verdictOrder[b.verdict]).slice(0, 3);
       return `
       <article class="cand-card reveal" style="--c:${c.color}">
         <div class="cand-top">
@@ -118,7 +208,7 @@
             </ul>
           </div>
           <div class="cand-foot">
-            <button class="btn btn-c" data-dossier="${c.id}">Abrir dossiê</button>
+            <a class="btn btn-c" href="#dossie/${c.id}">Abrir dossiê</a>
             <a class="btn btn-ghost" href="${pdfUrl(c)}" target="_blank" rel="noopener">PDF original</a>
           </div>
         </div>
@@ -134,26 +224,24 @@
       </article>`;
   }
 
-  /* ---------- Filtros e matriz ---------- */
+  /* ==========================================================
+     Filtros e matriz de propostas
+     ========================================================== */
   function renderFilters() {
     $('#theme-filter').innerHTML = [`<button data-theme-f="all" aria-pressed="true">Todos os temas</button>`]
       .concat(D.themes.map((t) => `<button data-theme-f="${t.id}" aria-pressed="false">${t.icon} ${esc(t.label)}</button>`)).join('');
-    $('#cand-filter').innerHTML = D.candidates.map((c) => `<button data-cand-f="${c.id}" aria-pressed="true"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c.color};margin-right:6px"></span>${esc(c.shortName)}</button>`).join('');
+    $('#cand-filter').innerHTML = D.candidates.map((c) => `<button data-cand-f="${c.id}" aria-pressed="true"><span class="dot" style="background:${c.color}"></span>${esc(c.shortName)}</button>`).join('');
     $('#verdict-filter').innerHTML = [`<button data-verdict-f="all" aria-pressed="true">Todos os degraus</button>`]
       .concat(D.legalScale.map((s) => `<button data-verdict-f="${s.id}" aria-pressed="false">${esc(s.label)}</button>`)).join('');
 
-    $('#theme-filter').addEventListener('click', (e) => {
+    const single = (group, key, prop) => $(group).addEventListener('click', (e) => {
       const b = e.target.closest('button'); if (!b) return;
-      state.theme = b.dataset.themeF;
-      $$('#theme-filter button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      state[key] = b.dataset[prop];
+      $$(`${group} button`).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
       renderMatrix();
     });
-    $('#verdict-filter').addEventListener('click', (e) => {
-      const b = e.target.closest('button'); if (!b) return;
-      state.verdict = b.dataset.verdictF;
-      $$('#verdict-filter button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      renderMatrix();
-    });
+    single('#theme-filter', 'theme', 'themeF');
+    single('#verdict-filter', 'verdict', 'verdictF');
     $('#cand-filter').addEventListener('click', (e) => {
       const b = e.target.closest('button'); if (!b) return;
       const id = b.dataset.candF;
@@ -168,7 +256,12 @@
     });
   }
 
-  const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const propButton = (p, compact = false) => `
+    <a class="prop${compact ? ' prop-compact' : ''}" href="#p/${p.key}">
+      <span class="prop-title">${esc(p.title)}</span>
+      <span class="prop-chips">${chip(p.verdict)}${contestedTag(p)}</span>
+      ${compact ? '' : `<span class="prop-plain">${esc(p.plain)}</span><span class="prop-more">Ver análise e fonte (p. ${esc(p.page)}) →</span>`}
+    </a>`;
 
   function renderMatrix() {
     const q = norm(state.q.trim());
@@ -190,21 +283,63 @@
       const rows = D.candidates.filter((c) => list.some((p) => p.theme === t.id && p.cand.id === c.id)).map((c) => `
         <div class="theme-row">
           <div class="row-who">${avatar(c)}<span>${esc(c.shortName)}</span></div>
-          <div class="row-items">
-            ${list.filter((p) => p.theme === t.id && p.cand.id === c.id).map((p) => `
-              <button class="prop" data-prop="${p.key}">
-                <span class="prop-title">${esc(p.title)}</span>
-                <span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${chip(p.verdict)}${contestedTag(p)}</span>
-                <span class="prop-plain">${esc(p.plain)}</span>
-                <span class="prop-more">Ver análise e fonte (p. ${esc(p.page)}) →</span>
-              </button>`).join('')}
-          </div>
+          <div class="row-items">${list.filter((p) => p.theme === t.id && p.cand.id === c.id).map((p) => propButton(p)).join('')}</div>
         </div>`).join('');
       return `<section class="theme-block"><div class="theme-head"><span class="ti" aria-hidden="true">${t.icon}</span><h3>${esc(t.label)}</h3></div>${rows}</section>`;
     }).join('');
   }
 
-  /* ---------- Radar CF/88 ---------- */
+  /* ==========================================================
+     Frente a frente (comparação)
+     ========================================================== */
+  function initCompare() {
+    const opts = D.candidates.map((c) => `<option value="${c.id}">${esc(c.shortName)}</option>`).join('');
+    $('#cmp-a').innerHTML = opts;
+    $('#cmp-b').innerHTML = opts;
+    const onChange = () => {
+      state.cmp = [$('#cmp-a').value, $('#cmp-b').value];
+      history.replaceState(null, '', `#comparar/${state.cmp.join(',')}`);
+      renderCompare();
+    };
+    $('#cmp-a').addEventListener('change', onChange);
+    $('#cmp-b').addEventListener('change', onChange);
+    $('#cmp-swap').addEventListener('click', () => {
+      state.cmp.reverse();
+      $('#cmp-a').value = state.cmp[0];
+      $('#cmp-b').value = state.cmp[1];
+      onChange();
+    });
+    $('#cmp-share').addEventListener('click', (e) => copyLink(new URL(`#comparar/${state.cmp.join(',')}`, location.href).href, e.currentTarget));
+    renderCompare();
+  }
+
+  function renderCompare() {
+    const [a, b] = state.cmp.map((id) => candById[id]);
+    $('#cmp-a').value = a.id;
+    $('#cmp-b').value = b.id;
+    const head = (c) => `
+      <div class="cmp-head" style="--c:${c.color}">
+        <div class="cand-id">${avatar(c)}<div><div class="cand-name">${esc(c.shortName)}</div><div class="cand-party">${esc(c.party)} · ${c.proposals.length} propostas</div></div></div>
+        <p class="cmp-thesis">${esc(c.thesis)}</p>
+        ${verdictBar(c.proposals)}
+      </div>`;
+    const col = (c, theme) => {
+      const ps = allProposals.filter((p) => p.cand.id === c.id && p.theme === theme);
+      return ps.length ? ps.map((p) => propButton(p, true)).join('') : '<p class="cmp-empty">Nenhuma proposta analisada neste tema.</p>';
+    };
+    const same = a.id === b.id ? '<p class="cmp-warn">Escolha dois candidatos diferentes para comparar.</p>' : '';
+    $('#cmp').innerHTML = same + `
+      <div class="cmp-grid">${head(a)}${head(b)}</div>
+      ${D.themes.map((t) => `
+        <div class="cmp-theme">
+          <h3><span aria-hidden="true">${t.icon}</span> ${esc(t.label)}</h3>
+          <div class="cmp-grid"><div class="cmp-col" style="--c:${a.color}">${col(a, t.id)}</div><div class="cmp-col" style="--c:${b.color}">${col(b, t.id)}</div></div>
+        </div>`).join('')}`;
+  }
+
+  /* ==========================================================
+     Radar CF/88
+     ========================================================== */
   function articleHits() {
     const hits = {};
     allProposals.forEach((p) => p.arts.forEach((a) => (hits[a] = hits[a] || []).push(p)));
@@ -226,7 +361,8 @@
         <span class="art-who">${cands.map((c) => avatar(c)).join('')}</span>
       </button>`;
     };
-    const top = ids.slice(0, 6), rest = ids.slice(6);
+    const top = ids.slice(0, 6);
+    const rest = ids.slice(6);
     $('#radar').innerHTML = top.map(card).join('');
     $('#radar-more').innerHTML = rest.length ? `
       <details class="more"><summary>Mais ${rest.length} artigos citados ↓</summary>
@@ -234,11 +370,13 @@
       </details>` : '';
   }
 
-  /* ---------- Orçamento ---------- */
+  /* ==========================================================
+     Orçamento
+     ========================================================== */
   function renderBudget() {
     const b = D.budget;
     $('#budget-note').textContent = b.note;
-    const pct = (v) => ((v / b.total) * 100);
+    const pct = (v) => (v / b.total) * 100;
     const fmt = (v) => (v >= 1000 ? `R$ ${(v / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 2 })} tri` : `R$ ${v} bi`);
 
     $('#budget-stack').innerHTML = b.items.map((i) => `
@@ -260,12 +398,11 @@
       el.addEventListener('mouseleave', () => highlight(null));
     });
 
-    const free = b.items.find((i) => i.id === 'livre').value;
-    const max = Math.max(free, ...b.promises.map((p) => p.perYear));
+    const max = Math.max(FREE_SPACE, ...b.promises.map((p) => p.perYear));
     $('#promises').innerHTML = `
       <div class="promise" style="--c: var(--brand)">
-        <div class="promise-top"><span>Espaço livre do Executivo</span><span>R$ ${free} bi/ano</span></div>
-        <div class="promise-bar"><i style="width:${(free / max) * 100}%"></i></div>
+        <div class="promise-top"><span>Espaço livre do Executivo</span><span>R$ ${FREE_SPACE} bi/ano</span></div>
+        <div class="promise-bar"><i style="width:${(FREE_SPACE / max) * 100}%"></i></div>
       </div>` + b.promises.map((p) => {
       const c = candById[p.candidate];
       return `
@@ -277,12 +414,40 @@
     }).join('');
   }
 
-  /* ---------- Contexto, correções, glossário ---------- */
+  /* ---------- Gráfico de cifras (aba Economia do dossiê) ---------- */
+  const kindLabel = { gasto: 'gasto', corte: 'corte/economia', meta: 'meta', fundo: 'fundo externo', 'diagnóstico': 'diagnóstico' };
+
+  function figuresChart(c) {
+    const figs = c.economic.figures || [];
+    const withValue = figs.filter((f) => f.value);
+    const max = Math.max(FREE_SPACE * 1.25, ...withValue.map((f) => f.value));
+    const refLeft = (FREE_SPACE / max) * 100;
+    const rows = figs.map((f) => `
+      <div class="fig-row">
+        <div class="fig-top">
+          <span>${esc(f.label)} <span class="fig-kind k-${f.kind === 'corte' ? 'corte' : 'gasto'}">${esc(kindLabel[f.kind] || f.kind)}</span></span>
+          <a class="src-link" href="${pdfUrl(c, f.page)}" target="_blank" rel="noopener">p. ${esc(f.page)}</a>
+        </div>
+        ${f.value
+          ? `<div class="fig-track"><i style="width:${(f.value / max) * 100}%;${f.kind === 'corte' ? 'background:var(--muted)' : ''}"></i><b class="fig-ref" style="left:${refLeft}%"></b></div>
+             <small>${esc(f.display)}${/\/ano/.test(f.display) ? '' : ` · ≈ R$ ${f.value} bi por ano`}</small>`
+          : `<small>${esc(f.display)}</small>`}
+      </div>`).join('');
+    return `
+      <div class="analysis-card">
+        <div class="analysis-top"><b>Cifras citadas no plano</b><span class="fig-legend"><b class="fig-ref-key"></b>R$ ${FREE_SPACE} bi/ano livres do Executivo (2026)</span></div>
+        ${rows || ''}
+        ${c.economic.figuresNote ? `<p class="stat-note" style="margin-top:8px">${esc(c.economic.figuresNote)}</p>` : ''}
+      </div>`;
+  }
+
+  /* ==========================================================
+     Contexto, correções, glossário, rodapé
+     ========================================================== */
   function renderContext() {
-    $('#ctx-grid').innerHTML = D.indicators.map((s) => `
-      <div class="ctx-card reveal"><div class="stat-label">${esc(s.label)}</div><div class="stat-value">${esc(s.value)}</div><p>${esc(s.note)}</p><span class="stat-src">${esc(s.source)}</span></div>`).join('');
+    $('#ctx-grid').innerHTML = D.indicators.map((s) => statCard(s, 'ctx-card')).join('');
     $('#trilemma').innerHTML = `<div style="grid-column:1/-1"><h3 style="font-family:var(--font-display);font-size:1.5rem">O trilema de qualquer presidente</h3><p class="lede" style="font-size:1rem">Toda promessa precisa passar por estas três travas ao mesmo tempo.</p></div>` +
-      D.trilemma.map((t, i) => `<div class="tri-item"><h4>${i + 1}. ${esc(t.title)}</h4><p>${esc(t.desc)}</p></div>`).join('');
+      D.trilemma.map((t, i) => `<div class="tri-item"><h4>${i + 1}. ${esc(t.title)}</h4><p>${rich(t.desc)}</p></div>`).join('');
   }
 
   function renderFixes() {
@@ -290,16 +455,16 @@
       <div class="fix reveal">
         <div class="fix-head"><span class="fix-kind">${esc(f.kind)}</span>${esc(f.who)}</div>
         <div class="fix-was">${esc(f.was)}</div>
-        <div class="fix-now">${esc(f.now)}</div>
+        <div class="fix-now">${rich(f.now, { terms: false })}</div>
       </div>`;
     $('#fixes').innerHTML = D.corrections.slice(0, 6).map(fix).join('');
     const rest = D.corrections.slice(6);
     $('#fixes-more').innerHTML = rest.length ? `<details class="more"><summary>Ver as outras ${rest.length} correções ↓</summary><div class="fix-grid">${rest.map(fix).join('')}</div></details>` : '';
-    $('#sources').innerHTML = D.sources.map((s) => `<li>${esc(s)}</li>`).join('');
+    $('#sources').innerHTML = D.sources.map((s) => `<li>${ext(s.url, esc(s.text))} ↗</li>`).join('');
   }
 
   function renderGlossary() {
-    $('#gloss').innerHTML = D.glossary.map((g) => `<details class="reveal"><summary>${esc(g.term)}</summary><p>${esc(g.definition)}</p></details>`).join('');
+    $('#gloss').innerHTML = D.glossary.map((g, i) => `<details class="reveal" id="termo-${i}"><summary>${esc(g.term)}</summary><p>${rich(g.definition, { skipTerm: i })}</p></details>`).join('');
   }
 
   function renderFooter() {
@@ -307,12 +472,46 @@
     $('#foot-updated').textContent = `Atualizado em ${D.meta.updated}`;
   }
 
-  /* ---------- Modal ---------- */
+  /* ==========================================================
+     Compartilhamento
+     ========================================================== */
+  const shareFile = (p) => `share/${p.cand.id}--${p.id}.html`;
+
+  function copyLink(url, btn) {
+    const done = () => {
+      const old = btn.innerHTML;
+      btn.innerHTML = '✓ Link copiado';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.innerHTML = old; btn.classList.remove('ok'); }, 1800);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(done, () => prompt('Copie o link:', url));
+    } else {
+      prompt('Copie o link:', url);
+    }
+  }
+
+  function shareBar(p) {
+    const url = new URL(shareFile(p), location.href).href;
+    const text = `${p.cand.shortName}: “${p.title}” — o que a Constituição diz sobre isso`;
+    return `
+      <div class="share" data-share-url="${esc(url)}" data-share-text="${esc(text)}">
+        <span class="share-label">Compartilhar</span>
+        <button class="share-btn" data-copy>🔗 Copiar link</button>
+        ${navigator.share ? '<button class="share-btn" data-native-share>📤 Enviar…</button>' : ''}
+        <a class="share-btn" href="https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="share-btn" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}" target="_blank" rel="noopener">X</a>
+      </div>`;
+  }
+
+  /* ==========================================================
+     Modal
+     ========================================================== */
   const modal = $('#modal');
   let lastFocus = null;
 
   function openModal(headHtml, bodyHtml, color) {
-    lastFocus = document.activeElement;
+    if (!modal.classList.contains('open')) lastFocus = document.activeElement;
     modal.style.setProperty('--c', color || 'var(--brand)');
     $('#modal-head').innerHTML = headHtml;
     $('#modal-body').innerHTML = bodyHtml;
@@ -320,34 +519,33 @@
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    const close = $('[data-close-btn]', modal);
-    (close || $('.modal-panel', modal)).focus();
+    ($('[data-close-btn]', modal) || $('.modal-panel', modal)).focus();
   }
 
   function closeModal() {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    if (lastFocus) lastFocus.focus();
-    if (location.hash.startsWith('#dossie-')) history.replaceState(null, '', location.pathname + location.search);
+    if (/^#(p|dossie)\//.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+    if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
   }
 
   const closeBtn = `<button class="icon-btn" data-close-btn data-close aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>`;
 
-  function proposalCard(p, withWho = false) {
+  function proposalCard(p, { withWho = false, link = true } = {}) {
     const c = p.cand;
     return `
       <article class="analysis-card">
         <div class="analysis-top">
-          <b>${withWho ? `${esc(c.shortName)}: ` : ''}${esc(p.title)}</b>
-          <span style="display:flex;gap:6px;flex-wrap:wrap">${chip(p.verdict)}${contestedTag(p)}</span>
+          ${link ? `<a class="analysis-title" href="#p/${p.key}">${withWho ? `${esc(c.shortName)}: ` : ''}${esc(p.title)}</a>` : `<span class="sub">Classificação jurídica</span>`}
+          <span class="prop-chips">${chip(p.verdict)}${contestedTag(p)}</span>
         </div>
         <p>${esc(p.plain)}</p>
         ${p.quote ? `<blockquote class="quote">“${esc(p.quote)}”<cite>${esc(c.document.title)}, p. ${esc(p.page)}</cite></blockquote>` : ''}
         <dl class="kv">
-          <div><dt>O que diz a Constituição</dt><dd>${esc(p.legal)}</dd></div>
+          <div><dt>O que diz a Constituição</dt><dd>${rich(p.legal)}</dd></div>
         </dl>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px">
+        <div class="card-links">
           <a class="src-link" href="${pdfUrl(c, p.page)}" target="_blank" rel="noopener">Abrir no PDF, p. ${esc(p.page)} ↗</a>
           ${p.arts.map((a) => `<button class="src-link" data-article="${a}">${esc(D.articles[a].title)}</button>`).join('')}
         </div>
@@ -368,7 +566,6 @@
       </div>
       <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" data-tab="${k}" data-cid="${c.id}" aria-selected="${k === tab}">${esc(l)}</button>`).join('')}</div>`;
     openModal(head, dossierBody(c, tab), c.color);
-    history.replaceState(null, '', `#dossie-${c.id}`);
   }
 
   function dossierBody(c, tab) {
@@ -380,15 +577,16 @@
     if (tab === 'economia') {
       return `
         <h3>${esc(c.economic.headline)}</h3>
-        <ul class="mini-list" style="margin-bottom:16px">${c.economic.points.map((x) => `<li>• ${esc(x)}</li>`).join('')}</ul>
-        <p>${esc(c.economic.analysis)}</p>`;
+        ${figuresChart(c)}
+        <ul class="bullets">${c.economic.points.map((x) => `<li>${rich(x)}</li>`).join('')}</ul>
+        <p>${rich(c.economic.analysis)}</p>`;
     }
     if (tab === 'contexto') {
       return `
         <div class="analysis-card"><dl class="kv">
-          <div><dt>Diagnóstico do plano</dt><dd>${esc(c.context.diagnosis)}</dd></div>
-          <div><dt>Resposta proposta</dt><dd>${esc(c.context.solution)}</dd></div>
-          <div><dt>Ponto cego</dt><dd>${esc(c.context.critique)}</dd></div>
+          <div><dt>Diagnóstico do plano</dt><dd>${rich(c.context.diagnosis)}</dd></div>
+          <div><dt>Resposta proposta</dt><dd>${rich(c.context.solution)}</dd></div>
+          <div><dt>Ponto cego</dt><dd>${rich(c.context.critique)}</dd></div>
         </dl></div>`;
     }
     return `
@@ -399,28 +597,41 @@
       </div>
       <blockquote class="quote">“${esc(c.motto.text)}”<cite>${c.motto.page ? `p. ${esc(c.motto.page)}` : 'abertura do programa'}</cite></blockquote>
       <h3>Em resumo</h3>
-      <p>${esc(c.summary)}</p>
+      <p>${rich(c.summary)}</p>
       <h3>Perfil jurídico</h3>
       ${verdictBar(c.proposals)}
-      <p style="margin-top:18px"><a class="btn btn-ghost" href="${pdfUrl(c)}" target="_blank" rel="noopener">Ler o plano completo (PDF) ↗</a></p>`;
+      <p style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-ghost" href="${pdfUrl(c)}" target="_blank" rel="noopener">Ler o plano completo (PDF) ↗</a>
+        <a class="btn btn-ghost" href="#comparar/${c.id},${D.candidates.find((x) => x.id !== c.id).id}" data-close>Comparar com outro candidato</a>
+      </p>`;
   }
 
   function openProposal(key) {
     const p = byKey[key];
+    if (!p) return;
     const c = p.cand;
+    const s = scaleById[p.verdict];
+    const siblings = allProposals.filter((x) => x.cand.id === c.id);
+    const i = siblings.indexOf(p);
+    const prev = siblings[(i - 1 + siblings.length) % siblings.length];
+    const next = siblings[(i + 1) % siblings.length];
     const head = `
       <div class="modal-head-row">
         <div style="display:flex;gap:14px;align-items:center">${avatar(c)}<div><div class="sub">${esc(c.name)} · ${themeById[p.theme].icon} ${esc(themeById[p.theme].label)}</div><h2 id="modal-title">${esc(p.title)}</h2></div></div>
         ${closeBtn}
       </div><div style="height:18px"></div>`;
-    const s = scaleById[p.verdict];
-    const body = proposalCard(p) + `
+    const body = proposalCard(p, { link: false }) + shareBar(p) + `
       <div class="explain" style="margin-top:16px">
         <span class="explain-icon" aria-hidden="true">?</span>
-        <div><strong>O que significa “${esc(s.label)}”</strong><p>${esc(s.desc)} <b>${esc(s.who)}.</b></p></div>
+        <div><strong>O que significa “${esc(s.label)}”</strong><p>${rich(s.desc)} <b>${esc(s.who)}.</b></p></div>
       </div>
-      <p style="margin-top:8px"><button class="btn btn-ghost" data-dossier="${c.id}">Ver o dossiê completo de ${esc(c.shortName)}</button></p>`;
+      <nav class="prop-nav" aria-label="Outras propostas de ${esc(c.shortName)}">
+        <a href="#p/${prev.key}">← ${esc(prev.title)}</a>
+        <a href="#p/${next.key}">${esc(next.title)} →</a>
+      </nav>
+      <p style="margin-top:12px"><a class="btn btn-ghost" href="#dossie/${c.id}">Ver o dossiê completo de ${esc(c.shortName)}</a></p>`;
     openModal(head, body, c.color);
+    document.title = `${p.title} · ${c.shortName} · Raio-X 2026`;
   }
 
   function openArticle(id) {
@@ -432,21 +643,49 @@
         ${closeBtn}
       </div><div style="height:18px"></div>`;
     const body = `
-      <blockquote class="quote">${esc(a.text)}<cite>CF/88</cite></blockquote>
-      <div class="explain"><span class="explain-icon" aria-hidden="true">i</span><div><strong>Em português simples</strong><p>${esc(a.plain)}</p></div></div>
+      <blockquote class="quote">${esc(a.text)}<cite>${ext(D.constitutionUrl, 'CF/88 no site do Planalto ↗')}</cite></blockquote>
+      <div class="explain"><span class="explain-icon" aria-hidden="true">i</span><div><strong>Em português simples</strong><p>${rich(a.plain)}</p></div></div>
       <h3>Propostas que esbarram neste artigo</h3>
-      ${list.map((p) => proposalCard(p, true)).join('')}`;
+      ${list.map((p) => proposalCard(p, { withWho: true })).join('')}`;
     openModal(head, body);
+  }
+
+  /* ==========================================================
+     Roteamento por hash
+     ========================================================== */
+  const BASE_TITLE = document.title;
+
+  function route() {
+    const h = decodeURIComponent(location.hash.slice(1));
+    let m;
+    document.title = BASE_TITLE;
+    if ((m = h.match(/^p\/([\w-]+\/[\w-]+)$/)) && byKey[m[1]]) return openProposal(m[1]);
+    if ((m = h.match(/^dossie[/-]([\w-]+)$/)) && candById[m[1]]) return openDossier(m[1]);
+    if ((m = h.match(/^comparar\/([\w-]+),([\w-]+)$/)) && candById[m[1]] && candById[m[2]]) {
+      if (modal.classList.contains('open')) closeModal();
+      state.cmp = [m[1], m[2]];
+      renderCompare();
+      $('#comparar').scrollIntoView();
+      return;
+    }
+    if (modal.classList.contains('open')) closeModal();
   }
 
   function initModal() {
     document.addEventListener('click', (e) => {
-      const t = e.target.closest('[data-dossier],[data-prop],[data-article],[data-tab],[data-close]');
+      const t = e.target.closest('[data-article],[data-tab],[data-close],[data-copy],[data-native-share]');
       if (!t) return;
-      if (t.dataset.close !== undefined) return closeModal();
-      if (t.dataset.dossier) return openDossier(t.dataset.dossier);
-      if (t.dataset.prop) return openProposal(t.dataset.prop);
+      if (t.dataset.close !== undefined) {
+        if (t.tagName !== 'A') closeModal();
+        return;
+      }
       if (t.dataset.article) return openArticle(t.dataset.article);
+      if (t.dataset.copy !== undefined) return copyLink(t.closest('.share').dataset.shareUrl, t);
+      if (t.dataset.nativeShare !== undefined) {
+        const s = t.closest('.share').dataset;
+        navigator.share({ title: document.title, text: s.shareText, url: s.shareUrl }).catch(() => {});
+        return;
+      }
       if (t.dataset.tab) {
         const c = candById[t.dataset.cid];
         $$('.tabs button', modal).forEach((b) => b.setAttribute('aria-selected', String(b === t)));
@@ -458,19 +697,22 @@
       if (!modal.classList.contains('open')) return;
       if (e.key === 'Escape') closeModal();
       if (e.key === 'Tab') {
-        const f = $$('button, a[href], input, [tabindex]:not([tabindex="-1"])', modal).filter((el) => el.offsetParent !== null);
+        const f = $$('button, a[href], input, select, [tabindex]:not([tabindex="-1"])', modal).filter((el) => el.offsetParent !== null);
         if (!f.length) return;
-        const first = f[0], last = f[f.length - 1];
+        const first = f[0];
+        const last = f[f.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     });
     $('.modal-panel', modal).setAttribute('tabindex', '-1');
-    const m = location.hash.match(/^#dossie-(.+)$/);
-    if (m && candById[m[1]]) openDossier(m[1]);
+    addEventListener('hashchange', route);
+    route();
   }
 
-  /* ---------- Navegação, progresso, animações ---------- */
+  /* ==========================================================
+     Navegação, progresso, animações
+     ========================================================== */
   function initChrome() {
     const menuBtn = $('#menu-btn');
     const mnav = $('#mobile-nav');
@@ -509,7 +751,9 @@
     }
   }
 
-  /* ---------- Init ---------- */
+  /* ==========================================================
+     Init
+     ========================================================== */
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     renderHero();
@@ -517,12 +761,14 @@
     renderCandidates();
     renderFilters();
     renderMatrix();
+    initCompare();
     renderRadar();
     renderBudget();
     renderContext();
     renderFixes();
     renderGlossary();
     renderFooter();
+    initTooltips();
     initModal();
     initChrome();
   });

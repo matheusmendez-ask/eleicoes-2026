@@ -31,6 +31,7 @@
         <a href="#como-ler">Como ler</a>
         <a href="#candidatos">Candidatos</a>
         <a href="#propostas">Propostas</a>
+        <a href="#comparar">Comparar</a>
         <a href="#constituicao">Constituição</a>
         <a href="#orcamento">Orçamento</a>
         <a href="#transparencia">Método</a>
@@ -48,6 +49,7 @@
       <a href="#como-ler">Como ler</a>
       <a href="#candidatos">Candidatos</a>
       <a href="#propostas">Propostas</a>
+      <a href="#comparar">Frente a frente</a>
       <a href="#constituicao">Constituição</a>
       <a href="#orcamento">Orçamento</a>
       <a href="#contexto">Contexto</a>
@@ -174,11 +176,29 @@
       </div>
     </section>
 
+    <!-- ============ FRENTE A FRENTE ============ -->
+    <section class="section" id="comparar">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow"><span class="num">4</span>Frente a frente</span>
+          <h2>Compare dois candidatos, tema a tema</h2>
+          <p>Escolha dois nomes. O link desta comparação pode ser copiado e enviado para quem você quiser.</p>
+        </header>
+        <div class="cmp-toolbar">
+          <label class="cmp-select"><span class="sr-only">Primeiro candidato</span><select id="cmp-a"></select></label>
+          <button class="icon-btn" id="cmp-swap" aria-label="Inverter candidatos" title="Inverter">⇄</button>
+          <label class="cmp-select"><span class="sr-only">Segundo candidato</span><select id="cmp-b"></select></label>
+          <button class="share-btn" id="cmp-share">🔗 Copiar link da comparação</button>
+        </div>
+        <div id="cmp"></div>
+      </div>
+    </section>
+
     <!-- ============ CONSTITUIÇÃO ============ -->
     <section class="section" id="constituicao">
       <div class="container">
         <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">4</span>Radar da CF/88</span>
+          <span class="eyebrow"><span class="num">5</span>Radar da CF/88</span>
           <h2>Os artigos da Constituição mais testados pelos planos</h2>
           <p>Estes são os dispositivos citados nas análises, do mais acionado ao menos. Clique para ler o texto e ver quais propostas esbarram nele.</p>
         </header>
@@ -191,7 +211,7 @@
     <section class="section section-alt" id="orcamento">
       <div class="container">
         <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">5</span>A conta</span>
+          <span class="eyebrow"><span class="num">6</span>A conta</span>
           <h2>Quanto dinheiro sobra para cumprir promessas?</h2>
           <p>
             O orçamento federal de 2026 soma R$ 6,5 trilhões, mas quase metade é juros e rolagem da dívida. Da despesa primária,
@@ -237,7 +257,7 @@
     <section class="section" id="contexto">
       <div class="container">
         <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">6</span>O país que o eleito recebe</span>
+          <span class="eyebrow"><span class="num">7</span>O país que o eleito recebe</span>
           <h2>Contexto em números</h2>
           <p>Indicadores mais recentes disponíveis, com fonte e data.</p>
         </header>
@@ -251,7 +271,7 @@
     <section class="section section-alt" id="transparencia">
       <div class="container">
         <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">7</span>Método e correções</span>
+          <span class="eyebrow"><span class="num">8</span>Método e correções</span>
           <h2>Como fizemos, e o que corrigimos</h2>
           <p>
             Checamos cada afirmação da versão anterior do site contra o texto dos PDFs. Encontramos lemas e coligações inventados,
@@ -293,7 +313,7 @@
     <section class="section" id="glossario">
       <div class="container">
         <header class="section-head reveal">
-          <span class="eyebrow"><span class="num">8</span>Glossário</span>
+          <span class="eyebrow"><span class="num">9</span>Glossário</span>
           <h2>Termos que aparecem no debate</h2>
         </header>
         <div class="gloss" id="gloss"></div>
@@ -340,6 +360,8 @@
       <div class="modal-body" id="modal-body"></div>
     </div>
   </div>
+
+  <div id="tip" class="tip" role="tooltip" hidden></div>
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
