@@ -1,747 +1,986 @@
 /**
- * Base de Dados Oficial e Analítica dos Planos de Governo - Presidência do Brasil 2026
- * Extraído diretamente dos documentos originais e confrontado com a Constituição Federal de 1988
- * e com o cenário macroeconômico nacional.
+ * Raio-X dos Planos de Governo — Eleições 2026
+ * ------------------------------------------------------------
+ * Base de dados do site. Cada proposta aponta a página do documento
+ * original (pasta /planos) e recebe uma classificação jurídica:
+ * qual é o instrumento MÍNIMO necessário para tirá-la do papel.
+ *
+ * Revisão: setembro de 2026. Todas as propostas foram conferidas
+ * contra o texto dos PDFs; indicadores trazem fonte e data.
  */
 
 const ELECTION_DATA = {
   meta: {
-    year: "2026",
-    title: "Raio-X Constitucional e Econômico dos Planos de Governo",
-    subtitle: "Análise independente e aprofundada dos 5 principais projetos para o Brasil",
-    lastUpdated: "Setembro de 2026",
-    frameworks: [
-      "Constituição da República Federativa do Brasil de 1988 (CF/88)",
-      "Lei Complementar nº 200/2023 (Novo Arcabouço Fiscal)",
-      "Lei de Responsabilidade Fiscal (LC nº 101/2000)",
-      "Orçamento Geral da União (OGU)",
-      "Lei das Diretrizes e Bases da Educação (Lei nº 9.394/96)"
-    ]
+    updated: "30 de setembro de 2026",
+    siteUrl: "https://matheusmendez-ask.github.io/eleicoes-2026/",
+    registeredCandidates: 13,
+    analyzed: 5
   },
 
-  countryContext: {
-    title: "Panorama Macroeconômico e Desafios Estruturais do Brasil (2026)",
-    summary: "O próximo presidente da República assumirá um país com estabilidade monetária consolidada, mas sob severo estresse fiscal, rigidez orçamentária extrema, polarização institucional e avanço de facções criminosas transnacionais.",
-    indicators: [
-      {
-        id: "dbgg",
-        label: "Dívida Bruta (DBGG / PIB)",
-        value: "78,6%",
-        status: "critical",
-        statusText: "Zona de Alerta",
-        description: "A Dívida Bruta do Governo Geral segue em trajetória de alta, limitando a capacidade de endividamento soberano e elevando o prêmio de risco exigido pelo mercado financeiro.",
-        icon: "activity"
-      },
-      {
-        id: "selic",
-        label: "Taxa Básica de Juros (Selic)",
-        value: "10,75% a.a.",
-        status: "warning",
-        statusText: "Juros Reais Elevados",
-        description: "Os juros reais brasileiros continuam entre os mais altos do mundo (~6,5% real), encarecendo o custo da rolagem da dívida pública em mais de R$ 720 bilhões ao ano.",
-        icon: "trending-up"
-      },
-      {
-        id: "orcamento_rigido",
-        label: "Rigidez Orçamentária",
-        value: "94,3%",
-        status: "critical",
-        statusText: "Quase Totalmente Engessado",
-        description: "Mais de 94% do Orçamento Geral da União é composto por despesas obrigatórias (Previdência, folha salarial, pisos de saúde e educação, precatórios), restando menos de 6% para investimentos livres.",
-        icon: "lock"
-      },
-      {
-        id: "emendas",
-        label: "Emendas Parlamentares",
-        value: "R$ 53,2 bi/ano",
-        status: "warning",
-        statusText: "Poder do Congresso",
-        description: "O Congresso Nacional controla a maior fatia proporcional de orçamento discricionário do Ocidente por meio de emendas impositivas, restringindo a coordenação do Executivo.",
-        icon: "briefcase"
-      },
-      {
-        id: "seguranca",
-        label: "Homicídios e Crime Organizado",
-        value: "39.500 mortes/ano",
-        status: "critical",
-        statusText: "Ameaça à Soberania",
-        description: "Consolidação de duas facções hegemônicas (PCC e CV) com domínio de rotas fluviais e portuárias internacionais, milícias urbanas e lavagem via criptoativos e fintechs.",
-        icon: "shield-alert"
-      },
-      {
-        id: "clima",
-        label: "Vulnerabilidade Climática",
-        value: "1.470+ municípios em seca/crise",
-        status: "warning",
-        statusText: "Risco Hídrico & Agro",
-        description: "Secas severas nas bacias do Amazonas e do Pantanal geram risco de estresse energético hidrelétrico e perdas de produtividade na safra de grãos.",
-        icon: "cloud-rain"
-      }
-    ],
-    trilemma: {
-      title: "O Trilema Republicano Brasileiro",
-      description: "Qualquer plano de governo no Brasil precisa equilibrar três forças mutuamente tensionadas pela Constituição e pela economia política:",
-      axes: [
-        {
-          title: "1. Rigor Fiscal e Sustentabilidade da Dívida",
-          desc: "Sem equilíbrio primário, a rolagem da dívida explode, o risco-país sobe, o dólar dispara e a inflação corrói a renda dos mais pobres."
-        },
-        {
-          title: "2. Garantias Constitucionais e Direitos Sociais",
-          desc: "A CF/88 consagra pisos intransponíveis na saúde e educação, indexação salarial da previdência e cláusulas pétreas protetivas que não podem ser cortadas sem choque constitucional."
-        },
-        {
-          title: "3. Governabilidade com o Congresso Hiperfragmentado",
-          desc: "Nenhum presidente governa sem negociar com um Parlamento fortalecido, detentor de bilhões em emendas orçamentárias obrigatórias e poder de veto sobre reformas."
-        }
-      ]
+  /* ------------------------------------------------------------------
+     Escada de viabilidade jurídica (do mais fácil ao impossível)
+     ------------------------------------------------------------------ */
+  legalScale: [
+    {
+      id: "exec",
+      short: "Só o governo",
+      step: "Degrau 1",
+      label: "Basta o governo",
+      who: "Presidente e ministérios",
+      desc: "Decreto, portaria, programa ou gestão. Depende de orçamento, mas não precisa do Congresso para existir."
+    },
+    {
+      id: "lei",
+      short: "Lei",
+      step: "Degrau 2",
+      label: "Precisa de lei",
+      who: "Maioria simples no Congresso",
+      desc: "Lei ordinária ou medida provisória. Metade + 1 dos presentes em cada Casa."
+    },
+    {
+      id: "lc",
+      short: "Lei complementar",
+      step: "Degrau 3",
+      label: "Lei complementar",
+      who: "257 deputados e 41 senadores",
+      desc: "Maioria absoluta. Exigida quando a Constituição reserva o tema (ex.: emprego das Forças Armadas, finanças públicas)."
+    },
+    {
+      id: "pec",
+      short: "PEC",
+      step: "Degrau 4",
+      label: "Emenda à Constituição",
+      who: "308 deputados e 49 senadores, 2 turnos",
+      desc: "PEC: 3/5 em dois turnos nas duas Casas. É o quórum mais alto do sistema — e o presidente nem vota nem sanciona."
+    },
+    {
+      id: "vedado",
+      short: "Inconstitucional",
+      step: "Degrau 5",
+      label: "Barrado pela Constituição",
+      who: "Nem PEC resolve (ou alto risco no STF)",
+      desc: "Choca com cláusula pétrea (Art. 60, §4º) ou com precedente firme do STF. Tende a ser anulado."
     }
-  },
+  ],
 
+  themes: [
+    { id: "seguranca", label: "Segurança e Justiça", icon: "🛡️" },
+    { id: "fiscal", label: "Contas públicas", icon: "📊" },
+    { id: "economia", label: "Economia e trabalho", icon: "🏗️" },
+    { id: "social", label: "Saúde, educação e social", icon: "🏥" },
+    { id: "instituicoes", label: "Instituições e poder", icon: "🏛️" },
+    { id: "ambiente", label: "Meio ambiente e energia", icon: "🌱" }
+  ],
+
+  /* ------------------------------------------------------------------
+     Candidatos
+     ------------------------------------------------------------------ */
   candidates: [
+    /* =============================== LULA =============================== */
     {
       id: "lula",
       name: "Luiz Inácio Lula da Silva",
       shortName: "Lula",
-      party: "Partido dos Trabalhadores (PT)",
-      coalition: "Federação Brasil da Esperança (PT / PCdoB / PV / PSB / PSOL / REDE)",
+      number: "13",
+      party: "PT",
+      coalition: "PT, PSB, PV, PCdoB, PDT, PSOL e Rede (logos na capa do programa)",
       vice: "Geraldo Alckmin (PSB)",
-      color: "#E11D48",
-      accentColor: "#F43F5E",
-      lightColor: "#FFE4E6",
-      avatarInitials: "LS",
-      documentTitle: "Programa de Governo Lula 13: Diretrizes para a Reconstrução e Transformação do Brasil",
-      pdfFile: "Programa-de-Governo-LULA-13.pdf",
-      totalPages: 42,
-      officialMotto: "Reconstruir o Brasil com Soberania, Democracia e Inclusão Social",
-      orientation: "Centro-esquerda desenvolvimentista / Social-democracia",
-      
-      summary: "O programa de governo da Coligação Brasil da Esperança propõe a consolidação de um projeto nacional de desenvolvimento centrado no combate à miséria, fortalecimento do mercado interno de consumo, valorização continuada do salário mínimo, e restauração do papel indutor e planejador do Estado brasileiro. O plano defende a substituição definitiva de tetos fiscais rígidos por mecanismos flexíveis e anticíclicos (o Arcabouço Fiscal), a reindustrialização orientada à transição ecológica (Nova Indústria Brasil - NIB), o fortalecimento estratégico de estatais como a Petrobras e os bancos públicos (BNDES, BB, Caixa), e uma ampla reforma tributária progressiva que 'coloque o pobre no orçamento e o rico no imposto de renda'.",
-
-      pillars: [
+      color: "#C8102E",
+      initials: "LU",
+      document: {
+        title: "Diretrizes para o Programa de Transformação do Brasil",
+        file: "Programa-de-Governo-LULA-13.pdf",
+        maxPage: 84,
+        pages: "84 páginas impressas (42 folhas duplas no PDF)",
+        // PDF em folhas duplas: a imagem k contém as páginas impressas k e 85−k
+        pageMap: "saddle84"
+      },
+      motto: { text: "O que nos move são os sonhos do povo brasileiro.", page: null },
+      thesis: "Continuidade: manter o arcabouço fiscal, ampliar programas sociais e usar o Estado para puxar a reindustrialização.",
+      summary: "O programa é, em grande parte, um balanço do atual mandato seguido de compromissos de continuidade. Várias medidas que costumam ser apresentadas como promessas — isenção de IR até R$ 5 mil, reforma tributária do consumo, COP30 — aparecem no documento como fatos já realizados. As novidades mais concretas são o fim da escala 6x1 com jornada de 40 horas, a PEC da Segurança Pública e a regulação das plataformas digitais.",
+      proposals: [
         {
-          title: "Combate à Fome e Proteção Social Integral",
-          description: "Manutenção do Bolsa Família com adicionais por primeira infância e gestante, restauração dos estoques reguladores da Conab, ampliação do Farmácia Popular e do programa Minha Casa Minha Vida com subsídio integral à Faixa 1."
+          id: "fim-escala-6x1",
+          theme: "economia",
+          title: "Fim da escala 6x1 e jornada de 40 horas sem corte de salário",
+          plain: "Reduzir a jornada semanal máxima de 44 para 40 horas e acabar com a escala de seis dias de trabalho para um de folga.",
+          page: 75,
+          quote: "assegurar o fim da escala 6x1 e a redução da jornada de trabalho para 40 horas, sem redução salarial",
+          verdict: "lei",
+          contested: true,
+          legal: "A Constituição fixa apenas um teto (44h semanais, Art. 7º, XIII); por isso, parte dos juristas entende que uma lei ordinária pode reduzir a jornada. Na prática, a tramitação no Congresso vem sendo feita por PEC, o que eleva o quórum para 3/5.",
+          arts: ["art7"]
         },
         {
-          title: "Nova Indústria Brasil (NIB) & Transição Ecológica",
-          description: "Reindustrialização voltada à descarbonização, liderança na bioeconomia amazônica, investimentos massivos via Novo PAC e retomada dos investimentos da Petrobras em refino, fertilizantes e energias limpas."
+          id: "salario-minimo",
+          theme: "economia",
+          title: "Continuar a valorização do salário mínimo",
+          plain: "Manter reajustes do mínimo acima da inflação.",
+          page: 74,
+          quote: "o novo mandato de Lula dará continuidade à política de valorização do salário mínimo",
+          verdict: "lei",
+          legal: "O valor do mínimo é fixado em lei. Não há obstáculo constitucional, mas há efeito fiscal: aposentadorias do piso e o BPC não podem ser menores que o mínimo (Arts. 201, §2º e 203, V). Desde a Lei 15.077/2024, o ganho real fica limitado à faixa de 0,6% a 2,5% do arcabouço.",
+          arts: ["art201"]
         },
         {
-          title: "Reforma Tributária sobre Renda e Consumo",
-          description: "Regulamentação do IVA Dual (IBS/CBS) para desonerar a produção e a cesta básica, aliada à isenção do Imposto de Renda para rendimentos de até R$ 5.000 e tributação de lucros, dividendos e super-ricos."
+          id: "arcabouco-fiscal",
+          theme: "fiscal",
+          title: "Manter o novo arcabouço fiscal",
+          plain: "Seguir limitando o crescimento dos gastos à regra criada em 2023 (LC 200/2023).",
+          page: 49,
+          quote: "manteremos o novo arcabouço fiscal, que controlou o crescimento das despesas",
+          verdict: "exec",
+          legal: "A regra já está em vigor; mantê-la não exige nova norma. O desafio é econômico: gastos obrigatórios crescem mais rápido que o limite, espremendo investimentos.",
+          arts: []
         },
         {
-          title: "Fortalecimento do Trabalho e dos Direitos Sociais",
-          description: "Política permanente de aumento real do salário mínimo (inflação + crescimento do PIB), regulação protetiva para trabalhadores de aplicativos/plataformas digitais e fortalecimento das negociações coletivas sindicais."
+          id: "pec-seguranca",
+          theme: "seguranca",
+          title: "PEC da Segurança Pública e Ministério da Segurança",
+          plain: "Dar à União papel de coordenação nacional da segurança e criar um ministério próprio para o tema.",
+          page: 27,
+          verdict: "pec",
+          legal: "Mudar a divisão de competências do Art. 144 exige emenda constitucional. A PEC não pode esvaziar a autonomia dos estados sobre suas polícias, pois a forma federativa é cláusula pétrea. O ministério, em si, sai por lei.",
+          arts: ["art144", "art60"]
         },
         {
-          title: "Meio Ambiente, Clima e Soberania Global",
-          description: "Desmatamento zero na Amazônia até 2030, fortalecimento dos órgãos fiscalizadores (Ibama, ICMBio, Funai), protagonismo na COP30 e reinserção ativa do Brasil nos BRICS e no Sul Global."
+          id: "regulacao-plataformas",
+          theme: "instituicoes",
+          title: "Regulação das redes sociais e plataformas digitais",
+          plain: "Criar regras de responsabilidade e transparência para as big techs e os algoritmos.",
+          page: 16,
+          verdict: "lei",
+          contested: true,
+          legal: "Pode ser feita por lei, mas precisa respeitar a liberdade de expressão e a vedação à censura prévia (Arts. 5º, IX e 220). Em 2025 o STF já ampliou a responsabilidade das plataformas ao julgar o Art. 19 do Marco Civil.",
+          arts: ["art5"]
+        },
+        {
+          id: "petrobras-distribuicao",
+          theme: "economia",
+          title: "Petrobras de volta à distribuição e ação contra a volatilidade de preços",
+          plain: "A estatal voltaria a vender combustível na ponta, e o governo seguiria usando subvenções para amortecer choques de preço.",
+          page: 67,
+          quote: "A Petrobras deverá retornar ao segmento de distribuição de combustíveis",
+          verdict: "exec",
+          contested: true,
+          legal: "É decisão de gestão do acionista controlador, mas a Petrobras é empresa de capital aberto: a Lei das Estatais (Lei 13.303/2016) e o Art. 173 exigem interesse público definido em lei e respeito aos acionistas minoritários. Subvenções dependem de previsão orçamentária.",
+          arts: ["art173"]
+        },
+        {
+          id: "fila-saude-risco",
+          theme: "social",
+          title: "Fila única digital na saúde por risco clínico",
+          plain: "Organizar consultas e exames especializados pela gravidade do caso, e não pela ordem de chegada (programa Agora Tem Especialistas).",
+          page: 37,
+          verdict: "exec",
+          legal: "Política de gestão do SUS, compatível com o Art. 196. Exige pactuação com estados e municípios, que executam a maior parte do atendimento.",
+          arts: []
+        },
+        {
+          id: "desmatamento-zero",
+          theme: "ambiente",
+          title: "Desmatamento líquido zero até 2030",
+          plain: "Compensar toda a perda de vegetação com recuperação até 2030.",
+          page: 71,
+          quote: "continuaremos trabalhando para alcançar o desmatamento líquido zero até 2030",
+          verdict: "exec",
+          legal: "Meta de política pública, alinhada ao dever de proteção do Art. 225. Não depende de mudança legal.",
+          arts: ["art225"]
         }
       ],
-
-      constitutionalLimitations: {
-        headline: "Segurança jurídica de privatizações, limites fiscais do Art. 167 e autonomia do Banco Central",
-        riskLevel: "Moderado a Alto",
-        riskBadge: "Tensão Regulatória & Orçamentária",
-        articles: [
-          {
-            article: "Art. 5º, XXXVI da CF/88",
-            topic: "Segurança Jurídica, Ato Jurídico Perfeito e Direito Adquirido",
-            quote: "A lei não prejudicará o direito adquirido, o ato jurídico perfeito e a coisa julgada.",
-            impact: "A intenção expressa no plano e em declarações governamentais de rever modelos de desestatização já consolidados (como a privatização da Eletrobras e a redefinição do poder de voto da União) colide com a garantia do ato jurídico perfeito e os contratos de concessão pactuados com investidores internacionais, gerando insegurança jurídica e judicialização no STF."
-          },
-          {
-            article: "Art. 167, III da CF/88",
-            topic: "A 'Regra de Ouro' e Limite ao Endividamento para Custeio",
-            quote: "É vedada a realização de operações de créditos que excedam o montante das despesas de capital, ressalvadas as autorizadas mediante créditos suplementares ou especiais com finalidade precisa.",
-            impact: "O aumento contínuo de despesas correntes obrigatórias (previdência, benefícios sociais e salários) sem aumento correspondente e garantido de receitas primárias pode violar a Regra de Ouro constitucional, exigindo frequentes pedidos de exceção ao Congresso Nacional."
-          },
-          {
-            article: "Art. 192 da CF/88 c/c LC nº 179/2021",
-            topic: "Autonomia Operacional do Banco Central do Brasil",
-            quote: "O sistema financeiro nacional, estruturado de forma a promover o desenvolvimento equilibrado do País (...), será regulado por leis complementares.",
-            impact: "As pressões políticas do Executivo para forçar cortes acelerados da taxa Selic ou alterar a governança do Copom encontram barreira intransponível na Lei Complementar 179/2021, que fixou mandatos não coincidentes com o mandato presidencial para a diretoria do BC."
-          }
-        ]
-      },
-
-      economicLimitations: {
-        headline: "Dívida Bruta em expansão, inflação de serviços e rigidez do Arcabouço Fiscal (LC 200/2023)",
-        fiscalViability: "Média (62%)",
-        metrics: [
-          { label: "Impacto Primário Projetado", value: "Déficit zero difícil de sustentar sem receitas atípicas" },
-          { label: "Crescimento de Despesas", value: "Travado em 2,5% a.a. acima do IPCA pelo Arcabouço" },
-          { label: "Pressão sobre a DBGG", value: "Risco de alcançar 82% a 84% do PIB até 2028" }
+      economic: {
+        figures: [
+          { label: "Programa Brasil Contra o Crime Organizado", value: null, display: "R$ 10 bi no total, sem prazo", kind: "gasto", page: 27 },
+          { label: "Emendas parlamentares (diagnóstico do plano)", value: 50, display: "R$ 50 bi/ano, 1/5 do discricionário", kind: "diagnóstico", page: 15 }
         ],
-        analysis: "A principal restrição econômica do modelo de Lula é a rigidez estrutural do gasto público combinada com a dinâmica da dívida. A política de reajuste do salário mínimo com base no PIB de dois anos anteriores impõe um crescimento vegetativo anual de dezenas de bilhões de reais na Previdência e no BPC. Como o próprio Arcabouço Fiscal criado pelo governo impõe um limite máximo de crescimento de despesas de 2,5% ao ano acima da inflação, e os pisos de saúde e educação crescem com a receita, o espaço para gastos discricionários e investimentos (PAC) encolhe a cada ano. Sem reformas estruturais nos benefícios obrigatórios, o governo depende criticamente de aumentos constantes de arrecadação e taxação, correndo risco de exaustão da carga tributária sobre o setor produtivo."
+        headline: "Promessas de continuidade num orçamento que já está no limite",
+        points: [
+          "Gastos obrigatórios (Previdência, BPC, pisos) crescem acima do teto de 2,5% real do arcabouço.",
+          "A política do salário mínimo aumenta automaticamente benefícios do INSS e do BPC.",
+          "Dívida bruta em alta (82,5% do PIB em jul/2026) limita novas despesas."
+        ],
+        analysis: "Os pisos de saúde e educação crescem com a receita, e a Previdência cresce com o salário mínimo e o envelhecimento da população. Como o arcabouço limita o total de gastos, cada real a mais nessas rubricas sai dos investimentos e do custeio da máquina. Sem mudar regras de despesas obrigatórias, o plano depende de aumento de arrecadação para fechar a conta. O documento não detalha fontes para o fim da escala 6x1 no setor público nem o custo das subvenções a combustíveis."
       },
-
-      countryContextResponse: {
-        diagnosis: "O plano diagnostica que o Brasil foi vítima de um desmonte institucional e social nos anos anteriores, com aumento da miséria e enfraquecimento das políticas de proteção.",
-        solution: "Propõe que a recuperação da renda das famílias mais pobres atue como motor anticíclico da economia, com o Estado liderando grandes investimentos em infraestrutura e inovação verde.",
-        critique: "A resposta do plano subestima o envelhecimento populacional acelerado e o peso das despesas previdenciárias sobre o Orçamento da União, apostando excessivamente no aumento contínuo da receita em um ambiente de Congresso conservador e resistente à elevação de impostos."
+      context: {
+        diagnosis: "O país teria sido reconstruído depois de anos de desmonte institucional e social.",
+        solution: "Renda das famílias como motor da economia, Estado indutor de investimentos e reindustrialização verde.",
+        critique: "O documento fala pouco de envelhecimento populacional e do peso crescente da Previdência, e aposta em mais receita num Congresso resistente a aumentar impostos."
       }
     },
 
+    /* ========================== FLÁVIO BOLSONARO ========================= */
     {
       id: "flavio_bolsonaro",
       name: "Flávio Bolsonaro",
       shortName: "Flávio Bolsonaro",
-      party: "Partido Liberal (PL)",
-      coalition: "Coligação Ordem e Liberdade (PL / PP / Republicanos - base conservadora)",
-      vice: "A definir (perfil técnico / militar ou agro)",
-      color: "#2563EB",
-      accentColor: "#3B82F6",
-      lightColor: "#DBEAFE",
-      avatarInitials: "FB",
-      documentTitle: "Para o Brasil Vencer o Atraso",
-      pdfFile: "FLAVIO-BOLSONARO-PARA-O-BRASIL-VENCER-O-ATRASO-1-1.pdf",
-      totalPages: 76,
-      officialMotto: "Ordem, Liberdade e o Brasil que Não Volta Atrás",
-      orientation: "Direita conservadora / Liberal-reformista",
-
-      summary: "O plano de governo 'Para o Brasil Vencer o Atraso' estrutura-se na visão de que a insegurança pública, o inchaço estatal e a burocracia sufocam as famílias e quem produz. Apresenta o pilar 'Brasil sem Medo', que adota medidas duras contra o narcotráfico e o crime organizado com base no modelo de penitenciárias de segurança máxima de El Salvador (Bukele), militarização de portos, aeroportos e fronteiras pelas Forças Armadas, e cumprimento integral da pena sem benefícios de progressão fácil. Na economia, propõe um choque liberal com corte de gastos ('Tesouraço nos gastos públicos'), desregulamentação agressiva via Lei de Liberdade Econômica, atração de R$ 900 bilhões em investimentos privados em 4 anos para ferrovias (Ferrogrão) e hidrovias, vouchers-creche universais para incentivar o trabalho feminino, exploração de gás não convencional (fracking) e limites institucionais à atuação da Suprema Corte ('Tesouraço na Censura').",
-
-      pillars: [
+      number: "22",
+      party: "PL",
+      coalition: "Não informada no documento",
+      vice: "Alfredo Gaspar",
+      color: "#1E4FD8",
+      initials: "FB",
+      document: {
+        title: "Para o Brasil Vencer o Atraso",
+        file: "FLAVIO-BOLSONARO-PARA-O-BRASIL-VENCER-O-ATRASO-1-1.pdf",
+        maxPage: 76,
+        pages: "76 páginas",
+        pageMap: "direct"
+      },
+      motto: { text: "O Brasil precisa de uma alternativa liberal, conservadora, reformista e corajosa.", page: 12 },
+      thesis: "Ordem primeiro: endurecimento penal, forças militares nas fronteiras e um choque liberal com corte de gastos e burocracia.",
+      summary: "O plano se define como “liberal, conservador e reformista”. Na segurança, propõe cinco presídios de segurança máxima no modelo de El Salvador, fim da progressão de regime para crimes hediondos, redução da maioridade penal e castração química de estupradores. Na economia, promete R$ 900 bilhões em infraestrutura em quatro anos (via PPPs, concessões, BNDES e securitização de ativos), redução gradual de encargos da conta de luz e liberação do fracking. No campo institucional, propõe fim da reeleição e uma reforma do Judiciário que limita decisões individuais de ministros do STF.",
+      proposals: [
         {
-          title: "Brasil sem Medo: Modelo Bukele e Cerco Militar ao Crime",
-          description: "Construção de 5 novos presídios federais de segurança máxima espelhados no modelo salvadorenho, tropas permanentes da Marinha e Aeronáutica em portos e aeroportos, Força Aérea armada nas fronteiras, fim de saidinhas e cumprimento integral de pena."
+          id: "presidios-el-salvador",
+          theme: "seguranca",
+          title: "5 presídios de segurança máxima no modelo de El Salvador",
+          plain: "Criar um complexo federal (“TREVA”) sem celular, sem visita íntima e com visitas monitoradas.",
+          page: 14,
+          quote: "O Brasil terá 5 novos presídios de segurança máxima no modelo adotado por El Salvador.",
+          verdict: "lei",
+          legal: "Construir presídios é ato do Executivo; mudar regras de visita e disciplina exige alterar a Lei de Execução Penal. O limite é o Art. 5º, XLIX: o Estado deve garantir a integridade física e moral do preso — ponto em que o modelo salvadorenho é criticado internacionalmente.",
+          arts: ["art5"]
         },
         {
-          title: "Brasil por Elas: Voucher-Creche Universal",
-          description: "Subsídio público direto à rede privada conveniada para garantir vagas de creche em período integral a todas as crianças da primeira infância, viabilizando o ingresso e a permanência de mães no mercado de trabalho formal e informal."
+          id: "fim-progressao-hediondos",
+          theme: "seguranca",
+          title: "Fim da progressão de regime para crimes hediondos",
+          plain: "Condenados por crimes hediondos cumpririam toda a pena em regime fechado.",
+          page: 15,
+          quote: "acabar com a progressão de regime de quem comete crimes hediondos.",
+          verdict: "vedado",
+          legal: "O STF já declarou inconstitucional exatamente essa regra (HC 82.959/2006 e Súmula Vinculante 26): vedar a progressão fere a individualização da pena (Art. 5º, XLVI), que é garantia individual e cláusula pétrea.",
+          arts: ["art5", "art60"]
         },
         {
-          title: "Tesouraço na Burocracia & Choque de Desregulamentação",
-          description: "Ampliação profunda da Lei de Liberdade Econômica, unificação de cadastros com Inteligência Artificial, eliminação de licenças prévias para pequenos e médios negócios e simplificação de tributos."
+          id: "maioridade-penal",
+          theme: "seguranca",
+          title: "Maioridade penal aos 16 anos (e punição a partir dos 14 para crimes graves)",
+          plain: "Adolescentes passariam a responder como adultos por crimes.",
+          page: 13,
+          quote: "O novo governo do Brasil vai apoiar e sancionar a redução da maioridade penal de 18 para 16 anos.",
+          verdict: "pec",
+          contested: true,
+          legal: "A idade penal está no Art. 228 da Constituição; só PEC muda — e o presidente não sanciona PEC. Há forte debate se o Art. 228 é cláusula pétrea (garantia individual); a punição a partir de 14 anos amplia esse risco.",
+          arts: ["art228", "art60"]
         },
         {
-          title: "Mega-Infraestrutura e Energia Barata (R$ 900 bi)",
-          description: "Destravamento imediato da Ferrovia Ferrogrão, desenvolvimento de Corredores Logísticos Inteligentes, exploração de Gás Não Convencional (fracking), redução das contas de luz via cortes na CDE e incentivo a Data Centers."
+          id: "castracao-quimica",
+          theme: "seguranca",
+          title: "Castração química obrigatória para estupradores condenados",
+          plain: "Aplicar tratamento hormonal compulsório a condenados por estupro e abuso infantil.",
+          page: 14,
+          quote: "aprovar e implementar a castração química de criminosos que abusam de mulheres e crianças",
+          verdict: "vedado",
+          contested: true,
+          legal: "Se imposta como pena, esbarra na proibição de penas cruéis (Art. 5º, XLVII, “e”) e no direito à integridade física do preso (XLIX). Versões voluntárias, como tratamento em troca de benefícios, são mais defensáveis.",
+          arts: ["art5"]
         },
         {
-          title: "Pacto Federativo e Limites Institucionais aos Poderes",
-          description: "'Mais Brasil, Menos Brasília', fortalecimento financeiro direto aos municípios e combate rigoroso ao ativismo judicial com estabelecimento de limites estritos à atuação do STF ('Tesouraço na Censura')."
+          id: "abate-fuzil",
+          theme: "seguranca",
+          title: "“Bandido armado com fuzil na mão vai ser abatido”",
+          plain: "Autorizar as forças de segurança a atirar em criminosos armados com fuzil.",
+          page: 13,
+          quote: "Bandido armado com fuzil na mão vai ser abatido pelas forças de segurança.",
+          verdict: "vedado",
+          contested: true,
+          legal: "O Brasil não tem pena de morte (Art. 5º, XLVII, “a”). Matar só é lícito em legítima defesa, própria ou de terceiros, diante de ameaça atual (Código Penal, arts. 23 e 25). Como política genérica de “abate”, a proposta não tem base legal; dentro da legítima defesa, já é permitido hoje.",
+          arts: ["art5"]
+        },
+        {
+          id: "militares-portos-aeroportos",
+          theme: "seguranca",
+          title: "Marinha e Aeronáutica ocupando portos e aeroportos de forma permanente",
+          plain: "Tropas especiais militares fariam o controle permanente de portos e aeroportos.",
+          page: 15,
+          quote: "vamos usar tropas especiais da Marinha e da Aeronáutica para ocupar e monitorar, de forma permanente, os portos e aeroportos",
+          verdict: "lc",
+          contested: true,
+          legal: "O emprego das Forças Armadas é regulado por lei complementar (LC 97/1999, Art. 142, §1º). A Constituição, porém, entrega à Polícia Federal a polícia marítima, aeroportuária e de fronteiras (Art. 144, §1º, III). Transferir essa função de forma permanente pode exigir PEC.",
+          arts: ["art142"]
+        },
+        {
+          id: "voucher-creche",
+          theme: "social",
+          title: "Voucher-creche quando faltar vaga na rede pública",
+          plain: "Se não houver vaga pública, a família recebe um voucher para usar em creche privada credenciada até surgir a vaga.",
+          page: 21,
+          quote: "a família receberá um voucher-creche para acesso à rede privada credenciada até a vaga pública surgir",
+          verdict: "lei",
+          contested: true,
+          legal: "Creche é dever do Estado (Art. 208, IV). Repassar verba a creches comunitárias, confessionais ou filantrópicas sem fins lucrativos já é permitido (Art. 213). Pagar escolas com fins lucrativos é controverso: o §1º do Art. 213 só prevê bolsas para ensino fundamental e médio. Creche também é atribuição dos municípios (Art. 211, §2º).",
+          arts: ["art213"]
+        },
+        {
+          id: "infraestrutura-900-bi",
+          theme: "economia",
+          title: "R$ 900 bilhões em infraestrutura em 4 anos",
+          plain: "Rodovias, ferrovias (Ferrogrão), hidrovias, portos e aeroportos com PPPs, concessões, BNDES e securitização de ativos da União.",
+          page: 51,
+          quote: "Vamos investir R$ 900 bilhões em quatro anos em rodovias, hidrovias, portos, aeroportos e ferrovias.",
+          verdict: "exec",
+          legal: "Concessões e PPPs já têm marco legal. O desafio é financeiro: são cerca de R$ 225 bi por ano, mais que todo o espaço discricionário do Executivo (cerca de R$ 206 bi em 2026). O plano não diz quanto viria do setor privado. A Ferrogrão depende do STF, que julga a ADI 6553 sobre o Parque do Jamanxim.",
+          arts: ["art225"]
+        },
+        {
+          id: "licenca-ambiental-tacita",
+          theme: "ambiente",
+          title: "Licença ambiental concedida automaticamente se o órgão não decidir no prazo",
+          plain: "Se o governo demorar demais para analisar, a licença sai sozinha.",
+          page: 50,
+          quote: "Se não decidir nem se manifestar dentro desse prazo, a licença deve ser concedida",
+          verdict: "vedado",
+          legal: "O STF já derrubou licenciamento ambiental automático (ADI 6808, 2022). O Art. 225, §1º, IV exige estudo prévio de impacto para atividades potencialmente degradantes. Prazos com consequências administrativas para o órgão são possíveis; a aprovação tácita, não.",
+          arts: ["art225"]
+        },
+        {
+          id: "fracking",
+          theme: "ambiente",
+          title: "Liberar o fracking (gás não convencional)",
+          plain: "Permitir a extração de gás de xisto por fraturamento hidráulico, “cumprindo a lei”.",
+          page: 52,
+          quote: "permitir a exploração do gás não convencional (fracking) com responsabilidade ambiental e cumprindo a lei",
+          verdict: "exec",
+          contested: true,
+          legal: "A ANP pode licitar blocos, mas há leis estaduais proibindo o fracking (ex.: Paraná) e decisões da Justiça Federal que já suspenderam leilões por falta de estudos. Exige licenciamento com EIA (Art. 225).",
+          arts: ["art225"]
+        },
+        {
+          id: "reforma-judiciario",
+          theme: "instituicoes",
+          title: "Reforma do Judiciário: fim do foro criminal no STF e limite a decisões monocráticas",
+          plain: "O STF deixaria de julgar autoridades em processos criminais, e as decisões individuais de ministros seriam limitadas.",
+          page: 65,
+          quote: "Limitação das decisões monocráticas do STF, privilegiando as decisões colegiadas",
+          verdict: "pec",
+          legal: "As competências do STF estão no Art. 102; alterá-las exige PEC. Reorganizar competências não viola a separação de Poderes por si só; o que seria vedado é esvaziar a independência do Judiciário (Arts. 2º e 60, §4º, III).",
+          arts: ["art102", "art2"]
+        },
+        {
+          id: "fim-reeleicao",
+          theme: "instituicoes",
+          title: "Fim da reeleição para presidente",
+          plain: "Mandatos presidenciais sem direito a um segundo período consecutivo.",
+          page: 66,
+          verdict: "pec",
+          legal: "A reeleição está no Art. 14, §5º (EC 16/1997). Retirá-la exige PEC, que é juridicamente viável.",
+          arts: ["art14"]
         }
       ],
-
-      constitutionalLimitations: {
-        headline: "Direitos fundamentais dos presos (Art. 5º), pacto federativo policial e limites ao Judiciário",
-        riskLevel: "Alto",
-        riskBadge: "Fricção com Cláusulas Pétreas",
-        articles: [
-          {
-            article: "Art. 5º, XLVII, 'b' e XLVI da CF/88",
-            topic: "Vedação de Penas Perpétuas e Individualização da Execução Penal",
-            quote: "Não haverá penas: (...) de caráter perpétuo; (...) de banimento; (...) cruéis; e a lei regulará a individualização da pena.",
-            impact: "A proposta de importação do modelo penal salvadorenho com aprisionamento sem perspectiva de progressão de regime, cumprimento integral sem individualização e endurecimento drástico do isolamento fere cláusula pétrea (Art. 60, § 4º, IV) e tratados internacionais de direitos humanos (Pacto de San José da Costa Rica ratificado pelo Brasil)."
-          },
-          {
-            article: "Art. 2º da CF/88",
-            topic: "Separação e Harmonia entre os Poderes da República",
-            quote: "São Poderes da União, independentes e harmônicos entre si, o Legislativo, o Executivo e o Judiciário.",
-            impact: "Propostas de 'Tesouraço na Censura' que pretendam coibir investigações criminais da Suprema Corte ou criar mecanismos do Executivo para anular decisões judiciais ferem a separação de poderes (cláusula pétrea do Art. 60, § 4º, III)."
-          },
-          {
-            article: "Art. 213 da CF/88",
-            topic: "Destinação dos Recursos Públicos à Educação",
-            quote: "Os recursos públicos serão destinados às escolas públicas, podendo ser dirigidos a escolas comunitárias, confessionais ou filantrópicas, definidas em lei, que comprovem finalidade não-lucrativa.",
-            impact: "O repasse direto de vouchers-creche públicos a estabelecimentos educacionais privados com finalidade lucrativa encontra forte óbice constitucional e jurisprudencial no STF, que limita repasses públicos ao setor privado educacional apenas para entidades sem fins lucrativos."
-          },
-          {
-            article: "Art. 225 da CF/88",
-            topic: "Direito ao Meio Ambiente Equilibrado e Princípio da Precaução",
-            quote: "Todos têm direito ao meio ambiente ecologicamente equilibrado, bem de uso comum do povo e essencial à sadia qualidade de vida (...).",
-            impact: "A exploração comercial de gás de folhelho por fraturamento hidráulico (fracking) e a implantação da ferrovia Ferrogrão atravessando terras e unidades de conservação protegidas já são alvo de liminares no STF por risco de contaminação de aquíferos e violação à consulta prévia de povos indígenas (Convenção 169 da OIT)."
-          }
-        ]
-      },
-
-      economicLimitations: {
-        headline: "Financiamento de R$ 900 bi sem aumento de imposto, custo do sistema prisional e risco ambiental",
-        fiscalViability: "Média-Baixa (54%)",
-        metrics: [
-          { label: "Investimento em Infraestrutura Prometido", value: "R$ 900 bilhões em 4 anos (2,1% do PIB/ano)" },
-          { label: "Custo Carcerário Adicional", value: "5 novos presídios federais + milhares de novas vagas" },
-          { label: "Sustentabilidade da Receita", value: "Dependente de concessões privadas e corte de subsídios" }
+      economic: {
+        figures: [
+          { label: "Infraestrutura (público + privado)", value: 225, display: "R$ 900 bi em 4 anos", kind: "gasto", page: 51 },
+          { label: "Meta de crescimento do PIB", value: null, display: "4% ao ano", kind: "meta", page: 49 },
+          { label: "Novas vagas prisionais", value: null, display: "500 mil em 4 anos, sem custo estimado", kind: "gasto", page: 14 }
         ],
-        analysis: "Prometer um programa de R$ 900 bilhões de infraestrutura e simultaneamente propor cortes maciços de impostos e encargos do setor elétrico (CDE) cria um abismo orçamentário que as contas públicas não conseguem cobrir sozinhas. Toda a viabilidade do plano repousa sobre a atração de capital privado doméstico e internacional através de concessões e privatizações. Contudo, em um cenário de Dívida Bruta em 78% do PIB e juros globais elevados, os investidores internacionais exigem rigorosa governança ambiental (ESG) e segurança jurídica — elementos que entram em conflito com as propostas de flexibilização ambiental para fracking e aceleração de ferrovias em áreas sensíveis."
+        headline: "Grandes cifras de investimento sem dizer quem paga",
+        points: [
+          "R$ 900 bi em 4 anos ≈ 1,7% do PIB por ano (PIB de 2025: R$ 12,7 tri).",
+          "Corte de encargos da conta de luz (CDE) é gradual e preserva a tarifa social.",
+          "Meio milhão de novas vagas prisionais em 4 anos tem custo de construção e de custeio."
+        ],
+        analysis: "O plano combina corte de gastos (“Tesouraço”), redução de encargos e uma meta de crescimento de 4% ao ano com um programa de infraestrutura maior do que todo o orçamento livre do governo. A viabilidade depende de o setor privado bancar a maior parte, e investidores exigem segurança jurídica e ambiental — justamente o ponto em que propostas como a licença tácita tendem a ser judicializadas. O documento também não estima o custo de manter meio milhão de presos a mais."
       },
-
-      countryContextResponse: {
-        diagnosis: "Identifica a criminalidade e a perda do controle territorial para o narcotráfico como o gargalo número um da economia brasileira, que paralisa o comércio e a vida das famílias.",
-        solution: "Aposta na autoridade da lei, no isolamento severo das lideranças criminosas, no fortalecimento do agro e na desregulamentação para gerar empregos.",
-        critique: "A proposta apoia-se em soluções penais punitivistas que historicamente sobrecarregam o sistema carcerário brasileiro sem atingir a raiz financeira do crime organizado e desconsidera os custos bilionários de manutenção contínua das Forças Armadas nas ruas e presídios federais."
+      context: {
+        diagnosis: "A perda de território para o crime organizado seria o principal entrave à vida das famílias e à economia.",
+        solution: "Autoridade da lei, isolamento de lideranças criminosas, desregulamentação e investimento privado em logística.",
+        critique: "Várias medidas penais já foram testadas e derrubadas no STF. O plano não trata do custo fiscal do encarceramento em massa nem da origem dos recursos para a infraestrutura."
       }
     },
 
+    /* =========================== RONALDO CAIADO ========================== */
     {
       id: "ronaldo_caiado",
       name: "Ronaldo Caiado",
       shortName: "Ronaldo Caiado",
-      party: "Partido Social Democrático (PSD)",
-      coalition: "Coligação Pacto pela Eficiência (PSD / União Brasil / Solidariedade - centro-conservador)",
+      number: "55",
+      party: "PSD",
+      coalition: "Não informada no documento",
       vice: "Gilberto Kassab (PSD)",
-      color: "#0284C7",
-      accentColor: "#0EA5E9",
-      lightColor: "#E0F2FE",
-      avatarInitials: "RC",
-      documentTitle: "Plano de Governo Ronaldo Caiado Presidente: Muito pra mostrar, nada pra esconder (2027 a 2030)",
-      pdfFile: "Plano-de-Governo-Ronaldo-Caiado-Presidente.pdf",
-      totalPages: 100,
-      officialMotto: "Autoridade, Pacificação Democrática e o Estado Eficiente",
-      orientation: "Centro-direita institucional / Conservadorismo fiscal e de autoridade",
-
-      summary: "Com uma das trajetórias mais sólidas da política nacional (médico, produtor rural, deputado, senador e governador reeleito de Goiás com recordes de aprovação), Ronaldo Caiado apresenta um plano robusto de 100 páginas dividido em 26 temas estratégicos, tendo Gilberto Kassab como vice. O documento propõe nacionalizar a bem-sucedida política de segurança pública de Goiás com tolerância zero, criação do Sistema Integrado de Proteção à Soberania Nacional, enquadramento de facções como 'terrorismo doméstico' e confisco massivo de patrimônio e criptoativos criminosos para custear a polícia. No campo fiscal, propõe estabilização plurianual responsável, impedindo o crescimento de despesas correntes acima do PIB potencial sem cortes cegos em serviços essenciais, auditoria severa contra fraudes em benefícios sociais, reordenamento transparente das emendas parlamentares com o Congresso, e agregação de valor ao Agronegócio e à Mineração Estratégica.",
-
-      pillars: [
+      color: "#0F766E",
+      initials: "RC",
+      document: {
+        title: "Plano de Governo — Muito pra mostrar, nada pra esconder (2027 a 2030)",
+        file: "Plano-de-Governo-Ronaldo-Caiado-Presidente.pdf",
+        maxPage: 100,
+        pages: "100 páginas, 26 temas",
+        pageMap: "direct"
+      },
+      motto: { text: "Muito pra mostrar, nada pra esconder.", page: 1 },
+      thesis: "Segurança como responsabilidade direta da Presidência, com facções tratadas como terrorismo e ajuste fiscal gradual sem aumento de impostos.",
+      summary: "Documento técnico de 100 páginas e 26 temas. O eixo central é a segurança: a Presidência assume responsabilidade direta pelo tema, facções como PCC e CV são enquadradas como “terrorismo doméstico” quando cumprirem critérios cumulativos, há penas mínimas de 35 a 45 anos e um regime prisional especial (REDAD). No fiscal, propõe que as despesas obrigatórias cresçam abaixo do PIB nominal, sem cortes lineares nem aumento de impostos, e renegociar com o Congresso os critérios das emendas. Também propõe fim da reeleição a partir de 2027 e voto distrital misto.",
+      proposals: [
         {
-          title: "Segurança de Tolerância Zero & Combate ao Terrorismo Doméstico",
-          description: "Criação do Sistema Integrado de Proteção à Soberania Nacional, Comando Nacional de Combate ao Terrorismo Doméstico (enquadramento penal de facções), asfixia patrimonial do crime e criação de fundo policial alimentado por bens confiscados."
+          id: "faccoes-terrorismo",
+          theme: "seguranca",
+          title: "Facções como “terrorismo doméstico”, com penas mínimas de 35 a 45 anos",
+          plain: "Nova lei enquadraria facções que têm comando, território, armas e poder econômico como organizações terroristas.",
+          page: 17,
+          verdict: "lei",
+          contested: true,
+          legal: "Exige mudar a Lei 13.260/2016, que hoje só considera terrorismo o ato movido por xenofobia ou preconceito. Os critérios cumulativos reduzem o risco de enquadrar grupos demais. Penas mínimas tão altas podem ser questionadas por desproporcionalidade, e o cumprimento continua limitado a 40 anos (Art. 75 do Código Penal).",
+          arts: ["art5"]
         },
         {
-          title: "Estabilização Fiscal Plurianual e Controle das Despesas",
-          description: "Travar o crescimento das despesas obrigatórias abaixo da capacidade do PIB, contenção de criação de novos gastos de pessoal sem compensação permanente, auditoria eletrônica contra fraudes nos benefícios sociais e estabilização da Dívida/PIB."
+          id: "regime-redad",
+          theme: "seguranca",
+          title: "Regime prisional especial (REDAD): progressão só após 90% da pena e monitoramento de conversas com advogados",
+          plain: "Líderes de facção ficariam isolados, com conversas com advogados monitoradas e quase sem direito a progressão.",
+          page: 17,
+          quote: "monitoramento obrigatório de todas as conversas com advogados, e direito à progressão somente após cumprimento de 90% da pena",
+          verdict: "lei",
+          contested: true,
+          legal: "Exigir 90% da pena para progredir chega muito perto da proibição total derrubada pelo STF (HC 82.959). Monitorar sempre as conversas com advogados choca com a ampla defesa (Art. 5º, LV) e a inviolabilidade da advocacia (Art. 133). O próprio plano prevê supervisão judicial (p. 19), o que reduz, mas não elimina, o risco.",
+          arts: ["art5"]
         },
         {
-          title: "Reforma Política e Governança por Competência (Tema 3)",
-          description: "Superação da fragmentação partidária e do fisiologismo no Congresso; imposição de critérios técnicos de integridade e capacidade para ministros e dirigentes de estatais, regidos por contratos de gestão e metas objetivas."
+          id: "forcas-armadas-sem-glo",
+          theme: "seguranca",
+          title: "Forças Armadas contra o crime organizado sem precisar decretar GLO",
+          plain: "Militares atuariam de forma regular no combate às facções, sem o decreto de Garantia da Lei e da Ordem.",
+          page: 17,
+          quote: "permite que as Forças Armadas sejam integradas ao enfrentamento do crime organizado sem acionamento da GLO",
+          verdict: "lc",
+          contested: true,
+          legal: "A LC 97/1999 só admite o emprego em segurança interna de forma episódica, esgotadas as polícias. Mudar isso exige lei complementar. Ao julgar a ADI 6457 (2024), o STF reforçou que esse emprego é excepcional (Art. 142).",
+          arts: ["art142"]
         },
         {
-          title: "Agronegócio Integrado e Mineração Estratégica (Temas 7 e 17)",
-          description: "Superação do modelo de exportação exclusiva de grãos brutos em direção à agroindústria sustentável; fundo garantidor privado de crédito agrícola, seguro rural acessível e soberania nacional em fertilizantes e terras raras."
+          id: "perda-bens-crime",
+          theme: "seguranca",
+          title: "Perda de bens do crime independentemente da ação penal",
+          plain: "Bens e criptoativos de facções poderiam ser tomados em processo próprio, com inversão do ônus da prova e venda antecipada.",
+          page: 17,
+          quote: "perda patrimonial autônoma, que poderá ser requerida independentemente da ação penal",
+          verdict: "lei",
+          contested: true,
+          legal: "O confisco de bens ligados ao tráfico já está no Art. 243, parágrafo único. Uma ação civil de perdimento é defensável por lei, mas exige contraditório e devido processo (Art. 5º, LIV e LV). A inversão do ônus da prova é o ponto mais sensível.",
+          arts: ["art5"]
         },
         {
-          title: "Saúde Regionalizada e SUS Inteligente (Tema 25)",
-          description: "Fila única transparente, combate à espera de especialistas por meio de policlínicas estaduais descentralizadas, atenção primária integrada e triagem inteligente para zerar filas cirúrgicas."
+          id: "despesas-abaixo-pib",
+          theme: "fiscal",
+          title: "Despesas obrigatórias crescendo abaixo do PIB, sem cortes lineares nem aumento de impostos",
+          plain: "Frear gastos como Previdência e folha para que cresçam menos que a economia.",
+          page: 12,
+          quote: "Fazer as despesas obrigatórias crescerem abaixo do PIB nominal",
+          verdict: "lei",
+          contested: true,
+          legal: "Parte dessas despesas está amarrada à própria Constituição: benefício mínimo igual ao salário mínimo, pisos de saúde e educação. Sem PEC, a meta depende sobretudo de crescimento econômico e do controle de fraudes.",
+          arts: ["art201", "art198"]
+        },
+        {
+          id: "emendas-criterios",
+          theme: "fiscal",
+          title: "Novos critérios para as emendas parlamentares, pactuados com o Congresso",
+          plain: "Reduzir a pulverização das emendas e exigir planejamento, transparência e resultado.",
+          page: 13,
+          quote: "Pactuar com o Congresso critérios de planejamento, transparência, manutenção, custo total e resultado",
+          verdict: "pec",
+          legal: "Transparência pode vir por lei e já é exigida pelo STF (ADPF 854). Porém a execução obrigatória das emendas está no Art. 166, §§ 9º a 20 (ECs 86, 100 e 126), e mudá-la exige PEC aprovada pelos próprios parlamentares.",
+          arts: ["art166"]
+        },
+        {
+          id: "fim-reeleicao",
+          theme: "instituicoes",
+          title: "Fim da reeleição, valendo já para o mandato iniciado em 2027",
+          plain: "O próprio Caiado abriria mão de concorrer a um segundo mandato.",
+          page: 8,
+          verdict: "pec",
+          legal: "Exige PEC alterando o Art. 14, §5º. Aplicar a regra ao próprio mandato é possível, porque restringe o direito do próprio titular.",
+          arts: ["art14"]
+        },
+        {
+          id: "voto-distrital-misto",
+          theme: "instituicoes",
+          title: "Voto distrital misto para deputados",
+          plain: "Parte dos deputados seria eleita por distritos e parte por lista partidária.",
+          page: 10,
+          verdict: "pec",
+          contested: true,
+          legal: "O Art. 45 manda eleger deputados “pelo sistema proporcional”. Há quem defenda que o distrital misto, por manter a proporcionalidade, poderia vir por lei; a posição majoritária é que exige PEC.",
+          arts: ["art45"]
+        },
+        {
+          id: "regulacao-sus",
+          theme: "social",
+          title: "Regulação inteligente do SUS: da fila cronológica à prioridade clínica",
+          plain: "Consultas e cirurgias seriam agendadas pela gravidade e pelo prazo clínico, não pela ordem de chegada.",
+          page: 76,
+          verdict: "exec",
+          legal: "É gestão do SUS, compatível com os Arts. 196 e 198. Depende de pactuação com estados e municípios.",
+          arts: []
         }
       ],
-
-      constitutionalLimitations: {
-        headline: "Tipificação de terrorismo doméstico, impositividade das emendas (Art. 166) e autonomia federativa",
-        riskLevel: "Moderado",
-        riskBadge: "Tensão Federativa & Penal",
-        articles: [
-          {
-            article: "Art. 5º, XLIII da CF/88 c/c Lei nº 13.260/2016",
-            topic: "Mandado de Criminalização do Terrorismo e Princípio da Tipicidade Estrita",
-            quote: "A lei considerará crimes inafiançáveis e insuscetíveis de graça ou anistia a prática da tortura, o tráfico ilícito de entorpecentes e drogas afins, o terrorismo e os definidos como crimes hediondos (...).",
-            impact: "A Lei Antiterrorismo brasileira exige elemento subjetivo específico (motivação de xenofobia, discriminação ou preconceito de raça, cor, etnia ou religião). Enquadrar facções que buscam lucro financeiro como terroristas domésticos exige alteração legislativa delicada no Congresso e pode sofrer impugnação no STF por desvio de tipicidade penal."
-          },
-          {
-            article: "Art. 166, §§ 9º ao 19 da CF/88",
-            topic: "Impositividade Constitucional das Emendas Parlamentares",
-            quote: "As emendas individuais ao projeto de lei orçamentária serão aprovadas no limite de 2% da receita corrente líquida (...), sendo a execução orçamentária e financeira obrigatória.",
-            impact: "A proposta de Caiado de 'reordenar as emendas parlamentares pactuando critérios técnicos com o Congresso' esbarra na impositividade constitucional forjada pelas Emendas Constitucionais 86, 100 e 105, que retiraram o controle discricionário do Presidente da República sobre esses recursos."
-          },
-          {
-            article: "Art. 144 da CF/88",
-            topic: "Autonomia Federativa das Polícias dos Estados",
-            quote: "A segurança pública, dever do Estado, direito e responsabilidade de todos, é exercida para a preservação da ordem pública e da incolumidade das pessoas e do patrimônio, através dos seguintes órgãos: (...) polícias civis e polícias militares.",
-            impact: "A centralização da segurança em um 'Comando Nacional' federal não pode subordinar hierarquicamente os governadores de estado e suas corporações policiais sem ferir a autonomia dos entes federados (cláusula pétrea do pacto federativo, Art. 60, § 4º, I)."
-          }
-        ]
-      },
-
-      economicLimitations: {
-        headline: "Indexação da previdência, equalização de juros no crédito rural e rigidez do OGU",
-        fiscalViability: "Alta-Média (74%)",
-        metrics: [
-          { label: "Estratégia Fiscal", value: "Contenção de despesas obrigatórias sem corte cego" },
-          { label: "Custo do Plano Safra", value: "Exige dezenas de bi em equalização com Selic em 10,75%" },
-          { label: "Capacidade de Investimento", value: "Depende de alavancagem com fundos privados garantidores" }
+      economic: {
+        figures: [],
+        figuresNote: "Não encontramos no plano estimativas em reais do custo total das propostas nem da economia pretendida. A regra fiscal é descrita como proporção do PIB.",
+        headline: "O ajuste mais detalhado, mas amarrado a gastos que a Constituição protege",
+        points: [
+          "Meta: despesas obrigatórias crescendo abaixo do PIB nominal.",
+          "Promete não aumentar impostos nem fazer cortes lineares.",
+          "Fundo antiterrorismo “não contingenciável” reduz a flexibilidade do orçamento."
         ],
-        analysis: "Dentre os candidatos, Caiado apresenta uma das estratégias de gestão fiscal mais experimentadas (já tendo recuperado a capacidade de pagamento do estado de Goiás e aderido ao Regime de Recuperação Fiscal com sucesso). Contudo, no plano federal, impedir o crescimento vegetativo de despesas obrigatórias esbarra no fato de que aposentadorias e o BPC estão amarrados ao salário mínimo pela própria Constituição. Além disso, o setor agropecuário exige subsídios bilionários do Tesouro Nacional para a equalização de juros do Plano Safra; em um ambiente de Selic a 10,75%, o custo fiscal do crédito agrícola atinge patamares recordes, disputando espaço com os investimentos em ferrovias e saneamento."
+        analysis: "É o plano com a regra fiscal mais explícita. O problema é que a maior despesa obrigatória, a Previdência, está indexada ao salário mínimo pela Constituição, e os pisos de saúde e educação crescem junto com a receita. Sem mexer nessas vinculações, conter o gasto abaixo do PIB depende de crescimento forte. Outro ponto: o plano cria fundos que não podem ser contingenciados, o que torna o orçamento ainda mais rígido."
       },
-
-      countryContextResponse: {
-        diagnosis: "Diagnostica que o Brasil é refém de uma polarização infantilizante e da fraqueza do Estado perante o crime organizado e os interesses corporativos no Congresso.",
-        solution: "Propõe pacificação pragmática por meio da autoridade moral, segurança com pulso firme e gestão técnica de coalizão profissional (articulada com a habilidade partidária de Gilberto Kassab).",
-        critique: "A governabilidade dependerá de acomodar o apetite do chamado 'Centrão', que comanda o PSD e partidos aliados, colocando à prova a promessa de gestão técnica e contratos de resultados contra indicações meramente políticas."
+      context: {
+        diagnosis: "O país estaria refém da “polarização estéril” e de um Estado fraco diante do crime organizado.",
+        solution: "Autoridade na segurança, gestão por metas e coalizão pragmática com o Congresso.",
+        critique: "A governabilidade dependerá de negociar com os mesmos partidos cujas emendas o plano quer reorganizar."
       }
     },
 
+    /* =========================== AUGUSTO CURY ============================ */
     {
       id: "augusto_cury",
       name: "Augusto Cury",
       shortName: "Augusto Cury",
-      party: "Candidatura Independente / Humanista",
-      coalition: "Frente Ampla pela Cultura da Paz e Saúde Emocional",
-      vice: "A definir (perfil educacional / científico)",
-      color: "#8B5CF6",
-      accentColor: "#A855F7",
-      lightColor: "#F3E8FF",
-      avatarInitials: "AC",
-      documentTitle: "Plano de Governo Augusto Cury 2026: Cultura da Paz em uma Sociedade Polarizada e Adoecida",
-      pdfFile: "Plano_gov_Augusto_Cury_2026.pdf",
-      totalPages: 200,
-      officialMotto: "Educar a Emoção, Pacificar a Sociedade, Libertar o Empreendedorismo",
-      orientation: "Humanismo centrista / Desenvolvimentismo socioemocional e preventivo",
-
-      summary: "Com um dos documentos mais extensos e detalhados da eleição (200 páginas e 18 grandes projetos de Estado), o médico psiquiatra, professor e escritor mais lido do Brasil, Augusto Cury, traz uma visão revolucionária e heterodoxa para a Presidência da República. Seu plano parte da tese central de que 'o Brasil não está dividido em dois barcos (direita x esquerda), mas em uma sociedade adoecida emocionalmente pela polarização'. Suas propostas prioritárias incluem: 'A Revolução da Educação' com tempo integral e desenvolvimento de pensadores críticos; o 'Brasil Neuroinclusivo' (acolhimento a autistas, TDAH, disléxicos); a criação de uma Secretaria/Ministério do Empreendedorismo para fomentar 10 milhões de microempresas contra a epidemia de desemprego da IA; o 'Brasil Oásis' para revitalizar o Semiárido de 31 milhões de pessoas; a maior rede de telemedicina pública do mundo no SUS ('Tele Saúde Brasil'); e o projeto 'FATO - Força de Alerta Total' para segurança 4.0 preventiva.",
-
-      pillars: [
+      number: "70",
+      party: "Avante",
+      coalition: "Não informada no documento",
+      vice: "Júlio Delgado (Avante)",
+      color: "#7C3AED",
+      initials: "AC",
+      document: {
+        title: "Cultura da Paz em uma Sociedade Polarizada e Adoecida",
+        file: "Plano_gov_Augusto_Cury_2026.pdf",
+        maxPage: 200,
+        pages: "200 páginas, 18 projetos",
+        pageMap: "direct"
+      },
+      motto: { text: "Estamos todos no mesmo barco, chamado família brasileira.", page: 3 },
+      thesis: "Pacificar um país “emocionalmente adoecido”: educação socioemocional, empreendedorismo em massa e telemedicina.",
+      summary: "O plano mais extenso da eleição, com 200 páginas, 18 projetos e 20 teses. A tese central é que a sociedade está adoecida pela polarização. As propostas incluem escola em tempo integral com Gestão da Emoção, Educação Financeira e Empreendedorismo no currículo; a política Brasil Neuroinclusivo; um novo órgão para gerar 10 milhões de empreendedores; o Brasil Oásis no Semiárido; e a maior plataforma pública de telemedicina do mundo. No campo institucional, propõe adotar o semipresidencialismo e reformar o STF, com 9 ministros e mandato de 8 anos.",
+      proposals: [
         {
-          title: "Cultura da Paz e Pacificação da Mente Social",
-          description: "Superação da histeria e polarização política destrutiva através do ensino obrigatório de Gestão da Emoção, mediação pacífica de conflitos nas escolas e órgãos públicos, e pacificação institucional."
+          id: "semipresidencialismo",
+          theme: "instituicoes",
+          title: "Semipresidencialismo, com Primeiro-Ministro escolhido pelo Parlamento",
+          plain: "O presidente dividiria o governo com um primeiro-ministro que depende do apoio da maioria parlamentar.",
+          page: 60,
+          verdict: "pec",
+          contested: true,
+          legal: "Mudar o sistema de governo exige PEC. Como o presidencialismo foi escolhido em plebiscito (1993), muitos juristas defendem que uma mudança precisaria de nova consulta popular.",
+          arts: ["art60"]
         },
         {
-          title: "Revolução da Educação & Brasil Neuroinclusivo (Projetos 1 e 2)",
-          description: "Escola de tempo integral voltada a formar pensadores e não repetidores de dados; política nacional de inclusão ativa para estudantes com TEA (autismo), TDAH, dislexia e altas habilidades."
+          id: "reforma-stf",
+          theme: "instituicoes",
+          title: "STF com 9 ministros, mandato de 8 anos e escolha pelas carreiras jurídicas",
+          plain: "O presidente deixaria de indicar ministros; magistratura, MP e OAB escolheriam. Mínimo de 3 mulheres.",
+          page: 64,
+          quote: "Propomos ainda reduzir a composição do STF para nove ministros",
+          verdict: "pec",
+          legal: "A composição e a forma de escolha estão no Art. 101; mudá-las exige PEC. É viável, desde que preserve a independência do Judiciário (Art. 60, §4º, III). Reduzir cadeiras enquanto há ministros em exercício traz questões de transição.",
+          arts: ["art102", "art2"]
         },
         {
-          title: "10 Milhões de Microempresas contra o Desemprego da IA (Projetos 4 e 5)",
-          description: "Criação do Ministério/Secretaria da Economia Distribuída para financiar e apoiar 10 milhões de pequenos negócios, prevenindo a crise de automação e substituição de postos por robótica e IA."
+          id: "gestao-emocao-curriculo",
+          theme: "social",
+          title: "Gestão da Emoção, Educação Financeira e Empreendedorismo no currículo",
+          plain: "Três novos pilares nas escolas, dentro do tempo integral.",
+          page: 75,
+          verdict: "exec",
+          legal: "A União define diretrizes nacionais (Art. 22, XXIV) e a BNCC já inclui competências socioemocionais. A aplicação depende das redes estaduais e municipais e deve respeitar o pluralismo pedagógico (Art. 206, III).",
+          arts: []
         },
         {
-          title: "Brasil Oásis & BEE nas Estradas (Projetos 6 e 7)",
-          description: "Transformação do Semiárido brasileiro (1.477 municípios) em fronteira tecnológica agroecológica e exportadora de frutas; conversão da malha rodoviária em polos turísticos e comerciais dinâmicos."
+          id: "neuroinclusivo",
+          theme: "social",
+          title: "Brasil Neuroinclusivo",
+          plain: "Política nacional para estudantes com autismo, TDAH, dislexia e altas habilidades, com formação de professores.",
+          page: 81,
+          verdict: "exec",
+          legal: "Alinhada à Lei Brasileira de Inclusão e à Lei 12.764/2012 (autismo). É implementável por programa federal com recursos.",
+          arts: []
         },
         {
-          title: "Tele Saúde Brasil & Segurança Preventiva FATO (Projetos 13 e 18)",
-          description: "Criação da maior plataforma pública de telemedicina do planeta para zerar a fila de consultas especializadas do SUS em até 50 dias; Sistema FATO (Segurança 4.0) com IA e cooperação policial integrada."
+          id: "banco-empreendedor",
+          theme: "economia",
+          title: "10 milhões de novos empreendedores e “Banco do Empreendedor”",
+          plain: "Crédito de até R$ 20 mil a 5% ou 6% ao ano, via 10 mil clubes, coordenados por uma Secretaria ou Ministério do Empreendedorismo.",
+          page: 98,
+          quote: "Crédito De Até R$ 20.000,00; Juros Civilizados (5% a 6% ao ano)",
+          verdict: "lei",
+          legal: "Criar banco ou empresa pública exige lei específica (Art. 37, XIX), e criar ministério também (Art. 88). Juros abaixo da Selic, hoje em 13,75%, dependem de subsídio no orçamento, a chamada equalização (LRF, art. 26).",
+          arts: []
+        },
+        {
+          id: "tele-saude",
+          theme: "social",
+          title: "Tele Saúde Brasil",
+          plain: "Maior plataforma pública de telemedicina do mundo, com atendimento digital em até 30 minutos nos casos compatíveis.",
+          page: 161,
+          quote: "meta nacional de atendimento digital em até trinta minutos para os casos compatíveis com telemedicina",
+          verdict: "exec",
+          legal: "A telessaúde já tem base na Lei 14.510/2022. Exige proteção de dados sensíveis (LGPD) e integração com o SUS de estados e municípios.",
+          arts: []
+        },
+        {
+          id: "brasil-oasis",
+          theme: "economia",
+          title: "Brasil Oásis no Semiárido",
+          plain: "Irrigação de precisão e agroindústria em 1.477 municípios (31 milhões de pessoas), com meta de multiplicar por dez a exportação de frutas.",
+          page: 114,
+          verdict: "exec",
+          legal: "É política de desenvolvimento regional, compatível com o Art. 3º, III. Precisa de outorga de água e licenciamento ambiental. O principal limite é orçamentário.",
+          arts: []
+        },
+        {
+          id: "policia-foco",
+          theme: "seguranca",
+          title: "Polícia FOCO: converter 5% dos servidores municipais em força de segurança",
+          plain: "Servidores já existentes nas prefeituras seriam remanejados para uma força municipal de prevenção.",
+          page: 45,
+          verdict: "vedado",
+          contested: true,
+          legal: "Guardas municipais são constitucionais (Art. 144, §8º), e o STF permite que façam policiamento preventivo. Mas transferir servidores de outra carreira para a função sem novo concurso viola o Art. 37, II e a Súmula Vinculante 43. A saída legal seria abrir concurso próprio.",
+          arts: ["art37", "art144"]
+        },
+        {
+          id: "deficit-zero",
+          theme: "fiscal",
+          title: "Déficit próximo de zero “sem aventuras fiscais”",
+          plain: "Compromisso genérico com equilíbrio das contas.",
+          page: 36,
+          quote: "Nossa meta será perseguir o déficit próximo de zero, sem aventuras fiscais",
+          verdict: "exec",
+          legal: "É meta de política fiscal, fixada anualmente na LDO. Não há obstáculo jurídico; o desafio é conciliá-la com o custo dos 18 projetos.",
+          arts: []
         }
       ],
-
-      constitutionalLimitations: {
-        headline: "Autonomia pedagógica (Art. 206), criação de ministérios (Art. 61) e integridade do SUS",
-        riskLevel: "Baixo a Moderado",
-        riskBadge: "Tensão Regulatória & LRF",
-        articles: [
-          {
-            article: "Art. 206, II e III da CF/88 c/c LDB (Lei nº 9.394/96)",
-            topic: "Liberdade de Aprender e Pluralismo de Ideias Pedagógicas",
-            quote: "O ensino será ministrado com base nos seguintes princípios: (...) liberdade de aprender, ensinar, pesquisar e divulgar o pensamento, a arte e o saber; pluralismo de idéias e de concepções pedagógicas.",
-            impact: "A imposição pelo governo federal de metodologias uniformes de inteligência socioemocional ou gestão da mente nas grades curriculares de todas as redes municipais e estaduais pode sofrer questionamentos por ferir a autonomia pedagógica das escolas e a competência concorrente de estados e municípios (Art. 24, IX e Art. 211)."
-          },
-          {
-            article: "Art. 61, § 1º, II, 'e' e Art. 169 da CF/88",
-            topic: "Criação de Ministérios e Limites com Despesa de Pessoal",
-            quote: "São de iniciativa privativa do Presidente da República as leis que disponham sobre: (...) criação e extinção de Ministérios e órgãos da administração pública (...). A despesa com pessoal ativo e inativo da União (...) não poderá exceder os limites estabelecidos em lei complementar.",
-            impact: "A proliferação de novas secretarias, novos ministérios (Empreendedorismo) e agências executivas para gerir os 18 projetos esbarra nas restrições de criação de despesas correntes de pessoal da Lei de Responsabilidade Fiscal e exige prévia autorização orçamentária na LDO e LOA."
-          },
-          {
-            article: "Art. 196 e Art. 199 da CF/88",
-            topic: "Universalidade da Saúde Pública e Complementariedade Privada",
-            quote: "A saúde é direito de todos e dever do Estado (...). A assistência à saúde é livre à iniciativa privada. As instituições privadas poderão participar de forma complementar do SUS (...).",
-            impact: "A migração em larga escala do atendimento especializado do SUS para a 'Tele Saúde' requer garantir a integralidade do cuidado médico e a soberania dos prontuários eletrônicos de saúde, respeitando a LGPD e evitando a privatização velada de dados clínicos dos cidadãos."
-          }
-        ]
-      },
-
-      economicLimitations: {
-        headline: "Meta de déficit zero vs financiamento dos 18 megaprojetos e viabilidade legislativa",
-        fiscalViability: "Média (60%)",
-        metrics: [
-          { label: "Meta Fiscal Declarada", value: "Déficit público próximo de zero sem choques brutais" },
-          { label: "Impacto Financeiro Previsto", value: "Crédito a 10 milhões de microempresas + obras hídricas" },
-          { label: "Dependência Política", value: "Exige aprovação de dotações orçamentárias pelo Congresso" }
+      economic: {
+        figures: [
+          { label: "Crédito por empreendedor", value: null, display: "até R$ 20 mil, a 5–6% ao ano", kind: "gasto", page: 98 },
+          { label: "Fundo Internacional de Erradicação da Fome", value: null, display: "US$ 177–342 bi/ano, com financiamento internacional", kind: "fundo", page: 157 }
         ],
-        analysis: "O plano de Augusto Cury é visionário ao antecipar os impactos da Inteligência Artificial sobre o mercado de trabalho e ao reconhecer a saúde mental como fator crítico de produtividade do país. Economicamente, contudo, há um descompasso entre a meta austera de 'déficit público próximo de zero' e o custo bilionário de implantar escolas em tempo integral em todo o país, estruturar obras hídricas nos 1.477 municípios do Semiárido ('Brasil Oásis') e subsidiar crédito para 10 milhões de pequenos negócios. Como o plano não especifica cortes em áreas sensíveis como a Previdência ou a folha salarial dos Três Poderes, seus programas dependeriam da boa vontade do Congresso na realocação de emendas ou de complexas parcerias público-privadas (PPPs)."
+        figuresNote: "O plano não apresenta o custo total dos 18 projetos.",
+        headline: "Muitos projetos novos e poucas fontes de financiamento",
+        points: [
+          "18 projetos nacionais, vários com novos órgãos e fundos.",
+          "Crédito subsidiado em escala nacional com a Selic a 13,75%.",
+          "O plano não aponta cortes em Previdência ou folha para compensar."
+        ],
+        analysis: "O plano acerta ao antecipar efeitos da inteligência artificial no emprego e ao tratar saúde mental como tema econômico. Mas soma escola integral nacional, infraestrutura hídrica no Semiárido, telemedicina e crédito barato a milhões de pequenos negócios, enquanto promete déficit próximo de zero. Sem apontar cortes ou novas receitas, os projetos dependem de PPPs, de lucros de estatais (citados como fonte do Banco do Empreendedor) e da boa vontade do Congresso."
       },
-
-      countryContextResponse: {
-        diagnosis: "Diagnostica o Brasil como um país doente emocionalmente, com índices alarmantes de ansiedade, depressão e desesperança entre jovens e educadores, exacerbados pelo ódio nas redes sociais e pela iminência do desemprego tecnológico.",
-        solution: "Aposta no desenvolvimento do capital humano, na inclusão neurodivergente, na gestão socioemocional e no microempreendedorismo cooperativo como antídoto para a revolução digital.",
-        critique: "Apesar de extremamente sensível às dores humanas reais da população, a tese carece de pragmatismo político tradicional para negociar com um Parlamento fisiológico que costuma exigir contrapartidas orçamentárias imediatas e cargos em troca de apoio."
+      context: {
+        diagnosis: "Um país “emocionalmente adoecido” por ansiedade, polarização e medo do desemprego tecnológico.",
+        solution: "Capital humano, inclusão neurodivergente, empreendedorismo e cooperativismo.",
+        critique: "Mudanças profundas como o semipresidencialismo e a reforma do STF exigem maioria de 3/5 num Congresso fragmentado, e o plano não explica como formar essa maioria."
       }
     },
 
+    /* ============================ RENAN SANTOS =========================== */
     {
       id: "renan_santos",
       name: "Renan Santos",
       shortName: "Renan Santos",
-      party: "Partido Missão (MBL)",
-      coalition: "Candidatura Própria / Movimento Brasil Livre (MBL)",
-      vice: "A definir (quadro técnico / liderança jovem)",
-      color: "#FACC15",
-      accentColor: "#EAB308",
-      lightColor: "#FEF9C3",
-      avatarInitials: "RS",
-      documentTitle: "Livro Amarelo - Missão 2026: O Futuro é Glorioso (Resumo Executivo do Plano de 500 págs.)",
-      pdfFile: "proposta-missao-renan-santos.pdf",
-      totalPages: 51,
-      officialMotto: "Sepultar a Nova República e Refundar a Potência Nacional",
-      orientation: "Nacional-liberal radical / Desenvolvimentismo de choque e ordem",
-
-      summary: "O Partido Missão entrega uma proposta que se declara o primeiro 'livro como plano de governo' da história brasileira (resumo de uma obra de mais de 500 páginas). O plano diagnostica a falência absoluta do arranjo da Nova República instaurada pela CF/88 e propõe medidas de choque radical: no campo fiscal, um corte de R$ 250 bilhões anuais ('Um Remédio Amargo') com desindexação da previdência do salário mínimo e desvinculação obrigatória dos pisos de saúde e educação (PEC do Equilíbrio Fiscal); na segurança, a aplicação imediata do 'Direito Penal do Inimigo' (Günther Jakobs) com decretação sucessiva de Estado de Defesa (Art. 136) para suspender garantias de faccionados ('Prendeu, Matou?'); no pacto federativo, a 'Grande Consolidação Municipal', fundindo compulsoriamente milhares de prefeituras inviáveis; e na economia, a implantação de Zonas Econômicas Especiais (ZEE) no Nordeste e Norte (modelo chinês/Shenzhen) com reindustrialização acelerada.",
-
-      pillars: [
+      number: null,
+      party: "Missão",
+      coalition: "Não informada no documento",
+      vice: "Aroldo Medina",
+      color: "#975A16",
+      initials: "RS",
+      document: {
+        title: "O Futuro é Glorioso — Resumo executivo do Livro Amarelo",
+        file: "proposta-missao-renan-santos.pdf",
+        maxPage: 51,
+        pages: "51 páginas (resumo de obra com mais de 500)",
+        pageMap: "direct"
+      },
+      motto: { text: "O futuro é glorioso.", page: 3 },
+      thesis: "Ruptura com a “Nova República”: ajuste fiscal duro, Direito Penal do Inimigo e reorganização do mapa municipal.",
+      summary: "O resumo do Livro Amarelo, com 51 páginas de uma obra de mais de 500, é o plano mais radical e o mais explícito sobre mudanças constitucionais. No fiscal, propõe uma PEC antes da posse para desindexar benefícios do salário mínimo e desvincular os pisos de saúde e educação, citando um ajuste necessário de R$ 250 bi por ano (estimativa atribuída a Mansueto Almeida). Na segurança, propõe o Direito Penal do Inimigo, aplicado “por sucessivos decretos de Estado de Defesa em áreas sob comando das facções”. O plano também propõe reduzir drasticamente o número de municípios, substituir o Bolsa Família por frentes de trabalho, abolir cotas e acabar com a autonomia universitária. O próprio texto afirma que alguns objetivos “dependem de nova ordem constitucional”.",
+      proposals: [
         {
-          title: "Ajuste Fiscal de R$ 250 Bilhões ('Um Remédio Amargo')",
-          description: "PEC de Transição do Equilíbrio Fiscal no dia 1: desindexação dos benefícios previdenciários e do BPC do salário mínimo (corrigidos apenas pelo IPCA), desvinculação dos pisos constitucionais de saúde e educação, e reforma administrativa."
+          id: "direito-penal-inimigo",
+          theme: "seguranca",
+          title: "Direito Penal do Inimigo (Jakobs)",
+          plain: "Membros de facções seriam tratados como “inimigos”: perda de direitos políticos e civis, restrição de locomoção e penas desproporcionais.",
+          page: 12,
+          quote: "medidas preventivas e penas desproporcionais àqueles que demonstram não aceitar o pacto social",
+          verdict: "vedado",
+          legal: "Cassar direitos políticos fora das hipóteses do Art. 15 é proibido; perdê-los exige condenação transitada em julgado. Penas desproporcionais e medidas sem culpa formada ferem o devido processo e a presunção de inocência (Art. 5º, LIV e LVII), que são cláusulas pétreas. O documento diz que as medidas seriam “compatíveis com a Constituição”, mas não explica como.",
+          arts: ["art5", "art60", "art15"]
         },
         {
-          title: "Direito Penal do Inimigo & Estado de Defesa Permanente ('Prendeu, Matou?')",
-          description: "Declaração de Guerra Aberta ao Crime no dia 1; aplicação da doutrina de Jakobs com suspensão de garantias processuais para facções; uso contínuo de decretos de Estado de Defesa (Art. 136), intervenções federais e GLO pesada."
+          id: "estado-de-defesa",
+          theme: "seguranca",
+          title: "“Sucessivos decretos de Estado de Defesa” em áreas dominadas por facções",
+          plain: "Usar o Estado de Defesa, que permite restringir direitos, de forma repetida para combater o crime.",
+          page: 12,
+          quote: "se daria por sucessivos decretos de Estado de Defesa em áreas sob comando das facções",
+          verdict: "vedado",
+          legal: "O Estado de Defesa dura no máximo 30 dias, prorrogáveis uma única vez (Art. 136, §2º), e precisa de aprovação do Congresso em 10 dias. Se não bastar, o caminho constitucional é o Estado de Sítio, com autorização prévia do Congresso, e não decretos em série. Mesmo nessas situações, só se restringem direitos específicos, como reunião e sigilo de correspondência; o devido processo não pode ser suspenso.",
+          arts: ["art136"]
         },
         {
-          title: "A Grande Consolidação Municipal & Pacto Federativo",
-          description: "Reorganização territorial drástica: fusão forçada de milhares de municípios fiscalmente inviáveis em unidades com escala econômica sustentável; revisão da bancada parlamentar desproporcional do Norte e Nordeste no Congresso."
+          id: "desindexacao-beneficios",
+          theme: "fiscal",
+          title: "Desindexar aposentadorias e benefícios assistenciais do salário mínimo",
+          plain: "Benefícios seriam corrigidos só pela inflação, mesmo que o salário mínimo tenha aumento real.",
+          page: 10,
+          quote: "desindexação de benefícios previdenciários e assistenciais do salário mínimo (corrigindo-os apenas pela inflação)",
+          verdict: "pec",
+          contested: true,
+          legal: "A Constituição proíbe benefício previdenciário abaixo do mínimo (Art. 201, §2º) e garante o BPC de um salário mínimo (Art. 203, V). Mudar isso exige PEC. Há debate se direitos sociais são cláusula pétrea (vedação de retrocesso), mas o STF nunca anulou uma emenda com esse argumento.",
+          arts: ["art201", "art60"]
         },
         {
-          title: "Zonas Econômicas Especiais (ZEE) & Reindustrialização (Missão Rondon)",
-          description: "Criação de enclaves de liberdade econômica e tributação zero para indústrias de exportação de alta tecnologia no Nordeste e Norte (modelo Shenzhen); retomada dos investimentos em infraestrutura pesada."
+          id: "desvinculacao-pisos",
+          theme: "fiscal",
+          title: "Desvincular os pisos de saúde e educação",
+          plain: "O governo deixaria de ser obrigado a gastar percentuais mínimos da receita em saúde e educação.",
+          page: 10,
+          quote: "desvinculação dos pisos de saúde e educação da receita",
+          verdict: "pec",
+          legal: "Os pisos estão nos Arts. 198, §2º e 212, e só uma PEC pode mudá-los. Há precedente: o Teto de Gastos (EC 95/2016) mudou a regra dos pisos e não foi anulado pelo STF. É juridicamente possível; o custo é político e social.",
+          arts: ["art198"]
         },
         {
-          title: "SUS Fila Zero & Formação de Elites ('Chega de Saudade')",
-          description: "Adoção de vouchers na saúde privada e gestão corporativa do SUS; formação meritocrática de novas elites científicas, estéticas e estatais, sepultando o corporativismo burocrático da Nova República."
+          id: "consolidacao-municipal",
+          theme: "instituicoes",
+          title: "Grande Consolidação Municipal: de 5.570 para cerca de 1.650 municípios",
+          plain: "Fundir municípios pequenos e sem receita própria, por meio da PEC 188/2019 e de um novo marco legal.",
+          page: 15,
+          quote: "A consolidação não será imposição de Brasília sobre o território.",
+          verdict: "pec",
+          contested: true,
+          legal: "Hoje, fundir municípios exige lei estadual, plebiscito e uma lei complementar federal que nunca foi aprovada (Art. 18, §4º). Por isso o plano recorre a uma PEC. Uma fusão em massa sem consulta às populações pode ser questionada como ofensa à forma federativa, que é cláusula pétrea.",
+          arts: ["art18", "art60"]
+        },
+        {
+          id: "clausula-antimafia",
+          theme: "instituicoes",
+          title: "Cláusula Antimáfia: STJ dissolve prefeituras capturadas pelo crime",
+          plain: "O mandato seria extinto e uma comissão federal administraria o município por até 24 meses.",
+          page: 18,
+          quote: "o mandato eletivo é extinto e o município passa a ser gerido por uma comissão extraordinária federal por até 24 meses",
+          verdict: "pec",
+          contested: true,
+          legal: "A União não pode intervir em municípios de estados; só o Estado pode, e nos casos do Art. 35. Os mandatos também só se perdem nas hipóteses constitucionais. O plano fala em “lei”, mas seria preciso uma PEC, com risco de ferir a autonomia municipal (Arts. 18 e 60, §4º, I).",
+          arts: ["art18", "art60"]
+        },
+        {
+          id: "frentes-cidadas",
+          theme: "social",
+          title: "Trocar o Bolsa Família por “Frentes Cidadãs” de trabalho",
+          plain: "A transferência de renda seria substituída por frentes de trabalho remuneradas.",
+          page: 21,
+          verdict: "lei",
+          contested: true,
+          legal: "O Bolsa Família é criado pela Lei 14.601/2023. Desde a EC 114/2021, porém, a Constituição garante renda básica a quem está em vulnerabilidade (Art. 6º, parágrafo único). Exigir trabalho como condição é juridicamente discutível para quem não pode trabalhar.",
+          arts: ["art6"]
+        },
+        {
+          id: "cotas-autonomia-universitaria",
+          theme: "social",
+          title: "Abolir cotas e substituir a autonomia universitária por “alinhamento estratégico”",
+          plain: "Fim da reserva de vagas e universidades federais subordinadas a metas do governo.",
+          page: 32,
+          quote: "substituindo a autonomia universitária por uma perspectiva de alinhamento estratégico",
+          verdict: "pec",
+          legal: "As cotas estão na Lei 12.711/2012; o STF as considerou constitucionais, mas não obrigatórias, então revogá-las é possível por lei. Já a autonomia universitária está no Art. 207, e acabar com ela exige PEC.",
+          arts: ["art207"]
+        },
+        {
+          id: "zonas-economicas-especiais",
+          theme: "economia",
+          title: "Zonas Econômicas Especiais no Nordeste (modelos Shenzhen e Shannon)",
+          plain: "Áreas com suspensão de tributos de importação e regime próprio de IBS/CBS para atrair indústria exportadora.",
+          page: 35,
+          verdict: "lc",
+          contested: true,
+          legal: "Incentivos regionais são permitidos (Art. 151, I), e as ZPEs já existem pela Lei 11.508/2007. Criar um regime específico de IBS/CBS exige lei complementar e, se não estiver entre as exceções da reforma tributária (EC 132/2023), PEC.",
+          arts: []
+        },
+        {
+          id: "crime-favelizacao",
+          theme: "social",
+          title: "“Crime de favelização” e demolição administrativa em 48 horas",
+          plain: "Punir loteadores ilegais e demolir construções não habitadas em áreas públicas ou de risco sem ordem judicial.",
+          page: 49,
+          quote: "o objetivo final, a demolição de toda construção ilegal, depende de nova ordem constitucional",
+          verdict: "lei",
+          contested: true,
+          legal: "Tipificar o crime exige lei. Demolições precisam de contraditório (Art. 5º, LV) e respeito ao direito à moradia (Art. 6º). O próprio plano admite que a meta final só seria possível com “nova ordem constitucional”.",
+          arts: ["art5", "art6"]
         }
       ],
-
-      constitutionalLimitations: {
-        headline: "Violação frontal de cláusulas pétreas (Art. 60), Estado de Defesa contínuo (Art. 136) e fusão municipal (Art. 18)",
-        riskLevel: "Crítico / Extremo",
-        riskBadge: "Inconstitucionalidade Flagrante",
-        articles: [
-          {
-            article: "Art. 60, § 4º, IV c/c Art. 5º da CF/88",
-            topic: "Cláusula Pétrea dos Direitos e Garantias Individuais e Devido Processo",
-            quote: "Não será objeto de deliberação a proposta de emenda tendente a abolir: (...) os direitos e garantias individuais. Ninguém será privado da liberdade ou de seus bens sem o devido processo legal (Art. 5º, LIV).",
-            impact: "A formalização do 'Direito Penal do Inimigo' (que trata investigados como inimigos desprovidos de direitos de cidadão) e a suspensão permanente de garantias individuais violam o núcleo intangível da Constituição Federal de 1988. Nem mesmo por Emenda Constitucional tais garantias podem ser abolidas, sendo fatalmente declaradas nulas pelo STF."
-          },
-          {
-            article: "Art. 136, § 2º da CF/88",
-            topic: "Limites Temporais e Materiais do Estado de Defesa",
-            quote: "O tempo de duração do estado de defesa não será superior a trinta dias, podendo ser prorrogado uma vez, por igual período, se persistirem as razões que justificaram a sua decretação.",
-            impact: "A proposta explícita do Livro Amarelo de governar por 'sucessivos decretos de Estado de Defesa' para combater o crime comum deturpa a natureza excepcional de crise institucional da medida, caracterizando desvio de finalidade e infração político-constitucional passível de impeachment (Art. 85 da CF/88)."
-          },
-          {
-            article: "Art. 198, § 2º e Art. 212 da CF/88",
-            topic: "Pisos Constitucionais Vinculados de Saúde e Educação",
-            quote: "A União aplicará, anualmente, nunca menos de dezoito (...) por cento da receita resultante de impostos na manutenção e desenvolvimento do ensino. A União destinará (...) no mínimo 15% da receita corrente líquida em ações e serviços públicos de saúde.",
-            impact: "A desvinculação completa dos pisos da saúde e educação, além de exigir quórum de 3/5 em dois turnos na Câmara e no Senado, colide com a jurisprudência consolidada do STF sobre a vedação ao retrocesso social (proibição de desmonte de direitos prestacionais fundamentais)."
-          },
-          {
-            article: "Art. 18, § 4º da CF/88",
-            topic: "Requisitos Constitucionais Rígidos para Fusão de Municípios",
-            quote: "A criação, a incorporação, a fusão e o desmembramento de Municípios, far-se-ão por lei estadual, dentro do período determinado por Lei Complementar Federal, e dependerão de consulta prévia, mediante plebiscito, às populações dos Municípios envolvidos (...).",
-            impact: "O governo federal não tem poder para fundir municípios por decreto ou lei ordinária própria. A Constituição exige Lei Complementar do Congresso, Estudos de Viabilidade Municipal e aprovação obrigatória por plebiscito pelas populações locais de cada município afetado."
-          }
-        ]
-      },
-
-      economicLimitations: {
-        headline: "Choque recessivo por contração súbita de R$ 250 bi, colapso de economias locais e risco soberano",
-        fiscalViability: "Baixa (38%)",
-        metrics: [
-          { label: "Corte Fiscal Pretendido", value: "R$ 250 bilhões anuais (2,3% do PIB)" },
-          { label: "Impacto em Cidades Pequenas", value: "70% dos municípios dependem do FPM e de aposentadorias do INSS" },
-          { label: "Risco de Mercado (CDS)", value: "Instabilidade institucional extrema pode disparar fuga de capitais" }
+      economic: {
+        figures: [
+          { label: "Ajuste fiscal necessário (citado)", value: 250, display: "R$ 250 bi/ano", kind: "corte", page: 10 },
+          { label: "Economia projetada com a PEC", value: 220, display: "R$ 1,1 tri até 2031", kind: "corte", page: 10 },
+          { label: "Infraestrutura de 2% para 4% do PIB", value: 254, display: "+2 pontos do PIB, público + privado", kind: "gasto", page: 23 },
+          { label: "Desfavelização", value: 135, display: "R$ 1,2–1,5 tri em 10 anos", kind: "gasto", page: 49 }
         ],
-        analysis: "Embora um ajuste fiscal de R$ 250 bilhões atendesse com folga aos anseios de sustentabilidade da dívida pública, sua execução em um único mandato via corte de reajustes reais de aposentadorias e do BPC causaria um violento choque recessivo keynesiano no consumo das famílias. No Brasil profundo, em mais de 3.000 cidades pequenas, a economia do comércio e dos serviços sobrevive quase exclusivamente da injeção mensal de benefícios da previdência básica e do funcionalismo. Cortar abruptamente essa circulação de renda provocaria colapso fiscal nas pequenas cidades antes que as indústrias das Zonas Econômicas Especiais (que demoram anos para maturar) pudessem gerar empregos compensatórios. Além disso, medidas de exceção jurídica e Estados de Defesa contínuos afugentam investidores globais que temem insegurança institucional."
+        headline: "O maior ajuste fiscal proposto, com risco de choque de curto prazo",
+        points: [
+          "Ajuste citado: R$ 250 bi por ano, cerca de 2% do PIB (estimativa atribuída a Mansueto Almeida).",
+          "Economia projetada pela PEC: R$ 1,1 tri até 2031.",
+          "Desfavelização custaria R$ 1,2 a 1,5 tri em 10 anos, segundo o próprio plano."
+        ],
+        analysis: "Um ajuste desse tamanho estabilizaria a dívida mais rápido que qualquer outro plano. Mas quem paga são sobretudo aposentados do piso e beneficiários do BPC, que sustentam o comércio de milhares de pequenas cidades. As Zonas Econômicas Especiais levam anos para gerar empregos que compensem essa perda de renda. O plano também propõe gastos altíssimos, como os R$ 1,2 a 1,5 tri em desfavelização e a duplicação do investimento em infraestrutura de 2% para 4% do PIB, sem mostrar a conta consolidada."
       },
-
-      countryContextResponse: {
-        diagnosis: "Diagnostica que a 'Nova República' de 1988 faliu moral, jurídica e economicamente, tendo gerado uma cleptocracia sustentada pelo loteamento partidário e um Estado leniente com facções criminosas.",
-        solution: "Propõe uma refundação nacional inspirada no salto industrial do nacional-desenvolvimentismo (Vargas 2.0), combinada com choque de capitalismo desregulamentado e mão de ferro sem trégua contra o crime.",
-        critique: "A proposta depende da destruição ou neutralização das instituições vigentes (Congresso, governadores e STF), demandando uma concentração quase ditatorial de poderes que é inteiramente rejeitada pela ordem democrática brasileira e pela comunidade internacional."
+      context: {
+        diagnosis: "A “Nova República” teria falhado: democracia esvaziada, oligarquias regionais e um Estado leniente com o crime.",
+        solution: "Refundação nacional “dentro dos limites da democracia representativa”, com choque fiscal, ordem e reindustrialização.",
+        critique: "Boa parte das medidas centrais esbarra em cláusulas pétreas ou exige 3/5 do Congresso. O próprio texto reconhece que algumas dependem de “nova ordem constitucional”."
       }
     }
   ],
 
-  constitutionalRadarArticles: [
-    {
-      articleId: "art5",
-      title: "Artigo 5º da CF/88",
-      topic: "Direitos e Garantias Fundamentais & Cláusulas Pétreas",
-      status: "critical",
-      summary: "Consagra o devido processo legal, presunção de inocência, vedação a penas perpétuas e integridade física dos presos. É cláusula pétrea (Art. 60, § 4º, IV).",
-      fullText: "Todos são iguais perante a lei, sem distinção de qualquer natureza, garantindo-se aos brasileiros e aos estrangeiros residentes no País a inviolabilidade do direito à vida, à liberdade, à igualdade, à segurança e à propriedade, nos termos seguintes: (...) XLVI - a lei regulará a individualização da pena (...); XLVII - não haverá penas: a) de morte, salvo em caso de guerra declarada (...); b) de caráter perpétuo; c) de trabalhos forçados; d) de banimento; e) cruéis; LIV - ninguém será privado da liberdade ou de seus bens sem o devido processo legal; LVII - ninguém será considerado culpado até o trânsito em julgado de sentença penal condenatória.",
-      affectedCandidates: [
-        {
-          id: "renan_santos",
-          candidateName: "Renan Santos",
-          friction: "Violação do Devido Processo e Direitos Fundamentais ao propor o 'Direito Penal do Inimigo' (Günther Jakobs), suspendendo garantias constitucionais de membros de facções."
-        },
-        {
-          id: "flavio_bolsonaro",
-          candidateName: "Flávio Bolsonaro",
-          friction: "Adoção do modelo salvadorenho de encarceramento estrito sem progressão ou individualização, beirando a pena cruel e desproporcional."
-        },
-        {
-          id: "ronaldo_caiado",
-          candidateName: "Ronaldo Caiado",
-          friction: "Enquadramento penal amplo de facções como 'terrorismo doméstico' e confisco sumário prévio de ativos e criptoativos antes do trânsito em julgado."
-        }
-      ]
-    },
-
-    {
-      articleId: "art136",
-      title: "Artigo 136 da CF/88",
-      topic: "Estado de Defesa e Limites do Estado de Exceção",
-      status: "critical",
-      summary: "Delimita taxativamente o Estado de Defesa a no máximo 30 dias (prorrogável uma única vez) e apenas em casos gravíssimos de calamidade ou comoção institucional.",
-      fullText: "O Presidente da República pode, ouvidos o Conselho da República e o Conselho de Defesa Nacional, decretar estado de defesa na vigência do qual podem ser restritos direitos como sigilo de correspondência e de comunicação e liberdade de reunião (...). § 2º O tempo de duração do estado de defesa não será superior a trinta dias, podendo ser prorrogado uma vez, por igual período, se persistirem as razões que justificaram a sua decretação.",
-      affectedCandidates: [
-        {
-          id: "renan_santos",
-          candidateName: "Renan Santos",
-          friction: "Proposta explícita de sucessivos decretos contínuos de Estado de Defesa para combater o crime organizado comum, violando o prazo máximo improrrogável de 60 dias totais da CF/88."
-        }
-      ]
-    },
-
-    {
-      articleId: "art18",
-      title: "Artigo 18, § 4º da CF/88",
-      topic: "Requisitos Constitucionais para Fusão e Criação de Municípios",
-      status: "high",
-      summary: "Exige Lei Complementar Federal, Estudos de Viabilidade Municipal e plebiscito prévio com voto obrigatório das populações locais.",
-      fullText: "A criação, a incorporação, a fusão e o desmembramento de Municípios, far-se-ão por lei estadual, dentro do período determinado por Lei Complementar Federal, e dependerão de consulta prévia, mediante plebiscito, às populações dos Municípios envolvidos, após divulgação dos Estudos de Viabilidade Municipal, apresentados e publicados na forma da lei.",
-      affectedCandidates: [
-        {
-          id: "renan_santos",
-          candidateName: "Renan Santos",
-          friction: "A 'Grande Consolidação Municipal' pretende fundir de forma compulsória milhares de prefeituras inviáveis, o que esbarra na exigência indeclinável de plebiscitos locais e leis estaduais."
-        }
-      ]
-    },
-
-    {
-      articleId: "art198_212",
-      title: "Artigos 198 e 212 da CF/88",
-      topic: "Pisos Constitucionais Obrigatórios da Saúde e da Educação",
-      status: "high",
-      summary: "Fixam que percentuais mínimos das receitas tributárias líquidas da União (15% da RCL em saúde e 18% de impostos em educação) devem ser obrigatoriamente aplicados nessas pastas.",
-      fullText: "Art. 198, § 2º A União, os Estados, o Distrito Federal e os Municípios aplicarão, anualmente, em ações e serviços públicos de saúde recursos mínimos derivados da aplicação de percentuais calculados sobre (...) a receita corrente líquida. Art. 212 A União aplicará, anualmente, nunca menos de dezoito, e os Estados, o Distrito Federal e os Municípios vinte e cinco por cento, no mínimo, da receita resultante de impostos, compreendida a proveniente de transferências, na manutenção e desenvolvimento do ensino.",
-      affectedCandidates: [
-        {
-          id: "renan_santos",
-          candidateName: "Renan Santos",
-          friction: "Proposta de desvinculação completa dos pisos para economizar dezenas de bilhões; esbarra no princípio da vedação do retrocesso social e na cláusula de direitos sociais fundamentais."
-        },
-        {
-          id: "lula",
-          candidateName: "Lula",
-          friction: "O crescimento rígido dos pisos constitucionais sob as regras vigentes consome todo o espaço do Arcabouço Fiscal, forçando o aperto orçamentário em investimentos e manutenção de ministérios."
-        },
-        {
-          id: "ronaldo_caiado",
-          candidateName: "Ronaldo Caiado",
-          friction: "Tentativa de conter o crescimento vegetativo de despesas obrigatórias sem mexer nos pisos cria estrangulamento imediato nas despesas correntes da União."
-        }
-      ]
-    },
-
-    {
-      articleId: "art166",
-      title: "Artigo 166 da CF/88",
-      topic: "Impositividade das Emendas Parlamentares e Poder Orçamentário do Congresso",
-      status: "medium",
-      summary: "Determina que as emendas parlamentares individuais e de bancada possuem execução financeira compulsória e vinculante pelo Executivo.",
-      fullText: "Art. 166, § 9º As emendas individuais ao projeto de lei orçamentária serão aprovadas no limite de 2% (dois por cento) da receita corrente líquida do exercício anterior (...), sendo a execução orçamentária e financeira da despesa obrigatória e de forma equitativa.",
-      affectedCandidates: [
-        {
-          id: "ronaldo_caiado",
-          candidateName: "Ronaldo Caiado",
-          friction: "A promessa de 'reordenar emendas parlamentares por critérios técnicos de planejamento' depende do aval do próprio Congresso, que dificilmente abrirá mão de seu poder impositivo constitucional."
-        },
-        {
-          id: "lula",
-          candidateName: "Lula",
-          friction: "A impositividade das emendas drena de R$ 40 a R$ 53 bilhões anuais que o governo planejava destinar prioritariamente a obras estratégicas do Novo PAC."
-        }
-      ]
-    },
-
-    {
-      articleId: "art173_213",
-      title: "Artigos 173 e 213 da CF/88",
-      topic: "Intervenção do Estado na Economia & Destinação de Verbas à Educação Privada",
-      status: "medium",
-      summary: "Regulam os limites da exploração direta da atividade econômica pelo Estado e restringem repasses de recursos públicos à iniciativa privada educacional.",
-      fullText: "Art. 173 Ressalvados os casos previstos nesta Constituição, a exploração direta de atividade econômica pelo Estado só será permitida quando necessária aos imperativos da segurança nacional ou a relevante interesse coletivo (...). Art. 213 Os recursos públicos serão destinados às escolas públicas, podendo ser dirigidos a escolas comunitárias, confessionais ou filantrópicas (...).",
-      affectedCandidates: [
-        {
-          id: "flavio_bolsonaro",
-          candidateName: "Flávio Bolsonaro",
-          friction: "A entrega generalizada de 'vouchers-creche' para instituições privadas comerciais lucrativas viola a destinação preferencial da verba pública às escolas públicas do Art. 213."
-        },
-        {
-          id: "lula",
-          candidateName: "Lula",
-          friction: "A utilização de empresas estatais (Petrobras, bancos públicos) para subsidiar preços e intervir diretamente em mercados privados colide com as regras concorrenciais do Art. 173 e a Lei das Estatais (Lei 13.303/16)."
-        }
-      ]
-    },
-
-    {
-      articleId: "art2",
-      title: "Artigo 2º da CF/88",
-      topic: "Separação e Harmonia entre os Poderes da República",
-      status: "high",
-      summary: "Institui a independência e harmonia dos Três Poderes, consagrado como cláusula pétrea no Art. 60, § 4º, III.",
-      fullText: "São Poderes da União, independentes e harmônicos entre si, o Legislativo, o Executivo e o Judiciário.",
-      affectedCandidates: [
-        {
-          id: "flavio_bolsonaro",
-          candidateName: "Flávio Bolsonaro",
-          friction: "Medidas destinadas a intervir em decisões do STF ou barrar investigações criminais de corte superior sob a bandeira de 'Tesouraço na Censura' ameaçam a harmonia e independência do Judiciário."
-        },
-        {
-          id: "renan_santos",
-          candidateName: "Renan Santos",
-          friction: "O enfrentamento aberto à estrutura dos poderes e a intenção de subverter a Nova República e o Congresso afrontam diretamente o pacto de 1988."
-        }
-      ]
-    }
+  /* ------------------------------------------------------------------
+     Referências citadas no texto: viram links automaticamente
+     ------------------------------------------------------------------ */
+  refs: [
+    { match: "HC 82.959", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=HC&numeroProcesso=82959" },
+    { match: "ADI 6808", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADI&numeroProcesso=6808" },
+    { match: "ADI 6457", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADI&numeroProcesso=6457" },
+    { match: "ADI 6553", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADI&numeroProcesso=6553" },
+    { match: "ADPF 854", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADPF&numeroProcesso=854" },
+    { match: "ADPF 186", url: "https://portal.stf.jus.br/processos/listarProcessos.asp?classe=ADPF&numeroProcesso=186" },
+    { match: "Súmula Vinculante 26", url: "https://jurisprudencia.stf.jus.br/pages/search?base=sumulas&queryString=%22S%C3%BAmula%20Vinculante%2026%22" },
+    { match: "Súmula Vinculante 43", url: "https://jurisprudencia.stf.jus.br/pages/search?base=sumulas&queryString=%22S%C3%BAmula%20Vinculante%2043%22" },
+    { match: "Lei 13.260/2016", url: "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2016/lei/l13260.htm" },
+    { match: "Lei 13.303/2016", url: "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2016/lei/l13303.htm" },
+    { match: "Lei 14.601/2023", url: "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14601.htm" },
+    { match: "Lei 12.711/2012", url: "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12711.htm" },
+    { match: "Lei 11.508/2007", url: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2007/lei/l11508.htm" },
+    { match: "Lei 14.510/2022", url: "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14510.htm" },
+    { match: "Lei 12.764/2012", url: "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12764.htm" },
+    { match: "Lei 15.077/2024", url: "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2024/lei/l15077.htm" },
+    { match: "LC 200/2023", url: "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp200.htm" },
+    { match: "LC 97/1999", url: "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp97.htm" },
+    { match: "EC 95/2016", url: "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc95.htm" },
+    { match: "EC 114/2021", url: "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc114.htm" },
+    { match: "EC 132/2023", url: "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc132.htm" }
   ],
+  // Artigos da Constituição ("Art. 5º", "Art. 144") viram link para o texto oficial
+  constitutionUrl: "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm",
 
-  budgetBreakdown: {
-    totalEstimatedBudget: "R$ 5,6 Trilhões",
-    mandatoryPercentage: 94.3,
-    discretionaryPercentage: 5.7,
-    mandatoryItems: [
-      { label: "Previdência Social (INSS e Servidores)", value: "R$ 985 bi", percent: 42.5 },
-      { label: "Pessoal e Encargos da União (Folha)", value: "R$ 380 bi", percent: 16.4 },
-      { label: "Pisos Constitucionais de Saúde e Educação", value: "R$ 310 bi", percent: 13.3 },
-      { label: "Benefícios Assistenciais (BPC / Bolsa Família)", value: "R$ 260 bi", percent: 11.2 },
-      { label: "Precatórios e Sentenças Judiciais", value: "R$ 105 bi", percent: 4.5 },
-      { label: "Emendas Parlamentares Impositivas", value: "R$ 53 bi", percent: 2.3 },
-      { label: "Outras Despesas Obrigatórias por Lei", value: "R$ 95 bi", percent: 4.1 }
+  /* ------------------------------------------------------------------
+     Radar CF/88 — os artigos citados nas análises
+     ------------------------------------------------------------------ */
+  articles: {
+    art2: { title: "Art. 2º", topic: "Separação dos Poderes", text: "São Poderes da União, independentes e harmônicos entre si, o Legislativo, o Executivo e o Judiciário.", plain: "Nenhum Poder pode anular ou controlar o outro. É cláusula pétrea." },
+    art5: { title: "Art. 5º", topic: "Direitos e garantias individuais", text: "XLVI – a lei regulará a individualização da pena (...); XLVII – não haverá penas: a) de morte, salvo em caso de guerra declarada (...); b) de caráter perpétuo; (...) e) cruéis; XLIX – é assegurado aos presos o respeito à integridade física e moral; LIV – ninguém será privado da liberdade ou de seus bens sem o devido processo legal; LVII – ninguém será considerado culpado até o trânsito em julgado de sentença penal condenatória.", plain: "O coração da Constituição. Nem emenda constitucional pode abolir essas garantias." },
+    art6: { title: "Art. 6º", topic: "Direitos sociais e renda básica", text: "São direitos sociais a educação, a saúde, a alimentação, o trabalho, a moradia (...). Parágrafo único. Todo brasileiro em situação de vulnerabilidade social terá direito a uma renda básica familiar, garantida pelo poder público em programa permanente de transferência de renda (...).", plain: "Desde 2021, a transferência de renda aos vulneráveis é um direito constitucional." },
+    art7: { title: "Art. 7º, XIII", topic: "Jornada de trabalho", text: "duração do trabalho normal não superior a oito horas diárias e quarenta e quatro semanais, facultada a compensação de horários e a redução da jornada, mediante acordo ou convenção coletiva de trabalho.", plain: "A Constituição fixa um teto de 44h por semana, não um piso." },
+    art14: { title: "Art. 14", topic: "Direitos políticos e reeleição", text: "§ 3º São condições de elegibilidade, na forma da lei: (...) V – a filiação partidária; § 5º O Presidente da República (...) poderá ser reeleito para um único período subsequente.", plain: "Não existe candidatura sem partido no Brasil. A reeleição pode ser extinta por PEC." },
+    art15: { title: "Art. 15", topic: "Perda de direitos políticos", text: "É vedada a cassação de direitos políticos, cuja perda ou suspensão só se dará nos casos de: (...) III – condenação criminal transitada em julgado, enquanto durarem seus efeitos; (...)", plain: "Ninguém perde direitos políticos por decisão do governo; só nas hipóteses listadas." },
+    art18: { title: "Art. 18, §4º", topic: "Criação e fusão de municípios", text: "A criação, a incorporação, a fusão e o desmembramento de Municípios, far-se-ão por lei estadual, dentro do período determinado por Lei Complementar Federal, e dependerão de consulta prévia, mediante plebiscito, às populações dos Municípios envolvidos (...).", plain: "Fundir cidades exige plebiscito local e uma lei complementar federal que nunca foi aprovada." },
+    art37: { title: "Art. 37, II", topic: "Concurso público", text: "a investidura em cargo ou emprego público depende de aprovação prévia em concurso público de provas ou de provas e títulos (...).", plain: "Não se muda um servidor de carreira sem novo concurso (Súmula Vinculante 43)." },
+    art45: { title: "Art. 45", topic: "Sistema eleitoral da Câmara", text: "A Câmara dos Deputados compõe-se de representantes do povo, eleitos, pelo sistema proporcional, em cada Estado, em cada Território e no Distrito Federal.", plain: "Trocar o sistema proporcional exige, em regra, emenda constitucional." },
+    art60: { title: "Art. 60", topic: "Emendas e cláusulas pétreas", text: "§ 2º A proposta será discutida e votada em cada Casa do Congresso Nacional, em dois turnos, considerando-se aprovada se obtiver, em ambos, três quintos dos votos (...). § 4º Não será objeto de deliberação a proposta de emenda tendente a abolir: I – a forma federativa de Estado; II – o voto direto, secreto, universal e periódico; III – a separação dos Poderes; IV – os direitos e garantias individuais.", plain: "Define o quórum de PEC e os quatro temas que nem emenda pode abolir." },
+    art102: { title: "Arts. 101 e 102", topic: "Composição e competência do STF", text: "Art. 101. O Supremo Tribunal Federal compõe-se de onze Ministros (...). Art. 102. Compete ao Supremo Tribunal Federal, precipuamente, a guarda da Constituição, cabendo-lhe: I – processar e julgar, originariamente: (...) b) nas infrações penais comuns, o Presidente da República, o Vice-Presidente, os membros do Congresso Nacional (...).", plain: "Número de ministros e o que o STF julga só mudam por PEC." },
+    art136: { title: "Art. 136", topic: "Estado de Defesa", text: "O Presidente da República pode (...) decretar estado de defesa para preservar ou prontamente restabelecer, em locais restritos e determinados, a ordem pública ou a paz social ameaçadas por grave e iminente instabilidade institucional (...). § 2º O tempo de duração do estado de defesa não será superior a trinta dias, podendo ser prorrogado uma vez, por igual período (...).", plain: "Medida excepcional: no máximo 60 dias, com aval do Congresso." },
+    art142: { title: "Arts. 142 e 144", topic: "Forças Armadas e segurança pública", text: "Art. 142. As Forças Armadas (...) destinam-se à defesa da Pátria, à garantia dos poderes constitucionais e, por iniciativa de qualquer destes, da lei e da ordem. § 1º Lei complementar estabelecerá as normas gerais (...) no emprego das Forças Armadas. Art. 144, § 1º, III – [cabe à Polícia Federal] exercer as funções de polícia marítima, aeroportuária e de fronteiras.", plain: "Militares só atuam na segurança interna de forma excepcional; portos e aeroportos são da PF." },
+    art144: { title: "Art. 144", topic: "Segurança pública e federalismo", text: "A segurança pública, dever do Estado, direito e responsabilidade de todos, é exercida (...) através dos seguintes órgãos: polícia federal; (...) polícias civis; polícias militares (...). § 8º Os Municípios poderão constituir guardas municipais (...).", plain: "Cada ente tem sua polícia. A União coordena, mas não comanda as polícias estaduais." },
+    art166: { title: "Art. 166, §§ 9º a 20", topic: "Emendas parlamentares impositivas", text: "§ 9º As emendas individuais ao projeto de lei orçamentária serão aprovadas no limite de 2% (dois por cento) da receita corrente líquida (...). § 11. É obrigatória a execução orçamentária e financeira das programações oriundas de emendas individuais (...).", plain: "O governo é obrigado a pagar as emendas individuais e de bancada." },
+    art173: { title: "Art. 173", topic: "Estado empresário", text: "(...) a exploração direta de atividade econômica pelo Estado só será permitida quando necessária aos imperativos da segurança nacional ou a relevante interesse coletivo, conforme definidos em lei.", plain: "Estatais competem no mercado sob regras de mercado." },
+    art198: { title: "Arts. 198 e 212", topic: "Pisos de saúde e educação", text: "Art. 198, § 2º, I – no caso da União, a receita corrente líquida (...), não podendo ser inferior a 15% (quinze por cento). Art. 212. A União aplicará, anualmente, nunca menos de dezoito (...) por cento, no mínimo, da receita resultante de impostos (...) na manutenção e desenvolvimento do ensino.", plain: "Mínimos obrigatórios de gasto. Podem ser alterados por PEC (houve precedente em 2016)." },
+    art201: { title: "Arts. 201, §2º e 203, V", topic: "Benefício mínimo = salário mínimo", text: "Art. 201, § 2º Nenhum benefício que substitua o salário de contribuição ou o rendimento do trabalho do segurado terá valor mensal inferior ao salário mínimo. Art. 203, V – a garantia de um salário mínimo de benefício mensal à pessoa portadora de deficiência e ao idoso que comprovem não possuir meios de prover à própria manutenção (...).", plain: "Por isso cada aumento real do mínimo pesa bilhões na Previdência e no BPC." },
+    art207: { title: "Art. 207", topic: "Autonomia universitária", text: "As universidades gozam de autonomia didático-científica, administrativa e de gestão financeira e patrimonial (...).", plain: "O governo não pode dirigir o conteúdo e a gestão das universidades." },
+    art213: { title: "Art. 213", topic: "Verba pública para escolas privadas", text: "Os recursos públicos serão destinados às escolas públicas, podendo ser dirigidos a escolas comunitárias, confessionais ou filantrópicas (...). § 1º Os recursos (...) poderão ser destinados a bolsas de estudo para o ensino fundamental e médio (...) quando houver falta de vagas e cursos regulares da rede pública na localidade (...).", plain: "Dinheiro público vai para escola pública ou sem fins lucrativos; bolsas só no fundamental e médio." },
+    art225: { title: "Art. 225", topic: "Meio ambiente", text: "Todos têm direito ao meio ambiente ecologicamente equilibrado (...). § 1º (...) IV – exigir, na forma da lei, para instalação de obra ou atividade potencialmente causadora de significativa degradação do meio ambiente, estudo prévio de impacto ambiental (...).", plain: "Obras de impacto exigem estudo prévio. O STF barra licença automática." },
+    art228: { title: "Art. 228", topic: "Maioridade penal", text: "São penalmente inimputáveis os menores de dezoito anos, sujeitos às normas da legislação especial.", plain: "Idade penal está na Constituição. Há debate se é cláusula pétrea." }
+  },
+
+  /* ------------------------------------------------------------------
+     Orçamento federal 2026 (LOA) — despesa primária, valores aproximados
+     ------------------------------------------------------------------ */
+  budget: {
+    total: 2556,
+    note: "Despesa primária da União em 2026, sem transferências a estados e municípios e sem juros e rolagem da dívida. Valores aproximados em R$ bilhões.",
+    items: [
+      { id: "prev", label: "Previdência (INSS)", value: 1100, group: "obrig", color: "#8B1E3F" },
+      { id: "pessoal", label: "Servidores ativos e inativos", value: 440, group: "obrig", color: "#B23A48" },
+      { id: "bf", label: "Bolsa Família", value: 158, group: "obrig", color: "#C75D2C" },
+      { id: "bpc", label: "BPC (idosos e pessoas com deficiência)", value: 122, group: "obrig", color: "#D98A2B" },
+      { id: "outras", label: "Outras obrigatórias (abono, seguro-desemprego, Fundeb, pisos, precatórios…)", value: 480, group: "obrig", color: "#A1887F" },
+      { id: "emendas", label: "Emendas parlamentares", value: 50, group: "livre", color: "#2563EB" },
+      { id: "livre", label: "Livre para o Executivo (investimentos e custeio)", value: 206, group: "livre", color: "#0B7A4B" }
     ],
-    discretionaryItems: [
-      { label: "Investimentos em Infraestrutura, Obras e PAC", value: "R$ 68 bi", percent: 52.3 },
-      { label: "Custeio Administrativo, Universidades e Defesa", value: "R$ 62 bi", percent: 47.7 }
+    promises: [
+      { candidate: "flavio_bolsonaro", label: "Infraestrutura de R$ 900 bi em 4 anos", perYear: 225, note: "Público e privado, sem divisão informada" },
+      { candidate: "renan_santos", label: "Ajuste fiscal citado (corte)", perYear: 250, note: "Economia, não gasto novo" },
+      { candidate: "renan_santos", label: "Desfavelização (R$ 1,2–1,5 tri em 10 anos)", perYear: 135, note: "Média anual do próprio plano" },
+      { candidate: "lula", label: "Brasil Contra o Crime Organizado", perYear: 10, note: "Valor total citado no plano" }
     ]
   },
 
+  /* ------------------------------------------------------------------
+     Indicadores (com fonte e data)
+     ------------------------------------------------------------------ */
+  indicators: [
+    { id: "selic", label: "Taxa Selic", value: "13,75%", note: "ao ano, após 5º corte seguido", source: "Copom/BCB · 16/09/2026", url: "https://www.bcb.gov.br/controleinflacao/historicotaxasjuros" },
+    { id: "ipca", label: "Inflação (IPCA 12 meses)", value: "4,22%", note: "juro real perto de 9% ao ano", source: "IBGE · ago/2026", url: "https://agenciadenoticias.ibge.gov.br/agencia-sala-de-imprensa/2013-agencia-de-noticias/releases/48015-ipca-fica-em-0-32-em-agosto" },
+    { id: "dbgg", label: "Dívida bruta", value: "82,5%", note: "do PIB, em alta", source: "BCB · jul/2026", url: "https://www.bcb.gov.br/estatisticas/estatisticasfiscais" },
+    { id: "rigidez", label: "Orçamento obrigatório", value: "~90%", note: "da despesa primária já tem destino fixo", source: "LOA 2026", url: "https://www.camara.leg.br/noticias/1246912-consultoria-de-orcamento-publica-raio-x-da-lei-orcamentaria-2026-apos-vetos-presidenciais/" },
+    { id: "emendas", label: "Emendas parlamentares", value: "R$ 61 bi", note: "previstas; R$ 37,8 bi de execução obrigatória", source: "LOA 2026", url: "https://www.camara.leg.br/noticias/1235253-congresso-nacional-aprova-orcamento-de-2026-com-r-65-trilhoes-em-despesas" },
+    { id: "mvi", label: "Mortes violentas", value: "40.775", note: "em 2025 (−8,2%); 19,1 por 100 mil", source: "Anuário FBSP 2026", url: "https://agenciabrasil.ebc.com.br/direitos-humanos/noticia/2026-07/mortes-violentas-caem-82-no-pais-em-2025-feminicidios-aumentam-4" },
+    { id: "letal", label: "Mortes por intervenção policial", value: "6.602", note: "em 2025, maior número desde 2016", source: "Anuário FBSP 2026", url: "https://agenciabrasil.ebc.com.br/direitos-humanos/noticia/2026-07/mortes-violentas-caem-82-no-pais-em-2025-feminicidios-aumentam-4" },
+    { id: "pib", label: "PIB 2025", value: "R$ 12,7 tri", note: "crescimento de 2,3%", source: "IBGE · mar/2026", url: "https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/45969-pib-cresce-2-3-em-2025" }
+  ],
+
+  trilemma: [
+    { title: "Dívida", desc: "Com a dívida em 82,5% do PIB e juro real perto de 9%, promessas sem fonte de receita pressionam câmbio, juros e inflação." },
+    { title: "Constituição", desc: "Direitos individuais, federalismo e separação de Poderes não podem ser abolidos nem por emenda. Pisos e benefícios mínimos só mudam com 3/5 do Congresso." },
+    { title: "Congresso", desc: "Nenhum presidente aprova PEC sozinho: são 308 deputados e 49 senadores, num Parlamento que controla cerca de R$ 61 bi em emendas." }
+  ],
+
+  /* ------------------------------------------------------------------
+     O que corrigimos na versão anterior (transparência)
+     ------------------------------------------------------------------ */
+  corrections: [
+    { who: "Augusto Cury", kind: "Fato", was: "“Candidatura Independente / Humanista”", now: "Candidato pelo Avante, com vice Júlio Delgado. Candidatura sem partido é proibida (Art. 14, §3º, V)." },
+    { who: "Todos", kind: "Metadados", was: "Lemas, coligações e vices atribuídos sem fonte (ex.: “Coligação Ordem e Liberdade”, “Frente Ampla pela Cultura da Paz”)", now: "Lemas tirados dos documentos, com página; vices conforme registro no TSE; coligação marcada como não informada quando o plano não a cita." },
+    { who: "Lula", kind: "Atribuição", was: "O plano teria “intenção expressa” de rever a privatização da Eletrobras e pressionar o Banco Central", now: "Nada disso está no documento. O plano defende concessões e fala só em “redução sustentada dos juros”." },
+    { who: "Lula", kind: "Fato", was: "“Federação Brasil da Esperança (PT/PCdoB/PV/PSB/PSOL/REDE)”", now: "A capa traz PT, PSB, PV, PCdoB, PDT, PSOL e Rede. A federação Brasil da Esperança é só PT, PCdoB e PV." },
+    { who: "Flávio Bolsonaro", kind: "Distorção", was: "Voucher-creche “universal” para rede privada com fins lucrativos", now: "Voucher supletivo, só onde faltar vaga pública e até a vaga surgir, pago à família para a rede “credenciada”." },
+    { who: "Flávio Bolsonaro", kind: "Distorção", was: "“Tesouraço na Censura” seria limitar o STF e barrar investigações", now: "O Tesouraço trata de estruturas de “Ministério da Verdade”. As mudanças no STF estão na Reforma do Judiciário (p. 65)." },
+    { who: "Flávio Bolsonaro", kind: "Exagero", was: "Cumprimento integral de pena, sem progressão, para todos os crimes", now: "Fim da progressão só para crimes hediondos, o que o STF já declarou inconstitucional." },
+    { who: "Ronaldo Caiado", kind: "Atribuição", was: "“Comando Nacional” subordinaria as polícias dos estados", now: "O plano prevê um conselho com governadores e cooperação federativa; não há subordinação." },
+    { who: "Augusto Cury", kind: "Distorção", was: "Tele Saúde para “zerar a fila do SUS em até 50 dias”", now: "Os 50 dias são a espera atual. A meta é atendimento digital em até 30 minutos nos casos compatíveis." },
+    { who: "Renan Santos", kind: "Distorção", was: "Fusão “compulsória” de municípios “por decreto”, vouchers na saúde e “tributação zero” nas ZEEs", now: "O plano diz que a consolidação “não será imposição de Brasília” e usaria PEC. Não há vouchers na saúde, e as ZEEs teriam suspensão de tributos aduaneiros e regime próprio de IBS/CBS." },
+    { who: "Renan Santos", kind: "Exagero", was: "Estado de Defesa “permanente”", now: "O texto fala em “sucessivos decretos… em áreas sob comando das facções”, o que já é inconstitucional sem o exagero." },
+    { who: "Indicadores", kind: "Dados", was: "Selic 10,75%, dívida 78,6% do PIB, 39,5 mil homicídios, orçamento “de R$ 5,6 tri” com 94,3% obrigatório", now: "Selic 13,75% (set/2026), dívida 82,5% (jul/2026), 40.775 mortes violentas (2025), cerca de 90% de despesa obrigatória na LOA 2026." },
+    { who: "Análise jurídica", kind: "Direito", was: "Desvincular pisos “colide com jurisprudência consolidada do STF”", now: "Exige PEC, mas há precedente de mudança por emenda (EC 95/2016) que o STF não anulou." },
+    { who: "Método", kind: "Método", was: "Notas de “viabilidade fiscal” com precisão falsa (62%, 54%, 38%…)", now: "Substituídas por análise qualitativa e pela escada de instrumentos jurídicos, com critério explícito." },
+    { who: "Recorte", kind: "Transparência", was: "“Os 5 principais candidatos”", now: "Há 13 candidaturas registradas. O site analisa os 5 planos que estão no repositório (Romeu Zema, do Novo, por exemplo, não está incluído)." }
+  ],
+
   glossary: [
-    {
-      term: "Cláusula Pétrea (Art. 60, § 4º da CF/88)",
-      definition: "Dispositivo constitucional imutável que não pode ser abolido ou restringido nem mesmo por Emenda Constitucional aprovada pelo Congresso. Inclui o federalismo, o voto direto, secreto e periódico, a separação dos poderes e os direitos e garantias individuais."
-    },
-    {
-      term: "Direito Penal do Inimigo (DPI)",
-      definition: "Teoria penal formulada pelo jurista alemão Günther Jakobs, que defende tratar certos indivíduos (como terroristas e membros de facções extremas) não como cidadãos portadores de direitos processuais, mas como 'inimigos' do Estado que devem ser neutralizados preventivamente sem garantias normais. É amplamente considerada inconstitucional no ordenamento brasileiro."
-    },
-    {
-      term: "Arcabouço Fiscal (Lei Complementar nº 200/2023)",
-      definition: "Regra fiscal que substituiu o Teto de Gastos no governo Lula. Limita o crescimento real da despesa pública entre 0,6% e 2,5% ao ano acima da inflação, vinculado ao desempenho da arrecadação de receitas (70% do crescimento das receitas em caso de cumprimento de meta, ou 50% em caso de descumprimento)."
-    },
-    {
-      term: "Desindexação Orçamentária",
-      definition: "Processo de retirar a vinculação automática de benefícios sociais, aposentadorias ou tributos a índices como o salário mínimo. No Brasil, se o salário mínimo sobe com ganho real, todas as aposentadorias do INSS de piso sobem automaticamente, gerando um efeito dominó de bilhões de reais nas contas públicas."
-    },
-    {
-      term: "Estado de Defesa (Art. 136 da CF/88)",
-      definition: "Medida de exceção decretada pelo Presidente da República para preservar ou restabelecer a ordem pública ou a paz social ameaçadas por grave e iminente instabilidade institucional ou calamidades naturais de grandes proporções. Tem prazo constitucional rígido máximo de 30 dias prorrogável uma única vez."
-    },
-    {
-      term: "Emendas Impositivas (Art. 166 da CF/88)",
-      definition: "Parcela do Orçamento Geral da União indicada diretamente por deputados e senadores cuja execução financeira é mandatória e obrigatória pelo Executivo, sem possibilidade de cancelamento discricionário pelo Presidente da República."
-    },
-    {
-      term: "Zonas Econômicas Especiais (ZEE)",
-      definition: "Áreas geográficas delimitadas com regimes jurídicos, tributários e aduaneiros altamente diferenciados do restante do país, criadas para atrair capitais estrangeiros e acelerar a industrialização voltada à exportação (modelo celebrizado em Shenzhen na China)."
-    },
-    {
-      term: "Regra de Ouro (Art. 167, III da CF/88)",
-      definition: "Norma constitucional que proíbe o governo de emitir dívida pública para pagar despesas correntes (como salários de servidores e contas do dia a dia). O endividamento só é permitido para realizar investimentos em obras/equipamentos ou refinanciar a própria dívida."
-    }
+    { term: "Cláusula pétrea", aliases: ["cláusula pétrea", "cláusulas pétreas"], definition: "Parte da Constituição que nem emenda pode abolir (Art. 60, §4º): forma federativa, voto direto e secreto, separação dos Poderes e direitos e garantias individuais." },
+    { term: "PEC (Proposta de Emenda à Constituição)", aliases: ["PEC", "emenda constitucional"], definition: "Altera o texto da Constituição. Precisa de 3/5 dos votos em dois turnos na Câmara (308 deputados) e no Senado (49 senadores). O presidente não pode vetar nem sancionar." },
+    { term: "Lei complementar", aliases: ["lei complementar"], definition: "Lei exigida pela Constituição para certos temas. Precisa de maioria absoluta: 257 deputados e 41 senadores." },
+    { term: "Arcabouço fiscal (LC 200/2023)", aliases: ["arcabouço fiscal", "arcabouço"], definition: "Regra que substituiu o Teto de Gastos. As despesas podem crescer entre 0,6% e 2,5% acima da inflação por ano: até 70% do crescimento da receita, ou 50% se a meta de resultado for descumprida." },
+    { term: "Desindexação", aliases: ["desindexação", "desindexar"], definition: "Desligar a correção automática de um valor, como aposentadorias, de um índice como o salário mínimo. No Brasil, o benefício mínimo do INSS e o BPC são atrelados ao mínimo pela Constituição." },
+    { term: "Estado de Defesa (Art. 136)", aliases: ["Estado de Defesa"], definition: "Medida excepcional para restabelecer a ordem em locais determinados. Dura no máximo 30 dias, prorrogáveis uma vez, e precisa de aprovação do Congresso. Permite restringir apenas direitos específicos, como reunião e sigilo de comunicações." },
+    { term: "GLO (Garantia da Lei e da Ordem)", aliases: ["GLO"], definition: "Decreto que autoriza as Forças Armadas a atuar temporariamente em segurança pública quando as polícias não dão conta (LC 97/1999)." },
+    { term: "Direito Penal do Inimigo", aliases: ["Direito Penal do Inimigo"], definition: "Teoria do jurista alemão Günther Jakobs segundo a qual certos criminosos perderiam o status de cidadão e seriam neutralizados sem as garantias comuns. É incompatível com as garantias do Art. 5º." },
+    { term: "Individualização da pena", aliases: ["individualização da pena"], definition: "Garantia de que a pena e sua execução considerem o caso concreto (Art. 5º, XLVI). Por isso o STF derrubou o regime integralmente fechado para crimes hediondos." },
+    { term: "Emendas impositivas", aliases: ["emendas impositivas", "execução obrigatória"], definition: "Parcela do orçamento indicada por deputados e senadores que o governo é obrigado a executar (Art. 166)." },
+    { term: "Regra de Ouro (Art. 167, III)", aliases: ["Regra de Ouro"], definition: "Proíbe o governo de se endividar para pagar despesas correntes, como salários e benefícios, sem autorização especial do Congresso por maioria absoluta. Desde 2019 essa autorização é pedida todos os anos." },
+    { term: "BPC (Benefício de Prestação Continuada)", aliases: ["BPC"], definition: "Um salário mínimo mensal pago a idosos a partir de 65 anos e a pessoas com deficiência de baixa renda (Art. 203, V). Não exige contribuição ao INSS." },
+    { term: "Trânsito em julgado", aliases: ["trânsito em julgado", "transitada em julgado"], definition: "Momento em que não cabe mais recurso contra uma decisão judicial. Pela Constituição, só a partir daí alguém é considerado culpado (Art. 5º, LVII)." },
+    { term: "Despesa discricionária", aliases: ["discricionário", "discricionárias"], definition: "Gasto que o governo pode decidir fazer ou não, como investimentos e custeio da máquina. É a pequena parte do orçamento que não está amarrada por lei ou pela Constituição." },
+    { term: "Zona Econômica Especial", aliases: ["Zonas Econômicas Especiais", "Zona Econômica Especial", "ZPEs"], definition: "Área com regras tributárias e aduaneiras próprias para atrair indústrias exportadoras. No Brasil existem as ZPEs (Lei 11.508/2007) e a Zona Franca de Manaus." }
+  ],
+
+  sources: [
+    { text: "Constituição da República Federativa do Brasil de 1988 (texto consolidado)", url: "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm" },
+    { text: "Planos de governo registrados pelos candidatos (pasta /planos deste repositório)", url: "https://github.com/matheusmendez-ask/eleicoes-2026/tree/main/planos" },
+    { text: "Banco Central — histórico da Selic (Copom de 16/09/2026)", url: "https://www.bcb.gov.br/controleinflacao/historicotaxasjuros" },
+    { text: "Banco Central — Estatísticas fiscais (jul/2026)", url: "https://www.bcb.gov.br/estatisticas/estatisticasfiscais" },
+    { text: "IBGE — IPCA de agosto de 2026", url: "https://agenciadenoticias.ibge.gov.br/agencia-sala-de-imprensa/2013-agencia-de-noticias/releases/48015-ipca-fica-em-0-32-em-agosto" },
+    { text: "IBGE — PIB de 2025", url: "https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/45969-pib-cresce-2-3-em-2025" },
+    { text: "Câmara dos Deputados — Raio X da LOA 2026", url: "https://www.camara.leg.br/noticias/1246912-consultoria-de-orcamento-publica-raio-x-da-lei-orcamentaria-2026-apos-vetos-presidenciais/" },
+    { text: "Fórum Brasileiro de Segurança Pública — Anuário 2026 (dados de 2025)", url: "https://agenciabrasil.ebc.com.br/direitos-humanos/noticia/2026-07/mortes-violentas-caem-82-no-pais-em-2025-feminicidios-aumentam-4" },
+    { text: "Agência Brasil — Avante oficializa Augusto Cury", url: "https://agenciabrasil.ebc.com.br/politica/noticia/2026-08/avante-oficializa-augusto-cury-como-candidato-presidencia" },
+    { text: "TSE — registros de candidatura 2026", url: "https://divulgacandcontas.tse.jus.br/" },
+    { text: "STF — decisões citadas (HC 82.959, SV 26, SV 43, ADI 6808, ADI 6457, ADI 6553, ADPF 186, ADPF 854): links em cada análise", url: "https://portal.stf.jus.br/" }
   ]
 };
