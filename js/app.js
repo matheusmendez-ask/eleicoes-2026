@@ -37,8 +37,8 @@
   const ICONS = {
     link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/>',
     share: '<path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/>',
-    whatsapp: '<path d="M3 21l1.6-4.7A8.5 8.5 0 1 1 8 19.6L3 21z"/><path d="M9 9.5c.3 2.4 2.6 4.7 5 5l1.2-1.3c.2-.2.5-.3.8-.2l1.7.7c.3.1.5.5.4.8-.3 1.1-1.3 1.8-2.4 1.7-3.7-.4-7.3-4-7.7-7.7-.1-1.1.6-2.1 1.7-2.4.3-.1.7.1.8.4l.7 1.7c.1.3 0 .6-.2.8L9 9.5z"/>',
-    x: '<path d="M4 4l16 16"/><path d="M20 4L4 20"/>',
+    whatsapp: '<path fill="currentColor" stroke="none" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>',
+    x: '<path fill="currentColor" stroke="none" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>',
     close: '<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',
     arrow: '<path d="M5 12h14"/><path d="M13 5l7 7-7 7"/>',
     chevron: '<path d="M9 6l6 6-6 6"/>',
@@ -632,40 +632,43 @@
 
   const closeBtn = `<button class="icon-btn" data-close-btn data-close aria-label="Fechar">${icon('close', 18)}</button>`;
 
-  function proposalCard(p, { withWho = false, link = true } = {}) {
+  function proposalCard(p, { withWho = false } = {}) {
     const c = p.cand;
     return `
-      <article class="panel" id="prop-${p.id}">
-        <div class="panel-top">
-          ${link ? `<a class="panel-title" href="#p/${p.key}">${withWho ? `${esc(c.shortName)}: ` : ''}${esc(p.title)}</a>` : '<b class="panel-title">Em uma frase</b>'}
+      <article class="prop-card v-${p.verdict}" id="prop-${p.id}">
+        <header class="prop-card-head">
+          <a class="prop-card-title" href="#p/${p.key}">${withWho ? `<span class="prop-card-who" style="--c:${c.color}">${esc(c.shortName)}</span>` : ''}${esc(p.title)}</a>
           <span class="prop-side">${chip(p.verdict)}${contestedTag(p)}</span>
+        </header>
+        <p class="prop-card-plain">${esc(p.plain)}</p>
+        ${p.quote ? `<blockquote class="pull"><p>${esc(p.quote)}</p><cite>${esc(c.document.title)}, p. ${esc(p.page)}</cite></blockquote>` : ''}
+        <div class="prop-card-cols">
+          <div><h4 class="label">O que diz a Constituição</h4><p>${rich(p.legal)}</p></div>
+          <div><h4 class="label">Efeito nas contas públicas</h4><p class="fiscal-line">${fiscalChip(p)}<span>${rich(p.fiscal.note)}</span></p></div>
         </div>
-        <p>${esc(p.plain)}</p>
-        ${p.quote ? `<blockquote class="quote">“${esc(p.quote)}”<cite>${esc(c.document.title)}, p. ${esc(p.page)}</cite></blockquote>` : ''}
-        <h4 class="label">O que diz a Constituição</h4>
-        <p>${rich(p.legal)}</p>
-        <h4 class="label">Efeito nas contas públicas</h4>
-        <p class="fiscal-line">${fiscalChip(p)}<span>${rich(p.fiscal.note)}</span></p>
-        <div class="card-links">
-          <a class="link" href="${pdfUrl(c, p.page)}" target="_blank" rel="noopener">Ver no plano, p. ${esc(p.page)} ${icon('external', 14)}</a>
-          ${p.arts.map((a) => `<button class="link" data-article="${a}">${esc(D.articles[a].title)}</button>`).join('')}
-        </div>
+        <footer class="prop-card-foot">
+          <a class="pill" href="${pdfUrl(c, p.page)}" target="_blank" rel="noopener">${icon('doc', 14)} Ver no plano, p. ${esc(p.page)}</a>
+          ${p.arts.map((a) => `<button class="pill" data-article="${a}">${esc(D.articles[a].title)}</button>`).join('')}
+        </footer>
       </article>`;
   }
 
   function openDossier(id, tab = 'geral') {
     const c = candById[id];
     if (!c) return;
-    const tabs = [['geral', 'Visão geral'], ['propostas', `Propostas (${c.proposals.length})`], ['economia', 'Economia'], ['contexto', 'Diagnóstico']];
+    const tabs = [['geral', 'Visão geral'], ['propostas', `Propostas`], ['economia', 'Economia'], ['contexto', 'Diagnóstico']];
     const head = `
       <div class="modal-head-row">
         <div class="modal-who">
-          ${avatar(c)}
-          <div><h2 id="modal-title">${esc(c.name)}</h2><div class="sub">${esc(c.party)}${c.number ? ` · nº ${esc(c.number)}` : ''} · vice: ${esc(c.vice)}</div></div>
+          ${avatar(c, 'avatar-lg')}
+          <div>
+            <div class="sub">${esc(c.party)}${c.number ? ` · nº ${esc(c.number)}` : ''} · vice: ${esc(c.vice)}</div>
+            <h2 id="modal-title">${esc(c.name)}</h2>
+          </div>
         </div>
         ${closeBtn}
       </div>
-      <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" data-tab="${k}" data-cid="${c.id}" aria-selected="${k === tab}">${esc(l)}</button>`).join('')}</div>`;
+      <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" data-tab="${k}" data-cid="${c.id}" aria-selected="${k === tab}">${esc(l)}${k === 'propostas' ? ` <small>${c.proposals.length}</small>` : ''}</button>`).join('')}</div>`;
     openModal(head, dossierBody(c, tab), c.color);
   }
 
@@ -678,12 +681,12 @@
       return `
         <div class="quick">
           <h3>Leitura rápida</h3>
-          <p>Das ${mine.length} propostas analisadas, ${sentence}. Nas contas públicas, <b>${f.gasto}</b> ${f.gasto === 1 ? 'aumenta' : 'aumentam'} gastos, <b>${f.economia}</b> ${f.economia === 1 ? 'economiza ou arrecada' : 'economizam ou arrecadam'} e <b>${f.neutro + f.incerto}</b> ${f.neutro + f.incerto === 1 ? 'tem' : 'têm'} efeito neutro ou incerto.</p>
+          <p class="lead">Das ${mine.length} propostas analisadas, ${sentence}. Nas contas públicas, <b>${f.gasto}</b> ${f.gasto === 1 ? 'aumenta' : 'aumentam'} gastos, <b>${f.economia}</b> ${f.economia === 1 ? 'economiza ou arrecada' : 'economizam ou arrecadam'} e <b>${f.neutro + f.incerto}</b> ${f.neutro + f.incerto === 1 ? 'tem' : 'têm'} efeito neutro ou incerto.</p>
           ${verdictBar(mine)}
           <ol class="index">
             ${D.themes.filter((t) => mine.some((p) => p.theme === t.id)).map((t) => `
               <li><span class="index-theme">${esc(t.label)}</span>
-                ${mine.filter((p) => p.theme === t.id).map((p) => `<a href="#prop-${p.id}" data-jump="prop-${p.id}"><span>${esc(p.title)}</span>${chip(p.verdict)}</a>`).join('')}
+                ${mine.filter((p) => p.theme === t.id).map((p) => `<a href="#prop-${p.id}" data-jump="prop-${p.id}" class="v-${p.verdict}"><i></i><span>${esc(p.title)}</span><small>${esc(scaleById[p.verdict].short)}</small></a>`).join('')}
               </li>`).join('')}
           </ol>
         </div>
@@ -725,13 +728,22 @@
         </dl>`;
     }
     const other = D.candidates.find((x) => x.id !== c.id).id;
+    const v = countBy(mine);
+    const f = countFiscal(mine);
     return `
-      <p class="doc-line">${icon('doc', 15)} <span>${esc(c.document.title)}</span> · ${esc(c.document.pages)}</p>
+      <blockquote class="motto"><p>${esc(c.motto.text)}</p><cite>${esc(c.document.title)}${c.motto.page ? `, p. ${esc(c.motto.page)}` : ''} · ${esc(c.document.pages)}</cite></blockquote>
+      <p class="lead">${rich(c.thesis)}</p>
       <p>${rich(c.summary)}</p>
-      <h3>Perfil jurídico das propostas</h3>
-      ${verdictBar(c.proposals)}
+      <div class="key-row">
+        <div><b>${mine.length}</b><span>propostas analisadas</span></div>
+        <div><b>${v.pec + v.vedado}</b><span>exigem emenda ou são barradas</span></div>
+        <div><b>${f.gasto}</b><span>aumentam gastos</span></div>
+        <div><b>${f.economia}</b><span>economizam ou arrecadam</span></div>
+      </div>
+      <h3>Perfil jurídico</h3>
+      ${verdictBar(mine)}
       <div class="btn-row">
-        <button class="btn btn-primary" data-tab="propostas" data-cid="${c.id}">Ver as ${c.proposals.length} propostas ${icon('arrow', 15)}</button>
+        <button class="btn btn-primary" data-tab="propostas" data-cid="${c.id}">Ler as ${c.proposals.length} propostas ${icon('arrow', 15)}</button>
         <a class="btn btn-ghost" href="${pdfUrl(c)}" target="_blank" rel="noopener">Plano original (PDF)</a>
         <a class="btn btn-ghost" href="#comparar/${c.id},${other}" data-close>Comparar com outro candidato</a>
       </div>`;
@@ -748,20 +760,32 @@
     const next = siblings[(i + 1) % siblings.length];
     const head = `
       <div class="modal-head-row">
-        <div class="modal-who">${avatar(c)}<div><div class="sub">${esc(c.name)} · ${esc(themeById[p.theme].label)}</div><h2 id="modal-title">${esc(p.title)}</h2></div></div>
+        <div class="modal-who">${avatar(c, 'avatar-lg')}<div><div class="sub">${esc(c.name)} · ${esc(themeById[p.theme].label)}</div><h2 id="modal-title">${esc(p.title)}</h2></div></div>
         ${closeBtn}
       </div>`;
-    const body = proposalCard(p, { link: false }) + `
-      <div class="note">
-        <b>O que significa “${esc(s.label)}”</b>
-        <p>${rich(s.desc)} ${esc(s.who)}.</p>
+    const body = `
+      <p class="lead">${esc(p.plain)}</p>
+      ${p.quote ? `<blockquote class="pull"><p>${esc(p.quote)}</p><cite>${esc(c.document.title)}, p. ${esc(p.page)} · <a href="${pdfUrl(c, p.page)}" target="_blank" rel="noopener">abrir no PDF</a></cite></blockquote>` : ''}
+      <div class="verdict v-${p.verdict}">
+        <div class="verdict-step">Degrau ${D.legalScale.indexOf(s) + 1} de 5${p.contested ? ' · tema controverso' : ''}</div>
+        <div class="verdict-label">${esc(s.label)}</div>
+        <div class="verdict-who">${esc(s.who)}</div>
+        <p>${rich(s.desc)}</p>
+      </div>
+      <h3>O que diz a Constituição</h3>
+      <p>${rich(p.legal)}</p>
+      <h3>Efeito nas contas públicas</h3>
+      <p class="fiscal-line">${fiscalChip(p)}<span>${rich(p.fiscal.note)}</span></p>
+      <div class="pill-row">
+        <a class="pill" href="${pdfUrl(c, p.page)}" target="_blank" rel="noopener">${icon('doc', 14)} Ver no plano, p. ${esc(p.page)}</a>
+        ${p.arts.map((a) => `<button class="pill" data-article="${a}">${esc(D.articles[a].title)} · ${esc(D.articles[a].topic)}</button>`).join('')}
       </div>
       ${shareBar({ url: new URL(`share/${c.id}--${p.id}.html`, location.href).href, text: `${c.shortName}: “${p.title}”. O que a Constituição diz sobre isso` })}
       <nav class="prop-nav" aria-label="Outras propostas de ${esc(c.shortName)}">
         <a href="#p/${prev.key}"><small>Anterior</small>${esc(prev.title)}</a>
         <a href="#p/${next.key}"><small>Próxima</small>${esc(next.title)}</a>
       </nav>
-      <p class="btn-row"><a class="btn btn-ghost" href="#dossie/${c.id}">Todas as propostas de ${esc(c.shortName)}</a></p>`;
+      <p class="btn-row"><a class="btn btn-ghost" href="#dossie/${c.id}/propostas">Todas as propostas de ${esc(c.shortName)}</a></p>`;
     openModal(head, body, c.color);
     document.title = `${p.title} · ${c.shortName} · Raio-X 2026`;
   }
@@ -771,14 +795,24 @@
     const list = allProposals.filter((p) => p.arts.includes(id));
     const head = `
       <div class="modal-head-row">
-        <div><div class="sub">Constituição Federal de 1988</div><h2 id="modal-title">${esc(a.title)} · ${esc(a.topic)}</h2></div>
+        <div><div class="sub">Constituição Federal de 1988</div><h2 id="modal-title">${esc(a.title)}</h2><div class="sub-strong">${esc(a.topic)}</div></div>
         ${closeBtn}
       </div>`;
     const body = `
-      <blockquote class="quote">${esc(a.text)}<cite>${ext(D.constitutionUrl, 'Texto oficial no Planalto')}</cite></blockquote>
+      <div class="law-text">
+        <p>${esc(a.text)}</p>
+        <a class="link-quiet" href="${esc(D.constitutionUrl)}#art${(a.title.match(/\d+/) || [''])[0]}" target="_blank" rel="noopener">Texto oficial no Planalto ${icon('external', 13)}</a>
+      </div>
       <div class="note"><b>Em português simples</b><p>${rich(a.plain)}</p></div>
-      <h3>Propostas que esbarram neste artigo</h3>
-      ${list.map((p) => proposalCard(p, { withWho: true })).join('')}`;
+      <h3>${plural(list.length, 'proposta que esbarra', 'propostas que esbarram')} neste artigo</h3>
+      <div class="art-list">
+        ${list.map((p) => `
+          <a class="art-item" href="#p/${p.key}">
+            ${avatar(p.cand, 'avatar-sm')}
+            <span class="art-item-main"><b>${esc(p.title)}</b><span>${esc(p.cand.shortName)} · ${esc(p.plain)}</span></span>
+            <span class="prop-side">${chip(p.verdict)}</span>
+          </a>`).join('')}
+      </div>`;
     openModal(head, body);
   }
 
