@@ -1,0 +1,16 @@
+{
+  "name": "raio-x-planos-de-governo-2026",
+  "version": "2.0.0",
+  "private": true,
+  "description": "O que os candidatos prometem e o que a Constituição e o orçamento permitem.",
+  "author": "Matheus Mendez",
+  "license": "MIT",
+  "scripts": {
+    "test": "node scripts/validate.cjs",
+    "build:share": "node scripts/build-share.cjs",
+    "start": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1"
+  }
+}

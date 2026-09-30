@@ -90,6 +90,7 @@ const ELECTION_DATA = {
       document: {
         title: "Diretrizes para o Programa de Transformação do Brasil",
         file: "Programa-de-Governo-LULA-13.pdf",
+        maxPage: 84,
         pages: "84 páginas impressas (42 folhas duplas no PDF)",
         // PDF em folhas duplas: a imagem k contém as páginas impressas k e 85−k
         pageMap: "saddle84"
@@ -221,6 +222,7 @@ const ELECTION_DATA = {
       document: {
         title: "Para o Brasil Vencer o Atraso",
         file: "FLAVIO-BOLSONARO-PARA-O-BRASIL-VENCER-O-ATRASO-1-1.pdf",
+        maxPage: 76,
         pages: "76 páginas",
         pageMap: "direct"
       },
@@ -401,6 +403,7 @@ const ELECTION_DATA = {
       document: {
         title: "Plano de Governo — Muito pra mostrar, nada pra esconder (2027 a 2030)",
         file: "Plano-de-Governo-Ronaldo-Caiado-Presidente.pdf",
+        maxPage: 100,
         pages: "100 páginas, 26 temas",
         pageMap: "direct"
       },
@@ -542,6 +545,7 @@ const ELECTION_DATA = {
       document: {
         title: "Cultura da Paz em uma Sociedade Polarizada e Adoecida",
         file: "Plano_gov_Augusto_Cury_2026.pdf",
+        maxPage: 200,
         pages: "200 páginas, 18 projetos",
         pageMap: "direct"
       },
@@ -681,6 +685,7 @@ const ELECTION_DATA = {
       document: {
         title: "O Futuro é Glorioso — Resumo executivo do Livro Amarelo",
         file: "proposta-missao-renan-santos.pdf",
+        maxPage: 51,
         pages: "51 páginas (resumo de obra com mais de 500)",
         pageMap: "direct"
       },
