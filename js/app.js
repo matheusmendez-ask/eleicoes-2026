@@ -418,12 +418,12 @@
         ${pct(i.value) > 9 ? `<span>${pct(i.value).toFixed(0)}%</span>` : ''}
       </button>`).join('');
 
-    const group = (g, title) => `<div class="bl-group">${title}</div>` + b.items.filter((i) => i.group === g).map((i) => `
-      <div class="bl-item" data-bitem="${i.id}" style="--bc:${i.color}"><i></i><span>${esc(i.label)}</span><b>${fmt(i.value)}</b><em>${pct(i.value).toFixed(1)}%</em></div>`).join('');
+    const group = (g, title) => `<div class="bl-col"><div class="bl-group">${title}</div>` + b.items.filter((i) => i.group === g).map((i) => `
+      <div class="bl-item" data-bitem="${i.id}" style="--bc:${i.color}"><i></i><span>${esc(i.label)}</span><b>${fmt(i.value)}</b><em>${pct(i.value).toFixed(1)}%</em></div>`).join('') + '</div>';
     const obrig = b.items.filter((i) => i.group === 'obrig').reduce((s, i) => s + i.value, 0);
     $('#budget-legend').innerHTML =
-      group('obrig', `Obrigatórias · ${pct(obrig).toFixed(0)}%`) +
-      group('livre', `Discricionárias · ${(100 - pct(obrig)).toFixed(0)}%`);
+      group('obrig', `Obrigatórias · ${pct(obrig).toFixed(0)}% · já têm dono`) +
+      group('livre', `Discricionárias · ${(100 - pct(obrig)).toFixed(0)}% · decididas a cada ano`);
 
     const highlight = (id) => $$('[data-bitem]').forEach((el) => el.classList.toggle('on', el.dataset.bitem === id));
     $$('[data-bitem]').forEach((el) => {
@@ -434,16 +434,17 @@
 
     const max = Math.max(FREE_SPACE, ...b.promises.map((p) => p.perYear));
     $('#promises').innerHTML = `
-      <div class="promise" style="--c: var(--brand)">
-        <div class="promise-top"><span>Espaço livre do Executivo</span><span>R$ ${FREE_SPACE} bi/ano</span></div>
-        <div class="promise-bar"><i style="width:${(FREE_SPACE / max) * 100}%"></i></div>
+      <div class="fn-row fn-last" style="--c: var(--brand)">
+        <div class="fn-label"><b>Espaço livre do Executivo</b><span>o que o presidente pode decidir em 2026</span></div>
+        <div class="fn-bar"><i style="width:${(FREE_SPACE / max) * 100}%"></i></div>
+        <div class="fn-val">R$ ${FREE_SPACE} bi<small>por ano</small></div>
       </div>` + b.promises.map((p) => {
       const c = candById[p.candidate];
       return `
-      <div class="promise" style="--c:${c.color}">
-        <div class="promise-top"><span>${esc(c.shortName)}: ${esc(p.label)}</span><span>R$ ${p.perYear} bi/ano</span></div>
-        <div class="promise-bar"><i style="width:${(p.perYear / max) * 100}%"></i></div>
-        <small>${esc(p.note)}</small>
+      <div class="fn-row fn-promise" style="--c:${c.color}">
+        <div class="fn-label"><b>${avatar(c, 'avatar-xs')}${esc(p.label)}</b><span>${esc(c.shortName)} · ${esc(p.note)}</span></div>
+        <div class="fn-bar"><i style="width:${(p.perYear / max) * 100}%"></i></div>
+        <div class="fn-val">R$ ${p.perYear} bi<small>por ano${p.perYear > FREE_SPACE ? ` · ${(p.perYear / FREE_SPACE).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}× o espaço livre` : ''}</small></div>
       </div>`;
     }).join('');
   }
@@ -454,9 +455,9 @@
     const fmt = (v) => (v >= 1000 ? `R$ ${(v / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 2 })} tri` : `R$ ${v} bi`);
     $('#funnel').innerHTML = f.map((step, i) => `
       <div class="fn-row${step.out ? ' fn-out' : ''}${i === f.length - 1 ? ' fn-last' : ''}">
-        <div class="fn-label"><b>${step.out ? '− ' : ''}${esc(step.label)}</b><span>${esc(step.note)}</span></div>
+        <div class="fn-label"><b>${step.out ? '<span class="fn-minus">−</span>' : ''}${esc(step.label)}</b><span>${esc(step.note)}</span></div>
         <div class="fn-bar"><i style="width:${Math.max(0.6, (step.value / max) * 100)}%"></i></div>
-        <div class="fn-val">${fmt(step.value)}</div>
+        <div class="fn-val">${fmt(step.value)}<small>${Math.round((step.value / max) * 100)}%</small></div>
       </div>`).join('');
   }
 
